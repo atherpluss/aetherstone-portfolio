@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Projets — Aetherstone</title>
+<link href="../css/main.css" rel="stylesheet" type="text/css">
+<style>
+body { background: rgb(228,228,228); margin:0; font-family:"Neue Montreal",sans-serif; color:#111; }
+.wp-nav { display:flex; justify-content:space-between; align-items:center; padding: 2rem 2rem 1rem; }
+.wp-nav a { text-decoration:none; color:#111; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; }
+.wp-logo { display:flex; align-items:center; gap:0.6rem; }
+.wp-logo img { width:2.2rem; height:2.2rem; animation:spin-logo-scroll linear; animation-timeline: scroll(root); }
+.wp-title { font-family:"Mixtape Extra Condensed", sans-serif; font-weight:800; font-size:6vw; line-height:0.9; margin:1rem 2rem 2rem; }
+.filters { display:flex; gap:1.5rem; margin: 0 2rem 3rem; flex-wrap:wrap; }
+.filter-btn { background:none; border:none; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; cursor:pointer; padding:0.4rem 0; border-bottom:2px solid transparent; color:#666; }
+.filter-btn.is-active { color:#111; border-bottom-color:#111; }
+.works-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; padding: 0 2rem 4rem; }
+@media (max-width:900px) { .works-grid { grid-template-columns:1fr 1fr; } .wp-title{font-size:12vw;} }
+@media (max-width:600px) { .works-grid { grid-template-columns:1fr; } }
+.work-card { text-decoration:none; color:inherit; display:block; opacity:1; transition:opacity .3s; }
+.work-card.is-hidden { display:none; }
+.work-card-img { width:100%; height:20rem; object-fit:cover; display:block; border-radius:0.3rem; }
+.work-card-info { display:flex; flex-direction:column; margin-top:0.6rem; }
+.work-card-title { font-weight:700; }
+.work-card-tag { opacity:0.65; font-size:0.9rem; }
+.work-modal { display:none; position:fixed; inset:0; background:rgba(20,20,20,0.92); z-index:100000; overflow-y:auto; }
+.work-modal.is-open { display:block; }
+.work-modal-inner { max-width:900px; margin:4rem auto; background:rgb(228,228,228); border-radius:0.6rem; position:relative; padding:2.5rem; }
+.work-modal-close { position:absolute; top:1.2rem; right:1.5rem; background:none; border:none; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; cursor:pointer; font-size:0.85rem; }
+.work-modal-media img { width:100%; border-radius:0.4rem; max-height:60vh; object-fit:cover; }
+.work-modal-body h2 { font-family:"Mixtape Extra Condensed",sans-serif; font-weight:800; font-size:3rem; margin:1.5rem 0 0.2rem; }
+.work-modal-tag { opacity:0.6; margin:0 0 1.5rem; }
+.work-modal-meta { display:flex; gap:2.5rem; margin-bottom:1.5rem; }
+.work-modal-meta span { display:block; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; font-size:0.75rem; opacity:0.6; }
+.work-modal-meta p { margin:0.2rem 0 0; font-weight:600; }
+.work-modal-info { line-height:1.6; }
+@keyframes spin-logo-scroll { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+<nav class="wp-nav">
+  <div class="wp-logo"><img src="../assets/logo-aetherstone.svg" alt="Aetherstone"><a href="../index.html">Aetherstone</a></div>
+  <div style="display:flex; gap:2rem;">
+    <a href="../index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="../index.html#contact">Contact</a>
+  </div>
+</nav>
+<h1 class="wp-title">Projets</h1>
+<div class="filters"><button class="filter-btn is-active" data-filter="Tous">Tous</button><button class="filter-btn" data-filter="Packaging">Packaging</button><button class="filter-btn" data-filter="Direction artistique">Direction artistique</button><button class="filter-btn" data-filter="Vidéoclip">Vidéoclip</button><button class="filter-btn" data-filter="Illustration">Illustration</button></div>
+<div class="works-grid">
+    <a href="#" class="work-card" data-cat="Packaging" data-modal="modal-moodgie">
+      <img src="../wf/works/moodgie.jpg" alt="Moodgie" loading="lazy" class="work-card-img">
+      <div class="work-card-info">
+        <span class="work-card-title">Moodgie</span>
+        <span class="work-card-tag">Packaging bougies premium</span>
+      </div>
+    </a>
+    <a href="#" class="work-card" data-cat="Direction artistique" data-modal="modal-ecurie33">
+      <img src="../wf/works/ecurie33.jpg" alt="Écurie 33" loading="lazy" class="work-card-img">
+      <div class="work-card-info">
+        <span class="work-card-title">Écurie 33</span>
+        <span class="work-card-tag">Breathing new life into an organic market</span>
+      </div>
+    </a>
+    <a href="#" class="work-card" data-cat="Packaging" data-modal="modal-tempo-dolce">
+      <img src="../wf/works/tempodolce.jpg" alt="Tempo Dolce" loading="lazy" class="work-card-img">
+      <div class="work-card-info">
+        <span class="work-card-title">Tempo Dolce</span>
+        <span class="work-card-tag">Packaging design, Brand identity</span>
+      </div>
+    </a>
+    <a href="#" class="work-card" data-cat="Illustration" data-modal="modal-thebus">
+      <img src="../wf/works/thebus.jpg" alt="The Bus" loading="lazy" class="work-card-img">
+      <div class="work-card-info">
+        <span class="work-card-title">The Bus</span>
+        <span class="work-card-tag">Œuvre miniature</span>
+      </div>
+    </a>
+    <a href="#" class="work-card" data-cat="Packaging" data-modal="modal-simo">
+      <img src="../wf/works/simo.jpg" alt="Simo" loading="lazy" class="work-card-img">
+      <div class="work-card-info">
+        <span class="work-card-title">Simo</span>
+        <span class="work-card-tag">Weaving artisan stories into a global brand</span>
+      </div>
+    </a>
+    <a href="#" class="work-card" data-cat="Vidéoclip" data-modal="modal-azzedine-alaia">
+      <img src="../wf/works/alaia.jpg" alt="Azzedine Alaïa" loading="lazy" class="work-card-img">
+      <div class="work-card-info">
+        <span class="work-card-title">Azzedine Alaïa</span>
+        <span class="work-card-tag">Mini-documentaire &amp; Motion Design</span>
+      </div>
+    </a>
+    <a href="#" class="work-card" data-cat="Vidéoclip" data-modal="modal-virgilabloh">
+      <img src="../wf/works/virgil.jpg" alt="Virgil was here" loading="lazy" class="work-card-img">
+      <div class="work-card-info">
+        <span class="work-card-title">Virgil was here</span>
+        <span class="work-card-tag">Kinetic Animation</span>
+      </div>
+    </a>
+    <a href="#" class="work-card" data-cat="Illustration" data-modal="modal-chez-stony">
+      <img src="../wf/works/chezstony.jpg" alt="Chez Stony" loading="lazy" class="work-card-img">
+      <div class="work-card-info">
+        <span class="work-card-title">Chez Stony</span>
+        <span class="work-card-tag">Reproduction miniature d&#x27;un dépanneur montréalais</span>
+      </div>
+    </a></div>
+
+    <div class="work-modal" id="modal-moodgie">
+      <div class="work-modal-inner">
+        <button class="work-modal-close" data-close>Close ×</button>
+        <div class="work-modal-media"><img src="../wf/works/moodgie.jpg" alt="Moodgie"></div>
+        <div class="work-modal-body">
+          <h2>Moodgie</h2>
+          <p class="work-modal-tag">Packaging bougies premium</p>
+          <div class="work-modal-meta">
+            <div><span>Client</span><p>Moodgie</p></div>
+            <div><span>Lieu</span><p>Montreal, Canada</p></div>
+            <div><span>Année</span><p>2024</p></div>
+          </div>
+          <p class="work-modal-info">L’objectif : repenser entièrement l’identité packaging et construire un système cohérent pour chaque bougie en format individuel ainsi qu’un pack de deux bougies. J’ai volontairement adopté une approche différente : au lieu d’utiliser des mockups standards, j’ai voulu créer une présentation qui m’appartient. J’ai donc conçu mes propres mockups en fabriquant le packaging en modèle 3D dans Blender, afin d’obtenir des visuels réalistes et contrôlés (angles, lumière, matière, détails). Une fois les </p>
+        </div>
+      </div>
+    </div>
+    <div class="work-modal" id="modal-ecurie33">
+      <div class="work-modal-inner">
+        <button class="work-modal-close" data-close>Close ×</button>
+        <div class="work-modal-media"><img src="../wf/works/ecurie33.jpg" alt="Écurie 33"></div>
+        <div class="work-modal-body">
+          <h2>Écurie 33</h2>
+          <p class="work-modal-tag">Breathing new life into an organic market</p>
+          <div class="work-modal-meta">
+            <div><span>Client</span><p>Écurie 33</p></div>
+            <div><span>Lieu</span><p>Montréal, Ca</p></div>
+            <div><span>Année</span><p>2025</p></div>
+          </div>
+          <p class="work-modal-info">Dans le cadre d’un projet scolaire, j’ai conçu l’identité visuelle et le site web du label musical Écurie 33, un projet fictif inspiré du monde des labels indépendants contemporains. L’objectif était de créer un univers digital qui reflète la singularité d’un label avant-gardiste, mêlant esthétique brute, sensibilité visuelle et narration immersive.J’ai abordé ce projet comme une expérience éditoriale en ligne, où le design et le rythme de navigation traduisent la personnalité du label. La direc</p>
+        </div>
+      </div>
+    </div>
+    <div class="work-modal" id="modal-tempo-dolce">
+      <div class="work-modal-inner">
+        <button class="work-modal-close" data-close>Close ×</button>
+        <div class="work-modal-media"><img src="../wf/works/tempodolce.jpg" alt="Tempo Dolce"></div>
+        <div class="work-modal-body">
+          <h2>Tempo Dolce</h2>
+          <p class="work-modal-tag">Packaging design, Brand identity</p>
+          <div class="work-modal-meta">
+            <div><span>Client</span><p>TEMPO DOLCE</p></div>
+            <div><span>Lieu</span><p>Montreal , Ca</p></div>
+            <div><span>Année</span><p>2026</p></div>
+          </div>
+          <p class="work-modal-info">Tempo Dolce est une capsule spéciale que j’ai conçue comme une expérience émotionnelle : un packaging qui ne se contente pas d’être beau, mais qui réveille un souvenir. Le projet s’inspire de l’héritage de Biscottificio Antonio Mattei, biscuiterie historique fondée à Prato (Toscane) en 1858,connue pour ses Biscotti di Prato.ConceptDans chaque packaging, j’ai intégré un qui mène à une page web : une se lance (narration + ambiance).L’audio place l’utilisateur dans la peau d’une personne, dans un ,</p>
+        </div>
+      </div>
+    </div>
+    <div class="work-modal" id="modal-thebus">
+      <div class="work-modal-inner">
+        <button class="work-modal-close" data-close>Close ×</button>
+        <div class="work-modal-media"><img src="../wf/works/thebus.jpg" alt="The Bus"></div>
+        <div class="work-modal-body">
+          <h2>The Bus</h2>
+          <p class="work-modal-tag">Œuvre miniature</p>
+          <div class="work-modal-meta">
+            <div><span>Client</span><p>The Bus</p></div>
+            <div><span>Lieu</span><p>Montreal, Canada</p></div>
+            <div><span>Année</span><p>2025</p></div>
+          </div>
+          <p class="work-modal-info">THE BUS, issu de la série « Terranova » — une plongée dans l&#x27;âme des quartiers pluriels de Montréal. Chaque miniature, aux dimensions de 45 cm × 28 cm pour une hauteur de 10 cm, révèle un univers de détails minutieux et d&#x27;une richesse saisissante.Ce que j&#x27;ai faitUn voyage au cœur de l&#x27;univers envoûtant de « THEBUS ». Façonnées avec une attention obsessionnelle au détail, ces pièces artisanales transportent le regard au cœur de l&#x27;énergie vibrante et foisonnante de la ville — où chaque recoin raco</p>
+        </div>
+      </div>
+    </div>
+    <div class="work-modal" id="modal-simo">
+      <div class="work-modal-inner">
+        <button class="work-modal-close" data-close>Close ×</button>
+        <div class="work-modal-media"><img src="../wf/works/simo.jpg" alt="Simo"></div>
+        <div class="work-modal-body">
+          <h2>Simo</h2>
+          <p class="work-modal-tag">Weaving artisan stories into a global brand</p>
+          <div class="work-modal-meta">
+            <div><span>Client</span><p>Simo</p></div>
+            <div><span>Lieu</span><p>Paris , France</p></div>
+            <div><span>Année</span><p>2019</p></div>
+          </div>
+          <p class="work-modal-info">Pour donner vie à cette vision, j&#x27;ai élaboré un guide de style de marque complet, définissant l&#x27;identité visuelle et le caractère de Simo Beer dans ses moindres détails. En parallèle, j&#x27;ai créé un design d&#x27;emballage dynamique et expressif, puisant son inspiration directement dans l&#x27;univers artistique de la marque — un packaging qui ne se contente pas de contenir une bière, mais qui raconte une histoire.More projectsSee all worksMoodgieMoodgieVirgil was hereVirgil was hereAzzedine AlaïaAzzedine A</p>
+        </div>
+      </div>
+    </div>
+    <div class="work-modal" id="modal-azzedine-alaia">
+      <div class="work-modal-inner">
+        <button class="work-modal-close" data-close>Close ×</button>
+        <div class="work-modal-media"><img src="../wf/works/alaia.jpg" alt="Azzedine Alaïa"></div>
+        <div class="work-modal-body">
+          <h2>Azzedine Alaïa</h2>
+          <p class="work-modal-tag">Mini-documentaire &amp; Motion Design</p>
+          <div class="work-modal-meta">
+            <div><span>Client</span><p>Azzedine Alaïa</p></div>
+            <div><span>Lieu</span><p>Montreal, CA</p></div>
+            <div><span>Année</span><p>2025</p></div>
+          </div>
+          <p class="work-modal-info">J’ai réalisé un mini-documentaire consacré à Azzedine Alaïa, avec l’objectif de produire une vidéo concise et impactante, capable de raconter un parcours et une vision créative à travers une narration claire et élégante. J’ai conçu l’ensemble comme un objet éditorial, en m’appuyant sur une hiérarchie typographique nette, un rythme maîtrisé (respirations, accents, transitions) et un montage fluide au service du récit. La direction artistique repose sur un habillage graphique cohérent et une typog</p>
+        </div>
+      </div>
+    </div>
+    <div class="work-modal" id="modal-virgilabloh">
+      <div class="work-modal-inner">
+        <button class="work-modal-close" data-close>Close ×</button>
+        <div class="work-modal-media"><img src="../wf/works/virgil.jpg" alt="Virgil was here"></div>
+        <div class="work-modal-body">
+          <h2>Virgil was here</h2>
+          <p class="work-modal-tag">Kinetic Animation</p>
+          <div class="work-modal-meta">
+            <div><span>Client</span><p>Virgil was here</p></div>
+            <div><span>Lieu</span><p>Montreal, Canada</p></div>
+            <div><span>Année</span><p>2025</p></div>
+          </div>
+          <p class="work-modal-info">L&#x27;objectif : transformer une phrase en expérience visuelle totale — faire de la typographie non plus un simple support de texte, mais un élément narratif à part entière, porteur de sens, de rythme et d&#x27;intention.J&#x27;ai conçu ce projet comme un objet éditorial contemporain, avec un travail approfondi sur la composition, la texture et la hiérarchie de lecture. Chaque mouvement a été chorégraphié au service du message : accélérations, respirations, ruptures et micro-mouvements — autant de choix pensé</p>
+        </div>
+      </div>
+    </div>
+    <div class="work-modal" id="modal-chez-stony">
+      <div class="work-modal-inner">
+        <button class="work-modal-close" data-close>Close ×</button>
+        <div class="work-modal-media"><img src="../wf/works/chezstony.jpg" alt="Chez Stony"></div>
+        <div class="work-modal-body">
+          <h2>Chez Stony</h2>
+          <p class="work-modal-tag">Reproduction miniature d&#x27;un dépanneur montréalais</p>
+          <div class="work-modal-meta">
+            <div><span>Client</span><p>Projet personnel</p></div>
+            <div><span>Lieu</span><p>Montréal, Canada</p></div>
+            <div><span>Année</span><p>2024</p></div>
+          </div>
+          <p class="work-modal-info">Ce projet est une reproduction miniature d’un dépanneur typique de Montréal, entièrement réalisée à la main. L’idée était simple : recréer l’ambiance réelle d’un commerce de quartier, avec ses étagères chargées, ses couleurs vives, ses petits détails et cette sensation familière que l’on retrouve en entrant dans un dépanneur.Chaque élément a été conçu avec soin. Les emballages ont été créés, imprimés, découpés et collés un par un. Les étagères, le comptoir, les affiches et la signalétique ont ét</p>
+        </div>
+      </div>
+    </div>
+<script>
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.work-card').forEach(card => {
+      card.classList.toggle('is-hidden', f !== 'Tous' && card.dataset.cat !== f);
+    });
+  });
+});
+document.querySelectorAll('.work-card').forEach(card => {
+  card.addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById(card.dataset.modal).classList.add('is-open');
+  });
+});
+document.querySelectorAll('[data-close]').forEach(btn => {
+  btn.addEventListener('click', () => btn.closest('.work-modal').classList.remove('is-open'));
+});
+document.querySelectorAll('.work-modal').forEach(m => {
+  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('is-open'); });
+});
+</script>
+</body>
+</html>
