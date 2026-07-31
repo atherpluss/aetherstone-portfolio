@@ -102,6 +102,22 @@
     return nodes;
   }
 
+  /* The "Site en français" / "Switch to english" links carry a Webflow
+     w--current class baked in at author-time (always on the English link),
+     which a global .text-mono.w--current{display:none} rule uses to hide
+     whichever locale link matches the current page. That class never
+     changed with our runtime toggle, so "Switch to english" stayed hidden
+     even once the page was actually showing French. Re-derive it from the
+     live language instead, via each link's hreflang, so only the language
+     you'd switch *to* is ever shown. */
+  function syncLocaleLinks(lang){
+    document.querySelectorAll('a[hreflang="en-US"], a[hreflang="fr-FR"]').forEach(function(a){
+      var isCurrent = (lang === 'fr' && a.hreflang === 'fr-FR') || (lang !== 'fr' && a.hreflang === 'en-US');
+      a.classList.toggle('w--current', isCurrent);
+      if(isCurrent){ a.setAttribute('aria-current', 'page'); } else { a.removeAttribute('aria-current'); }
+    });
+  }
+
   function applyLang(lang){
     walkableNodes(document.body).forEach(function(node){
       var parent = node.parentElement;
@@ -118,6 +134,7 @@
       }
     });
     document.documentElement.setAttribute('lang', lang === 'fr' ? 'fr-FR' : 'en-US');
+    syncLocaleLinks(lang);
   }
 
   function setLang(lang){
