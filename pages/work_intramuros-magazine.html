@@ -219,7 +219,7 @@ window.addEventListener('load', function () {
 .nav-menu_link{transform:translateY(120%);}
 .nav-menu_link_wrapper{text-decoration:none;color:inherit;}
 .nav-menu_link{white-space:nowrap;}
-.nav-menu_link_wrapper.hidden{display:flex!important;opacity:0;pointer-events:none;}
+@media (min-width:992px){.nav-menu_link_wrapper.hidden{display:flex;opacity:0;pointer-events:none;}}
 @media (hover:hover) and (min-width:992px){
   .nav-menu_link_wrapper .nav-menu_visual{width:0;min-width:0;opacity:0;margin-right:0;transition:width .5s cubic-bezier(.65,0,.35,1),opacity .3s ease,margin-right .5s cubic-bezier(.65,0,.35,1);}
   .nav-menu_link_wrapper:hover .nav-menu_visual{width:10.5rem;opacity:1;margin-right:.5rem;}
