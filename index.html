@@ -1670,16 +1670,22 @@ if (introTextElement) {
         var visual = w.querySelector('.home_services_visual_wrapper');
         var absLabel = w.querySelector('.home_services_list-item_absolute');
         w.addEventListener('mouseenter', function(){
-          wrappers.forEach(function(o){ o.style.opacity = (o === w) ? '1' : '0.15'; });
+          wrappers.forEach(function(o){ o.style.opacity = (o === w) ? '1' : '0.55'; });
           if(visual) visual.style.opacity = '1';
           if(absLabel) absLabel.style.opacity = '1';
         });
         w.addEventListener('mouseleave', function(){
-          w.style.opacity = '1';
+          wrappers.forEach(function(o){ o.style.opacity = '1'; });
           if(visual) visual.style.opacity = '0';
           if(absLabel) absLabel.style.opacity = '0';
         });
       });
+      var list = document.querySelector('.home_services_list');
+      if(list){
+        list.addEventListener('mouseleave', function(){
+          wrappers.forEach(function(o){ o.style.opacity = '1'; });
+        });
+      }
     })();
 
     // Rotating single city/time display, cycles every 5s
