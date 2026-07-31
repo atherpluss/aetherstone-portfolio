@@ -2021,6 +2021,7 @@ window.addEventListener('load', function () {
   }
   function setDark(dark){
     document.documentElement.classList.toggle('is-dark', dark);
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
     try{ localStorage.setItem('darkMode', dark ? 'enabled' : 'disabled'); }catch(e){}
     updateModeButtons(dark);
   }
@@ -2030,7 +2031,10 @@ window.addEventListener('load', function () {
     // the toggle never gets stuck showing the wrong state.
     try{
       var stored = localStorage.getItem('darkMode');
-      if(stored){ document.documentElement.classList.toggle('is-dark', stored === 'enabled'); }
+      if(stored){
+        document.documentElement.classList.toggle('is-dark', stored === 'enabled');
+        document.documentElement.setAttribute('data-theme', stored === 'enabled' ? 'dark' : 'light');
+      }
     }catch(e){}
     updateModeButtons(document.documentElement.classList.contains('is-dark'));
     document.querySelectorAll('#modeSwitch, #modeSwitch2').forEach(function(btn){
