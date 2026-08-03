@@ -7,6 +7,8 @@
 /shop             /pages/shop.html             301
 /legal            /pages/legal.html            301
 /work/:slug       /pages/work_:slug.html       301
+/journal          /pages/journal.html          301
+/journal/:slug    /pages/journal/:slug.html    301
 
 # Ancienne page d'accueil du template cloné.
 /index.raw-namma-source.html   /   301
