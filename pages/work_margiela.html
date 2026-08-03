@@ -81,7 +81,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
 <main class="page-main">
 <h1 class="section_hero-project heading-appear">Martin Margiela</h1>
 
-<section class="section_project"><div class="padding-global"><div class="container-large"><div class="project_visuals_wrapper"><div class="visual_wrapper-big grow-appear"><video src="../wf/works/margiela/hero-signature.mp4" autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="Martin Margiela"></video></div></div></div></div></section>
+<section class="section_project"><div class="padding-global"><div class="container-large"><div class="project_visuals_wrapper"><div class="visual_wrapper-big grow-appear"><video preload="none" data-lazysrc="../wf/works/margiela/hero-signature.mp4" autoplay loop muted playsinline preload="metadata" style="width:100%;display:block;" aria-label="Martin Margiela"></video></div></div></div></div></section>
 
 <section class="section_tagline"><div class="padding-global"><div class="container-large">
   <div class="project_tagline">Silence Was His Greatest Collection</div>
@@ -100,12 +100,12 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
 
 <section class="section_project gallery-block"><div class="padding-global"><div class="container-large">
   <div class="margiela-gifs">
-    <video src="../wf/works/margiela/gif-01.mp4" autoplay loop muted playsinline preload="metadata"></video>
-    <video src="../wf/works/margiela/gif-02.mp4" autoplay loop muted playsinline preload="metadata"></video>
-    <video src="../wf/works/margiela/gif-03.mp4" autoplay loop muted playsinline preload="metadata"></video>
-    <video src="../wf/works/margiela/gif-04.mp4" autoplay loop muted playsinline preload="metadata"></video>
-    <video src="../wf/works/margiela/gif-05.mp4" autoplay loop muted playsinline preload="metadata"></video>
-    <video src="../wf/works/margiela/gif-06.mp4" autoplay loop muted playsinline preload="metadata"></video>
+    <video preload="none" data-lazysrc="../wf/works/margiela/gif-01.mp4" autoplay loop muted playsinline preload="metadata"></video>
+    <video preload="none" data-lazysrc="../wf/works/margiela/gif-02.mp4" autoplay loop muted playsinline preload="metadata"></video>
+    <video preload="none" data-lazysrc="../wf/works/margiela/gif-03.mp4" autoplay loop muted playsinline preload="metadata"></video>
+    <video preload="none" data-lazysrc="../wf/works/margiela/gif-04.mp4" autoplay loop muted playsinline preload="metadata"></video>
+    <video preload="none" data-lazysrc="../wf/works/margiela/gif-05.mp4" autoplay loop muted playsinline preload="metadata"></video>
+    <video preload="none" data-lazysrc="../wf/works/margiela/gif-06.mp4" autoplay loop muted playsinline preload="metadata"></video>
   </div>
 </div></div></section>
 
@@ -588,6 +588,33 @@ document.getElementById('lightbox').addEventListener('click', function(e){
       })
       .finally(function(){ if(btn) btn.disabled = false; });
   });
+})();
+</script>
+
+<script>
+/* Chargement differe des videos de projet.
+   Elles sont en autoplay/loop : sans cela le navigateur telecharge chaque
+   fichier des l'ouverture de la page, soit plusieurs dizaines de Mo avant meme
+   que l'utilisateur ait fait defiler. On ne pose le src qu'a l'approche de
+   l'ecran. Filet de securite : si IntersectionObserver manque ou qu'une erreur
+   survient, tout est charge immediatement, donc jamais de video absente. */
+(function(){
+  var vids = [].slice.call(document.querySelectorAll('video[data-lazysrc]'));
+  if (!vids.length) return;
+  function load(v){
+    if (v.dataset.lazyloaded) return;
+    v.dataset.lazyloaded = '1';
+    v.src = v.dataset.lazysrc;
+    var p = v.play && v.play();
+    if (p && p.catch) p.catch(function(){});
+  }
+  if (!('IntersectionObserver' in window)) { vids.forEach(load); return; }
+  try {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
+    }, { rootMargin: '400px 0px' });
+    vids.forEach(function(v){ io.observe(v); });
+  } catch (err) { vids.forEach(load); }
 })();
 </script>
 </body>

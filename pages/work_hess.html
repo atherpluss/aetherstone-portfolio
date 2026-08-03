@@ -163,8 +163,8 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
       <div class="gallery_marquee_item"><img src="../wf/works/hess/post-3/12.webp" alt="HESS — identité visuelle HESS, visuel 36" loading="lazy" class="lightbox-trigger" decoding="async"></div>
       <div class="gallery_marquee_item"><img src="../wf/works/hess/post-3/13.webp" alt="HESS — identité visuelle HESS, visuel 37" loading="lazy" class="lightbox-trigger" decoding="async"></div>
       <div class="gallery_marquee_item"><img src="../wf/works/hess/post-3/14.webp" alt="HESS — identité visuelle HESS, visuel 38" loading="lazy" class="lightbox-trigger" decoding="async"></div>
-      <div class="gallery_marquee_item"><video src="../wf/works/hess/post-3/15.mp4" autoplay muted loop playsinline class="lightbox-trigger"></video></div>
-      <div class="gallery_marquee_item"><video src="../wf/works/hess/post-3/16.mp4" autoplay muted loop playsinline class="lightbox-trigger"></video></div>
+      <div class="gallery_marquee_item"><video preload="none" data-lazysrc="../wf/works/hess/post-3/15.mp4" autoplay muted loop playsinline class="lightbox-trigger"></video></div>
+      <div class="gallery_marquee_item"><video preload="none" data-lazysrc="../wf/works/hess/post-3/16.mp4" autoplay muted loop playsinline class="lightbox-trigger"></video></div>
     </div>
     <div class="gallery_marquee_track" aria-hidden="true">
       <div class="gallery_marquee_item"><img src="../wf/works/hess/post-3/01.webp" alt="HESS — identité visuelle HESS, visuel 39" loading="lazy" decoding="async"></div>
@@ -181,8 +181,8 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
       <div class="gallery_marquee_item"><img src="../wf/works/hess/post-3/12.webp" alt="HESS — identité visuelle HESS, visuel 50" loading="lazy" decoding="async"></div>
       <div class="gallery_marquee_item"><img src="../wf/works/hess/post-3/13.webp" alt="HESS — identité visuelle HESS, visuel 51" loading="lazy" decoding="async"></div>
       <div class="gallery_marquee_item"><img src="../wf/works/hess/post-3/14.webp" alt="HESS — identité visuelle HESS, visuel 52" loading="lazy" decoding="async"></div>
-      <div class="gallery_marquee_item"><video src="../wf/works/hess/post-3/15.mp4" autoplay muted loop playsinline></video></div>
-      <div class="gallery_marquee_item"><video src="../wf/works/hess/post-3/16.mp4" autoplay muted loop playsinline></video></div>
+      <div class="gallery_marquee_item"><video preload="none" data-lazysrc="../wf/works/hess/post-3/15.mp4" autoplay muted loop playsinline></video></div>
+      <div class="gallery_marquee_item"><video preload="none" data-lazysrc="../wf/works/hess/post-3/16.mp4" autoplay muted loop playsinline></video></div>
     </div>
   </div></div>
 </div></div></section>
@@ -692,6 +692,33 @@ document.getElementById('lightbox').addEventListener('click', function(e){
       })
       .finally(function(){ if(btn) btn.disabled = false; });
   });
+})();
+</script>
+
+<script>
+/* Chargement differe des videos de projet.
+   Elles sont en autoplay/loop : sans cela le navigateur telecharge chaque
+   fichier des l'ouverture de la page, soit plusieurs dizaines de Mo avant meme
+   que l'utilisateur ait fait defiler. On ne pose le src qu'a l'approche de
+   l'ecran. Filet de securite : si IntersectionObserver manque ou qu'une erreur
+   survient, tout est charge immediatement, donc jamais de video absente. */
+(function(){
+  var vids = [].slice.call(document.querySelectorAll('video[data-lazysrc]'));
+  if (!vids.length) return;
+  function load(v){
+    if (v.dataset.lazyloaded) return;
+    v.dataset.lazyloaded = '1';
+    v.src = v.dataset.lazysrc;
+    var p = v.play && v.play();
+    if (p && p.catch) p.catch(function(){});
+  }
+  if (!('IntersectionObserver' in window)) { vids.forEach(load); return; }
+  try {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
+    }, { rootMargin: '400px 0px' });
+    vids.forEach(function(v){ io.observe(v); });
+  } catch (err) { vids.forEach(load); }
 })();
 </script>
 </body>

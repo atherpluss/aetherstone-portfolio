@@ -87,7 +87,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
     <div class="gallery_marquee_track">
       <div class="gallery_marquee_item"><img src="../wf/works/casaboom-sousse/02-scroll-a.webp" alt="Casaboom Sousse — campagne Golf Bräu à Sousse, visuel 2" loading="lazy" class="lightbox-trigger" decoding="async"></div>
       <div class="gallery_marquee_item"><img src="../wf/works/casaboom-sousse/02-scroll-b.webp" alt="Casaboom Sousse — campagne Golf Bräu à Sousse, visuel 3" loading="lazy" class="lightbox-trigger" decoding="async"></div>
-      <div class="gallery_marquee_item"><video src="../wf/works/casaboom-sousse/02-scroll-e.mp4" autoplay muted loop playsinline class="lightbox-trigger"></video></div>
+      <div class="gallery_marquee_item"><video preload="none" data-lazysrc="../wf/works/casaboom-sousse/02-scroll-e.mp4" autoplay muted loop playsinline class="lightbox-trigger"></video></div>
       <div class="gallery_marquee_item"><img src="../wf/works/casaboom-sousse/02-scroll-c.webp" alt="Casaboom Sousse — campagne Golf Bräu à Sousse, visuel 4" loading="lazy" class="lightbox-trigger" decoding="async"></div>
       <div class="gallery_marquee_item"><img src="../wf/works/casaboom-sousse/02-scroll-d.webp" alt="Casaboom Sousse — campagne Golf Bräu à Sousse, visuel 5" loading="lazy" class="lightbox-trigger" decoding="async"></div>
       <div class="gallery_marquee_item"><img src="../wf/works/casaboom-sousse/02-scroll-f.webp" alt="Casaboom Sousse — campagne Golf Bräu à Sousse, visuel 6" loading="lazy" class="lightbox-trigger" decoding="async"></div>
@@ -95,7 +95,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
     <div class="gallery_marquee_track" aria-hidden="true">
       <div class="gallery_marquee_item"><img src="../wf/works/casaboom-sousse/02-scroll-a.webp" alt="Casaboom Sousse — campagne Golf Bräu à Sousse, visuel 7" loading="lazy" decoding="async"></div>
       <div class="gallery_marquee_item"><img src="../wf/works/casaboom-sousse/02-scroll-b.webp" alt="Casaboom Sousse — campagne Golf Bräu à Sousse, visuel 8" loading="lazy" decoding="async"></div>
-      <div class="gallery_marquee_item"><video src="../wf/works/casaboom-sousse/02-scroll-e.mp4" autoplay muted loop playsinline></video></div>
+      <div class="gallery_marquee_item"><video preload="none" data-lazysrc="../wf/works/casaboom-sousse/02-scroll-e.mp4" autoplay muted loop playsinline></video></div>
       <div class="gallery_marquee_item"><img src="../wf/works/casaboom-sousse/02-scroll-c.webp" alt="Casaboom Sousse — campagne Golf Bräu à Sousse, visuel 9" loading="lazy" decoding="async"></div>
       <div class="gallery_marquee_item"><img src="../wf/works/casaboom-sousse/02-scroll-d.webp" alt="Casaboom Sousse — campagne Golf Bräu à Sousse, visuel 10" loading="lazy" decoding="async"></div>
       <div class="gallery_marquee_item"><img src="../wf/works/casaboom-sousse/02-scroll-f.webp" alt="Casaboom Sousse — campagne Golf Bräu à Sousse, visuel 11" loading="lazy" decoding="async"></div>
@@ -606,6 +606,33 @@ document.getElementById('lightbox').addEventListener('click', function(e){
       })
       .finally(function(){ if(btn) btn.disabled = false; });
   });
+})();
+</script>
+
+<script>
+/* Chargement differe des videos de projet.
+   Elles sont en autoplay/loop : sans cela le navigateur telecharge chaque
+   fichier des l'ouverture de la page, soit plusieurs dizaines de Mo avant meme
+   que l'utilisateur ait fait defiler. On ne pose le src qu'a l'approche de
+   l'ecran. Filet de securite : si IntersectionObserver manque ou qu'une erreur
+   survient, tout est charge immediatement, donc jamais de video absente. */
+(function(){
+  var vids = [].slice.call(document.querySelectorAll('video[data-lazysrc]'));
+  if (!vids.length) return;
+  function load(v){
+    if (v.dataset.lazyloaded) return;
+    v.dataset.lazyloaded = '1';
+    v.src = v.dataset.lazysrc;
+    var p = v.play && v.play();
+    if (p && p.catch) p.catch(function(){});
+  }
+  if (!('IntersectionObserver' in window)) { vids.forEach(load); return; }
+  try {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
+    }, { rootMargin: '400px 0px' });
+    vids.forEach(function(v){ io.observe(v); });
+  } catch (err) { vids.forEach(load); }
 })();
 </script>
 </body>

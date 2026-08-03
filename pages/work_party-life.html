@@ -119,7 +119,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
 <section class="section_project gallery-block"><div class="padding-global"><div class="container-large">
   <div class="pl-row2">
     <div><img src="../wf/works/party-life/02-left.webp" alt="Party Life, détail de la pochette" class="lightbox-trigger" loading="lazy" decoding="async"></div>
-    <div><video src="../wf/works/party-life/03-video.mp4" autoplay loop muted playsinline class="lightbox-trigger"></video></div>
+    <div><video preload="none" data-lazysrc="../wf/works/party-life/03-video.mp4" autoplay loop muted playsinline class="lightbox-trigger"></video></div>
   </div>
 </div></div></section>
 
@@ -154,7 +154,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
 </div></div></section>
 
 <section class="section_project gallery-block"><div class="padding-global"><div class="container-large">
-  <video src="../wf/works/party-life/12-site-demo.mp4" autoplay loop muted playsinline class="lightbox-trigger" style="width:100%;display:block;border-radius:0.2rem;"></video>
+  <video preload="none" data-lazysrc="../wf/works/party-life/12-site-demo.mp4" autoplay loop muted playsinline class="lightbox-trigger" style="width:100%;display:block;border-radius:0.2rem;"></video>
 </div></div></section>
 
 <section class="section_project gallery-block"><div class="padding-global"><div class="container-large">
@@ -653,6 +653,33 @@ document.getElementById('lightbox').addEventListener('click', function(e){
       })
       .finally(function(){ if(btn) btn.disabled = false; });
   });
+})();
+</script>
+
+<script>
+/* Chargement differe des videos de projet.
+   Elles sont en autoplay/loop : sans cela le navigateur telecharge chaque
+   fichier des l'ouverture de la page, soit plusieurs dizaines de Mo avant meme
+   que l'utilisateur ait fait defiler. On ne pose le src qu'a l'approche de
+   l'ecran. Filet de securite : si IntersectionObserver manque ou qu'une erreur
+   survient, tout est charge immediatement, donc jamais de video absente. */
+(function(){
+  var vids = [].slice.call(document.querySelectorAll('video[data-lazysrc]'));
+  if (!vids.length) return;
+  function load(v){
+    if (v.dataset.lazyloaded) return;
+    v.dataset.lazyloaded = '1';
+    v.src = v.dataset.lazysrc;
+    var p = v.play && v.play();
+    if (p && p.catch) p.catch(function(){});
+  }
+  if (!('IntersectionObserver' in window)) { vids.forEach(load); return; }
+  try {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
+    }, { rootMargin: '400px 0px' });
+    vids.forEach(function(v){ io.observe(v); });
+  } catch (err) { vids.forEach(load); }
 })();
 </script>
 </body>
