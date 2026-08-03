@@ -14,7 +14,7 @@
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   # CSP : 'unsafe-inline' reste nécessaire tant que les scripts et styles sont
   # embarqués dans les pages. Le durcir suppose de les externaliser d'abord.
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://player.vimeo.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; font-src 'self'; connect-src 'self' https://formsubmit.co https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com; frame-src https://player.vimeo.com; base-uri 'self'; form-action 'self' https://formsubmit.co https://checkout.stripe.com; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://player.vimeo.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; font-src 'self'; connect-src 'self' https://formsubmit.co https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com; frame-src https://player.vimeo.com https://splendid-kitsune-85e291.netlify.app; base-uri 'self'; form-action 'self' https://formsubmit.co https://checkout.stripe.com; object-src 'none'; upgrade-insecure-requests
 
 # Assets versionnés/immuables : cache long.
 /wf/*
