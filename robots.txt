@@ -1,0 +1,15 @@
+# Aetherstone — https://nadhemhsini.online
+#
+# Cloudflare ajoute automatiquement un bloc « Managed content » AVANT ce
+# fichier (signaux de contenu, blocage des robots d'entraînement IA). C'est
+# normal : les deux groupes `User-agent: *` se cumulent, les règles ci-dessous
+# restent appliquées.
+
+User-agent: *
+Allow: /
+
+# Fichiers de travail : jamais destinés à l'indexation.
+Disallow: /_quarantine/
+Disallow: /index.raw-namma-source.html
+
+Sitemap: https://nadhemhsini.online/sitemap.xml

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Page not found — Aetherstone</title>
+<meta name="robots" content="noindex, follow"/>
+<meta name="description" content="This page does not exist. Head back to the Aetherstone homepage or browse the projects."/>
+<link rel="shortcut icon" href="/wf/68d6a3c20fb6a2c34c5b6c90_favicon-aetherstone.png" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="/wf/68d6a3aa8f8e464b573255e9_webclip-aetherstone.png"/>
+<link href="/css/main.css" rel="stylesheet" type="text/css"/>
+<script>
+  // Respecte le theme choisi par le visiteur, comme le reste du site.
+  try { if (localStorage.getItem('darkMode') === 'enabled') document.documentElement.classList.add('is-dark'); } catch (e) {}
+</script>
+<style>
+  html, body { margin:0; height:100%; background:var(--light,#e4e4e4); color:var(--dark,#111); }
+  html.is-dark body { background:var(--dark,#111); color:var(--light,#e4e4e4); }
+  .nf { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+        gap:1.5rem; padding:2rem; text-align:center; font-family:Mixtape, Verdana, sans-serif; }
+  .nf_code { font-family:"Mixtape Extra Condensed", sans-serif; font-weight:800; line-height:.85;
+             font-size:clamp(6rem, 26vw, 20rem); letter-spacing:-.02em; margin:0; }
+  .nf_msg  { font-size:clamp(1rem,2.2vw,1.4rem); max-width:34ch; margin:0; opacity:.75; }
+  .nf_links { display:flex; flex-wrap:wrap; gap:.75rem; justify-content:center; margin-top:.5rem; }
+  .nf_link { font-family:"Gt Pressura Mono", monospace; font-size:.8rem; letter-spacing:.1em;
+             text-transform:uppercase; text-decoration:none; color:inherit;
+             border:1px solid currentColor; border-radius:.4rem; padding:.7rem 1.2rem;
+             transition:background-color .25s ease, color .25s ease; }
+  .nf_link:hover { background:currentColor; }
+  .nf_link:hover span { mix-blend-mode:difference; }
+  .nf_link:focus-visible { outline:2px solid #0000ff; outline-offset:3px; }
+</style>
+</head>
+<body>
+  <main class="nf">
+    <h1 class="nf_code">404</h1>
+    <p class="nf_msg">This page doesn’t exist — it may have moved, or the link may be wrong.</p>
+    <nav class="nf_links" aria-label="Suggestions">
+      <a class="nf_link" href="/"><span>Home</span></a>
+      <a class="nf_link" href="/pages/works.html"><span>Projects</span></a>
+      <a class="nf_link" href="/pages/approach.html"><span>Approach</span></a>
+      <a class="nf_link" href="/pages/shop.html"><span>Shop</span></a>
+    </nav>
+  </main>
+</body>
+</html>

@@ -1,0 +1,5 @@
+
+# Assets non référencés, mis de côté avant suppression — jamais déployés.
+_quarantine/
+# Copie brute du template d'origine, gardée pour référence locale uniquement.
+index.raw-namma-source.html

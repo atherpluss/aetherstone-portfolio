@@ -3,8 +3,9 @@
 <head><script>try{if(localStorage.getItem('darkMode')==='enabled'){document.documentElement.classList.add('is-dark');}}catch(e){}</script>
 
 <meta charset="utf-8">
-<title>Shop — Aetherstone</title>
-<link href="../css/main.css" rel="stylesheet" type="text/css">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<title>Shop: Aetherstone</title>
+<link rel="preload" href="../wf/68396a14a9b4604f87fdbba4_MixtapeExtraCondensed-ExtraBold.woff2" as="font" type="font/woff2" crossorigin/><link rel="preload" href="../wf/GTPressuraMonoLight-exact.woff2" as="font" type="font/woff2" crossorigin/><link href="../css/main.css" rel="stylesheet" type="text/css">
 <style>
 body { margin:0; }
 .container-large { padding-top: 0; }
@@ -14,6 +15,7 @@ body { margin:0; }
 .small-link .text-mono { transition: color .2s ease; }
 .small-link:hover .text-mono { color: var(--blue); }
 .cta_visual { width:7rem !important; }
+.cta_visual{ display:none !important; }
 .pg-hover-wrap { position:relative; }
 .pg-hover-badge { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#0000ff; color:#fff; font-family:"Mixtape Extra Condensed",sans-serif; font-weight:800; font-size:1rem; text-transform:uppercase; padding:0.6rem 1.3rem; border-radius:5px; pointer-events:none; opacity:0; transition:opacity 0.2s ease; white-space:nowrap; z-index:10; }
 </style>
@@ -32,46 +34,473 @@ body { margin:0; }
   .nav-menu_link_wrapper .nav-menu_visual{width:0;min-width:0;opacity:0;margin-right:0;transition:width .5s cubic-bezier(.65,0,.35,1),opacity .3s ease,margin-right .5s cubic-bezier(.65,0,.35,1);}
   .nav-menu_link_wrapper:hover .nav-menu_visual{width:10.5rem;opacity:1;margin-right:.5rem;}
 }
+@media (max-width:991px){.nav-menu_link_wrapper .nav-menu_visual{display:none;}.nav-menu_link_wrapper{margin-left:0;}}
 </style>
-</head>
+<style id="custom-cursor-global">
+*:not(input):not(textarea){ cursor:none !important; }
+#customCursorDot.is-light{ background:#8080ff !important; }
+</style>
+<style id="gallery-marquee-style">
+.gallery_marquee{ overflow:hidden; width:100%; border-radius:0.2rem; }
+.gallery_marquee_inner{ display:flex; width:max-content; animation: galleryMarqueeScroll 34s linear infinite; }
+.gallery_marquee:hover .gallery_marquee_inner{ animation-play-state:paused; }
+.gallery_marquee_track{ display:flex; gap:1rem; padding-right:1rem; }
+.gallery_marquee_item{ display:block; flex-shrink:0; width:24rem; height:16rem; border-radius:0.2rem; overflow:hidden; cursor:zoom-in; }
+.gallery_marquee_item img, .gallery_marquee_item video{ width:100%; height:100%; object-fit:cover; display:block; }
+@keyframes galleryMarqueeScroll{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+.gallery_marquee.is-reverse .gallery_marquee_inner{ animation-direction:reverse; }
+@media (max-width:479px){ .gallery_marquee_item{ width:15rem; height:10rem; } }
+</style>
+<style id="shop-styles">
+.shop_hero_marquee{ margin-top:1rem; margin-bottom:5rem; }
+.shop_hero_marquee .gallery_marquee_item{ width:19rem; height:25rem; border-radius:0.4rem; background:linear-gradient(160deg,#f5f0e4,#e6ddc9); }
+.shop_hero_marquee .gallery_marquee_item img{ object-fit:contain; padding:0; box-sizing:border-box; transform:scale(1.55); }
+.shop_hero_marquee .gallery_marquee_track .gallery_marquee_item:nth-child(1){ background:linear-gradient(160deg,#f8f4ea,#e9e0ca); }
+.shop_hero_marquee .gallery_marquee_track .gallery_marquee_item:nth-child(2){ background:linear-gradient(160deg,#f0e9d6,#ddd0b0); }
+.shop_hero_marquee .gallery_marquee_track .gallery_marquee_item:nth-child(3){ background:linear-gradient(160deg,#e6dbc0,#cfbd93); }
+.shop_hero_marquee .gallery_marquee_track .gallery_marquee_item:nth-child(4){ background:linear-gradient(160deg,#dccdac,#c1ac82); }
+.shop_hero_marquee .gallery_marquee_track .gallery_marquee_item:nth-child(5){ background:linear-gradient(160deg,#d2bf98,#b39d72); }
+.shop_hero_marquee .gallery_marquee_track .gallery_marquee_item:nth-child(6){ background:linear-gradient(160deg,#dccdac,#c1ac82); }
+.shop_hero_marquee .gallery_marquee_track .gallery_marquee_item:nth-child(7){ background:linear-gradient(160deg,#e6dbc0,#cfbd93); }
+.shop_hero_marquee .gallery_marquee_track .gallery_marquee_item:nth-child(8){ background:linear-gradient(160deg,#f0e9d6,#ddd0b0); }
+
+.shop_intro_component{ max-width:38rem; }
+.shop_intro_component p{ font-family:"Mixtape",Verdana,sans-serif; font-size:1.25rem; line-height:1.32; letter-spacing:-0.024em; margin-top:0.8rem; }
+
+.shop_products{ margin-top:1rem; margin-bottom:9rem; }
+.shop_grid{ display:grid; grid-template-columns:1fr 1fr; gap:3.5rem 2rem; margin-top:2.5rem; }
+@media (max-width:767px){ .shop_grid{ grid-template-columns:1fr; gap:3.5rem; } }
+
+.shop_card{ cursor:pointer; }
+.shop_card_media{ position:relative; width:100%; aspect-ratio:4/5; border-radius:0.4rem; overflow:hidden; }
+.shop_card_media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:0; box-sizing:border-box; transition:opacity .45s ease, transform .5s ease; transform:scale(1.5); }
+.shop_card_media img.is-back{ opacity:0; }
+@media (hover:hover){
+  .shop_card:hover .shop_card_media img.is-back{ opacity:1; }
+  .shop_card:hover .shop_card_media img.is-front{ opacity:0; }
+  .shop_card:hover .shop_card_media img{ transform:scale(1.55); }
+}
+@keyframes greyBreathe{
+  0%,100%{ background-position:28% 22%, 0 0; }
+  50%{ background-position:72% 78%, 0 0; }
+}
+.shop_card_media, .shop_modal_stage, .shop_modal_thumb, .cart_item_media{
+  background-color:#d9d8d5;
+  background-image:radial-gradient(circle, rgba(255,255,255,.85), rgba(255,255,255,0) 55%), linear-gradient(160deg,#e1dfdb,#c7c5c0);
+  background-size:170% 170%, 100% 100%;
+  animation:greyBreathe 9s ease-in-out infinite;
+}
+.shop_card_badge{ color:#3a3a38; border-color:rgba(58,58,56,.4); }
+.shop_card_media.bg-amber, .shop_modal_stage.bg-amber, .shop_modal_thumb.bg-amber, .cart_item_media.bg-amber{ background-color:#dbd6c8; background-image:radial-gradient(circle, rgba(255,251,240,.85), rgba(255,251,240,0) 55%), linear-gradient(160deg,#e4dece,#c9c2ae); }
+.shop_card_media.bg-forest, .shop_modal_stage.bg-forest, .shop_modal_thumb.bg-forest, .cart_item_media.bg-forest{ background-color:#d5dbd0; background-image:radial-gradient(circle, rgba(247,251,246,.85), rgba(247,251,246,0) 55%), linear-gradient(160deg,#dee3d9,#c2c9ba); }
+.shop_card_media.bg-rust, .shop_modal_stage.bg-rust, .shop_modal_thumb.bg-rust, .cart_item_media.bg-rust{ background-color:#ddd4c9; background-image:radial-gradient(circle, rgba(253,247,241,.85), rgba(253,247,241,0) 55%), linear-gradient(160deg,#e5ddd2,#cabfaf); }
+.shop_card_media.bg-azure, .shop_modal_stage.bg-azure, .shop_modal_thumb.bg-azure, .cart_item_media.bg-azure{ background-color:#d0d6d9; background-image:radial-gradient(circle, rgba(243,248,250,.85), rgba(243,248,250,0) 55%), linear-gradient(160deg,#dadfe1,#bcc5c8); }
+
+.shop_card_badge{ position:absolute; top:1rem; left:1rem; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; font-size:0.65rem; letter-spacing:.1rem; padding:0.35rem 0.75rem; border-radius:.5rem; border:1px solid currentColor; }
+.shop_card_info{ margin-top:1.1rem; }
+.shop_card_top_row{ display:flex; justify-content:space-between; align-items:baseline; gap:1rem; }
+.shop_card_name{ font-family:"Mixtape Extra Condensed",sans-serif; font-weight:800; text-transform:uppercase; font-size:2.1rem; line-height:0.95; margin:0; letter-spacing:-0.065em; }
+.shop_card_price{ font-family:"Gt Pressura Mono",monospace; font-size:1rem; white-space:nowrap; }
+.shop_card_tag{ font-family:"Gt Pressura Mono",monospace; font-size:.8rem; text-transform:uppercase; letter-spacing:.06rem; opacity:.55; margin-top:0.3rem; }
+.shop_card_footer{ margin-top:1.1rem; }
+.shop_add_btn{ background-color:var(--text); color:var(--background); text-transform:uppercase; border-radius:.5rem; padding:0.75rem 1.4rem; font-family:"Mixtape Extra Condensed",sans-serif; font-size:1.35rem; font-weight:800; letter-spacing:-.07rem; border:none; cursor:pointer; transition:opacity .2s ease; white-space:nowrap; }
+.shop_add_btn:hover{ opacity:.7; }
+.shop_add_btn.is-added{ background-color:#0000ff; color:#fff; }
+/* --- Etats des boutons (ajoutes le 2026-08-02) -----------------------------
+   Le repos ne change pas. On ajoute ce qui manquait : le bouton desactive
+   pendant la preparation du paiement, le retour d'appui au doigt, et un
+   contour visible au clavier. Sans etat desactive, un double-clic pouvait
+   lancer deux paiements. */
+.shop_add_btn:disabled, .checkout_submit:disabled{ opacity:.45; cursor:not-allowed; }
+.shop_add_btn:disabled:hover, .checkout_submit:disabled:hover{ opacity:.45; }
+.shop_add_btn:active:not(:disabled){ transform:scale(.97); }
+.shop_add_btn, .checkout_submit, .shop_size_btn{ transition:opacity .2s ease, transform .12s ease, background-color .2s ease, border-color .2s ease, color .2s ease; }
+.shop_size_btn:hover:not(.is-active){ border-color:var(--text); }
+.shop_size_btn:active{ transform:scale(.95); }
+.checkout_submit:not(:disabled):hover::after{ transform:translateX(.25rem); }
+.shop_add_btn:focus-visible, .shop_size_btn:focus-visible, .checkout_submit:focus-visible,
+.cart_checkout_btn:focus-visible, .checkout_modal_close:focus-visible{
+  outline:2px solid var(--blue, #0000ff); outline-offset:2px;
+}
+/* Le curseur personnalise masque le pointeur : sur un ecran tactile ces
+   boutons doivent redevenir normaux. */
+@media (hover:none), (pointer:coarse){
+  .shop_add_btn, .shop_size_btn, .checkout_submit{ cursor:pointer; }
+}
+
+.shop_modal{ display:none; position:fixed; inset:0; z-index:199000; align-items:center; justify-content:center; padding:2.5rem 1.2rem; }
+.shop_modal.is-open{ display:flex; }
+.shop_modal_backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.88); }
+.shop_modal_panel{ position:relative; background:var(--background); color:var(--text); max-width:64rem; width:100%; max-height:92vh; overflow-y:auto; border-radius:0.5rem; display:grid; grid-template-columns:1.1fr 1fr; }
+@media (max-width:767px){ .shop_modal_panel{ grid-template-columns:1fr; max-height:94vh; } }
+
+.shop_modal_gallery{ padding:1.5rem; display:flex; flex-direction:column; gap:0.7rem; }
+.shop_modal_stage{ position:relative; width:100%; aspect-ratio:1/1.05; border-radius:0.4rem; overflow:hidden; }
+.shop_modal_stage_track{ display:flex; flex-direction:column; height:300%; transition:transform 0.85s cubic-bezier(.65,0,.35,1); }
+.shop_modal_stage_slide{ height:33.3334%; width:100%; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.shop_modal_stage_slide img{ width:100%; height:100%; object-fit:contain; padding:0; box-sizing:border-box; transform:scale(1.45); }
+.shop_modal_thumbs{ display:flex; gap:0.6rem; }
+.shop_modal_thumb{ flex:1; aspect-ratio:1/1; border-radius:0.3rem; border:2px solid transparent; padding:2%; box-sizing:border-box; cursor:pointer; opacity:.55; transition:opacity .2s ease, border-color .2s ease; }
+.shop_modal_thumb.is-active{ opacity:1; border-color:var(--text); }
+.shop_modal_thumb img{ width:100%; height:100%; object-fit:contain; display:block; }
+
+.shop_modal_close{ position:absolute; top:1rem; right:1rem; z-index:2; background:var(--_theme---background); color:var(--_theme---text); border:1px solid rgba(128,128,128,.3); border-radius:999px; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; font-size:.75rem; padding:0.5rem 1rem; cursor:pointer; }
+.shop_modal_info{ padding:2.5rem 2.5rem 2.5rem 1.2rem; display:flex; flex-direction:column; }
+@media (max-width:767px){ .shop_modal_info{ padding:0.5rem 1.8rem 2rem; } }
+.shop_modal_badge{ font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; font-size:.7rem; letter-spacing:.1rem; opacity:.5; margin-bottom:0.6rem; }
+.shop_modal_name{ font-family:"Mixtape Extra Condensed",sans-serif; font-weight:800; text-transform:uppercase; font-size:2.8rem; line-height:0.9; margin:0 0 0.6rem; letter-spacing:-0.065em; }
+.shop_modal_price{ font-family:"Gt Pressura Mono",monospace; font-size:1.15rem; margin-bottom:1.1rem; }
+.shop_modal_desc{ font-family:"Mixtape",Verdana,sans-serif; font-size:1.1rem; line-height:1.32; letter-spacing:-0.024em; margin-bottom:1.4rem; }
+.shop_modal_meta{ font-family:"Gt Pressura Mono",monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.05rem; opacity:.5; margin-bottom:1.5rem; }
+
+.shop_size_row{ margin-bottom:1.4rem; }
+.shop_size_label{ font-family:"Gt Pressura Mono",monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.08rem; opacity:.55; margin-bottom:0.6rem; }
+.shop_size_options{ display:flex; gap:0.5rem; flex-wrap:wrap; }
+.shop_size_btn{ min-width:2.8rem; height:2.6rem; padding:0 0.5rem; border-radius:0.3rem; border:1px solid rgba(128,128,128,.35); background:none; color:inherit; font-family:"Gt Pressura Mono",monospace; font-size:.8rem; cursor:pointer; transition:all .15s ease; }
+.shop_size_btn.is-active{ background:var(--text); color:var(--background); border-color:var(--text); }
+
+.shop_qty_row{ display:flex; align-items:center; gap:1rem; margin-bottom:1.3rem; }
+.shop_qty_wrapper{ display:flex; align-items:center; border:1px solid rgba(128,128,128,.35); border-radius:999px; overflow:hidden; }
+.shop_qty_wrapper button{ background:none; border:none; width:2.4rem; height:2.4rem; font-size:1.2rem; cursor:pointer; color:inherit; font-family:"Gt Pressura Mono",monospace; }
+.shop_qty_wrapper span{ min-width:2rem; text-align:center; font-family:"Gt Pressura Mono",monospace; font-size:1.15rem; font-weight:600; }
+.shop_modal_add{ width:100%; margin-top:auto; }
+.shop_trust_row{ font-family:"Gt Pressura Mono",monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.04rem; opacity:.55; margin-top:1.2rem; line-height:1.5; }
+
+.cart_drawer{ position:fixed; inset:0; z-index:199000; display:none; }
+.cart_drawer.is-open{ display:block; }
+.cart_drawer_backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.5); }
+.cart_drawer_panel{ position:absolute; top:0; right:0; height:100%; width:min(26rem, 100vw); background:var(--background); color:var(--text); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .45s cubic-bezier(.65,0,.35,1); }
+.cart_drawer.is-open .cart_drawer_panel{ transform:translateX(0); }
+.cart_drawer_header{ display:flex; justify-content:space-between; align-items:center; padding:1.6rem 1.6rem 1.2rem; border-bottom:1px solid rgba(128,128,128,.2); }
+.cart_drawer_header h2{ font-family:"Mixtape Extra Condensed",sans-serif; font-weight:800; text-transform:uppercase; font-size:2rem; margin:0; letter-spacing:-0.065em; }
+.cart_drawer_close{ background:none; border:none; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; cursor:pointer; color:inherit; font-size:.78rem; }
+.cart_drawer_items{ flex:1; overflow-y:auto; padding:0.5rem 1.6rem; }
+.cart_item{ display:flex; gap:1rem; padding:1.2rem 0; border-bottom:1px solid rgba(128,128,128,.15); }
+.cart_item_media{ width:4.4rem; height:5.4rem; border-radius:0.3rem; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.cart_item_media img{ width:100%; height:100%; object-fit:contain; padding:10%; box-sizing:border-box; }
+.cart_item_body{ flex:1; display:flex; flex-direction:column; }
+.cart_item_top{ display:flex; justify-content:space-between; gap:0.5rem; }
+.cart_item_name{ font-family:"Mixtape Extra Condensed",sans-serif; font-weight:800; text-transform:uppercase; font-size:1.15rem; margin:0; line-height:1.05; letter-spacing:-0.065em; }
+.cart_item_size{ font-family:"Gt Pressura Mono",monospace; font-size:.72rem; text-transform:uppercase; opacity:.55; margin-top:0.2rem; }
+.cart_item_price{ font-family:"Gt Pressura Mono",monospace; font-size:.8rem; white-space:nowrap; }
+.cart_item_bottom{ display:flex; justify-content:space-between; align-items:center; margin-top:auto; }
+.cart_item_remove{ background:none; border:none; text-decoration:underline; font-family:"Gt Pressura Mono",monospace; font-size:.72rem; text-transform:uppercase; cursor:pointer; color:inherit; opacity:.55; padding:0; }
+.cart_item .shop_qty_wrapper button{ width:1.8rem; height:1.8rem; font-size:1rem; }
+.cart_empty{ text-align:center; padding:3.5rem 1rem; opacity:.55; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; font-size:.8rem; letter-spacing:.05rem; }
+.cart_drawer_footer{ padding:1.4rem 1.6rem 1.6rem; border-top:1px solid rgba(128,128,128,.2); }
+.cart_subtotal{ display:flex; justify-content:space-between; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; margin-bottom:1rem; font-size:.88rem; }
+.cart_checkout_btn{ width:100%; }
+.shop_cart_toggle{ cursor:pointer; margin-left:2rem; }
+
+.checkout_modal{ display:none; position:fixed; inset:0; z-index:199500; align-items:center; justify-content:center; padding:2rem 1.2rem; }
+.checkout_modal.is-open{ display:flex; }
+.checkout_modal_backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.88); }
+.checkout_modal_panel{ position:relative; background:var(--background); color:var(--text); max-width:30rem; width:100%; max-height:92vh; overflow-y:auto; padding:3rem 2.4rem 2.4rem; }
+.checkout_modal_close{ position:absolute; top:1.4rem; right:1.4rem; background:none; border:none; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; font-size:.72rem; cursor:pointer; color:inherit; opacity:.6; }
+.checkout_modal_panel h2{ font-family:"Mixtape Extra Condensed",sans-serif; font-weight:800; text-transform:uppercase; font-size:3rem; line-height:.9; margin:0 0 1.6rem; letter-spacing:-0.065em; }
+.checkout_summary{ border-top:1px solid rgba(128,128,128,.3); border-bottom:1px solid rgba(128,128,128,.3); padding:1rem 0; margin-bottom:1.8rem; font-family:"Gt Pressura Mono",monospace; font-size:.75rem; }
+.checkout_summary_line{ display:flex; justify-content:space-between; gap:1rem; padding:0.35rem 0; text-transform:uppercase; letter-spacing:.03rem; }
+.checkout_summary_total{ display:flex; justify-content:space-between; padding-top:0.7rem; margin-top:0.5rem; border-top:1px solid rgba(128,128,128,.3); font-weight:700; }
+.checkout_field{ margin-bottom:1.3rem; }
+.checkout_field label{ display:block; font-family:"Gt Pressura Mono",monospace; font-size:.65rem; letter-spacing:.1rem; text-transform:uppercase; opacity:.5; margin-bottom:.4rem; }
+.checkout_field input, .checkout_field textarea{ width:100%; box-sizing:border-box; background:none; border:none; border-bottom:1px solid rgba(128,128,128,.35); padding:.4rem 0; font-family:"Mixtape",Verdana,sans-serif; font-size:1.05rem; color:inherit; cursor:none; transition:border-color .2s ease; }
+.checkout_field input:focus, .checkout_field textarea:focus{ outline:none; border-bottom-color:var(--text); }
+.checkout_field select{ width:100%; box-sizing:border-box; background:none; border:none; border-bottom:1px solid rgba(128,128,128,.35); border-radius:0; padding:.4rem 0; font-family:"Mixtape",Verdana,sans-serif; font-size:1.05rem; color:inherit; cursor:pointer; transition:border-color .2s ease; -webkit-appearance:none; appearance:none; background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%); background-position:calc(100% - 9px) calc(50% + 1px),calc(100% - 4px) calc(50% + 1px); background-size:5px 5px,5px 5px; background-repeat:no-repeat; }
+.checkout_field select:focus{ outline:none; border-bottom-color:var(--text); }
+.checkout_field select option{ color:#111; background:#e4e4e4; }
+.checkout_row2{ display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+.checkout_submit{ display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none; border-top:1px solid rgba(128,128,128,.3); padding:1.1rem 0 0; margin-top:.4rem; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; font-size:.85rem; color:inherit; cursor:pointer; text-align:left; }
+.checkout_submit::after{ content:"\2192"; font-size:1.1rem; transition:transform .2s ease; }
+.checkout_submit:hover::after{ transform:translateX(.3rem); }
+.checkout_submit:disabled{ opacity:.5; cursor:default; }
+.checkout_status{ margin-top:.9rem; font-family:"Gt Pressura Mono",monospace; font-size:.75rem; letter-spacing:.03rem; text-transform:uppercase; }
+
+.email_modal{ display:none; position:fixed; inset:0; z-index:199500; background:rgba(0,0,0,.88); align-items:center; justify-content:center; padding:2rem; }
+.email_modal.is-open{ display:flex; }
+.email_modal_panel{ background:var(--background); color:var(--text); max-width:24rem; width:100%; padding:3rem 2.2rem 2.2rem; position:relative; }
+.email_modal_close{ position:absolute; top:1.4rem; right:1.4rem; background:none; border:none; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; font-size:.72rem; cursor:pointer; color:inherit; opacity:.6; }
+.email_modal_panel label{ display:block; font-family:"Gt Pressura Mono",monospace; font-size:.65rem; letter-spacing:.1rem; text-transform:uppercase; opacity:.5; margin-bottom:.4rem; }
+.email_modal_panel input, .email_modal_panel textarea{ width:100%; box-sizing:border-box; background:none; border:none; border-bottom:1px solid rgba(128,128,128,.35); padding:.4rem 0; font-family:"Mixtape",Verdana,sans-serif; font-size:1.05rem; color:inherit; cursor:none; margin-bottom:1.3rem; }
+.email_modal_send{ display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none; border-top:1px solid rgba(128,128,128,.3); padding:1.1rem 0 0; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; font-size:.85rem; color:inherit; cursor:pointer; text-align:left; }
+.email_modal_send::after{ content:"\2192"; font-size:1.1rem; transition:transform .2s ease; }
+.email_modal_send:hover::after{ transform:translateX(.3rem); }
+</style><meta name="description" content="La boutique Aetherstone : tirages, objets et éditions limitées issus des projets de Nadhem Hsini. Fabrication soignée, quantités restreintes."/><link rel="canonical" href="https://nadhemhsini.online/pages/shop.html"/><meta property="og:type" content="article"/><meta property="og:site_name" content="Aetherstone"/><meta property="og:locale" content="fr_CA"/><meta property="og:title" content="Shop: Aetherstone"/><meta property="og:description" content="La boutique Aetherstone : tirages, objets et éditions limitées issus des projets de Nadhem Hsini. Fabrication soignée, quantités restreintes."/><meta property="og:url" content="https://nadhemhsini.online/pages/shop.html"/><meta property="og:image" content="https://nadhemhsini.online/wf/works/alaia.webp"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Shop: Aetherstone"/><meta name="twitter:description" content="La boutique Aetherstone : tirages, objets et éditions limitées issus des projets de Nadhem Hsini. Fabrication soignée, quantités restreintes."/><meta name="twitter:image" content="https://nadhemhsini.online/wf/works/alaia.webp"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"pages/shop.html","url":"https://nadhemhsini.online/pages/shop.html","description":"La boutique Aetherstone : tirages, objets et éditions limitées issus des projets de Nadhem Hsini. Fabrication soignée, quantités restreintes.","inLanguage":"fr","isPartOf":{"@type":"WebSite","name":"Aetherstone","url":"https://nadhemhsini.online/"}}</script><link rel="icon" type="image/png" href="/wf/favicon-light-32.png" media="(prefers-color-scheme: light)"/><link rel="icon" type="image/png" href="/wf/favicon-dark-32.png" media="(prefers-color-scheme: dark)"/><link rel="apple-touch-icon" href="/wf/webclip-180.png"/></head>
 <body data-page="shop">
-<nav class="nav-top"><div class="padding-global"><div class="container-nav"><div class="nav-top_component"><div id="w-node-_8d2b6dfe-4d27-7773-74c8-ed61533a8e45-533a8e41" class="nav-top_left"><div class="nav-top_left_1" style="display:flex;flex-direction:row;align-items:center;gap:0.5rem;"><svg id="aetherLogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 595.28 595.28" style="width:4.6rem;height:4.6rem;flex-shrink:0;color:rgb(211,211,211);mix-blend-mode:difference;">
+<nav class="nav-top"><div class="padding-global"><div class="container-nav"><div class="nav-top_component"><div id="w-node-_8d2b6dfe-4d27-7773-74c8-ed61533a8e45-533a8e41" class="nav-top_left"><div class="nav-top_left_1" style="display:flex;flex-direction:row;align-items:center;gap:0.5rem;"><a href="../index.html" class="w-inline-block w--current" style="display:block;"><svg id="aetherLogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 595.28 595.28" style="width:4.6rem;height:4.6rem;flex-shrink:0;color:rgb(211,211,211);mix-blend-mode:difference;">
   <path fill="currentColor" d="M482.48,288.13c9.4,6.09-.2,15.82,5.4,20.37l12.54,10.2c1.76,1.43,3.41,2.77,5.36,3.94l8.42,5.06c2.2,1.32,1.32,4.45,1.17,6.49-.31,4.01-.09,7.98-1.44,11.79-1.23,3.48-6.05,4.44-9.05,2.61l-7.28-4.44c-2.14-1.31-4.21-3.21-6.22-4.81-1.83-1.45-3.36-3.63-5.48-4.69-1.52-.76-2.56,1.44-2.46,2.72.21,2.58.44,5.16-.57,7.46-.61,1.37-2.69.56-3.46-.18-2.12-2.05-3.27-4.27-3.03-7.26l.62-7.71c.22-2.74-1.4-4.22-3.16-5.77l-5.41-4.78c-6.86-6.06-13.45-11.92-20.7-17.53l-7.4-5.73-11.84-8.62c-4.55-3.31-9.37-5.88-14.81-7.5-1.72-.51-3.86-.06-5.33.9-5.65,3.7.82,14.1,3.09,18.2,1.9,3.43,4.34,5.14,8.04,6.45,16.9,6.01,33.94,24.05,43.61,39.04,8.47,13.13,15.24,28.29,18.29,43.72,1.68,8.52,2.45,19.07.28,27.55-1.19,4.64-3.82,9.14-7.13,12.58-2.85,2.96-6.39,5.01-9.97,7.03-1.88,1.07-4.41.33-6.39-.05-4.37-.83-8.13-1.86-11.96-4.14-4.91-2.93-5.36,9.37-2.9,15.15.59,1.38,2.77,3,1.66,5.12-.78,1.49-4.8-5.38-4.61-4.95l-2.84-6.47c-3.25-7.41,2.35-12.04-2.26-16.27-11.08-10.16-22.93-25.6-29.99-38.94-.86-1.63-2.35-3.11-3.81-4.67-.82,1.73-.89,3.48-.52,5.26.75,3.64.98,7.11,1.12,10.84l.45,11.71c.58,15.25,1.59,49.99,4.5,63.5.4,1.84.77,4.15.13,5.9l-10.95,6.38c-3.21,1.87-7.02-.31-8.06-3.59-.25-.8-1.66-2.42-2.35-1.97-2.05,1.34-2.56,3.91-3.5,6.08-4.37,10.14-14.71,18.72-26.75,15.3-4.7-1.34-9.58-7.16-11.37-11.34-3.88-9.05-4.5-12.81-6.11-22.42-1.35-8.06-1.84-16-2.55-24.15l-1.79-20.56c-.23-2.59-1.46-8.38-4.09-8.9-2.32-.46-5.83,6.08-7.18,8.17-1.43,5.06-2.41,9.97-3.25,15.21-3.19,19.95-16.51,38.39-31.77,51.08-15.81,13.14-46,26.46-65.3,14.87-5.15-3.09-8.13-5.78-10.57-11.49-3.3-7.75,1.94-18.13,6.84-23.43,8.71-9.41,17.32-12.91,30.07-14.98,10.87-1.77,21.73-2.54,32.71-2.14,2.58.09,4.57.43,6.17-2.38,1.29-2.26,2.88-4.91,3.93-7.46,3.49-8.5,9.32-23.3-1.99-28.14-6.96-2.97-17.73-.91-25.83-.04-7.19.78-25.1,4.94-31.03,8.01-3.1,1.61-6.49,3.1-9.11,5.39-5.39,4.72-11.33,7.76-18.34,9.33s-13.49,2.58-20.57,2.36c-12.45-.38-24.48-1.86-36.1-6.18l-7.45-2.76c-2.08-.77-4.08-1.59-6.02-2.61l-6.12-3.23c-15.32-8.08-38.12-26.7-33.62-46.25.75-3.26,7.08-8.93,3.51-9.34-7.08-.81-9.84,4.19-12.83-2.29-1.55-3.36-3.27-6.58-5.08-9.9-.94-1.74-1.56-3.9-.7-6.03,1.77-4.39,8.65-4.69,12.63-4.3,5.81.57,11.46.97,17.2,2.15,12.61,2.59,24.84,4.48,37.68,5.57,7.6.64,14.73,1.58,22.35,1.53,3.69-.02,14.05-1.36,13.83-6.63-.11-2.49-1.51-4.99-3.39-6.68-15.26,2.06-35.25-1.73-49.21-8.06-16.17-7.33-33.45-20.52-40.6-37.2-2-4.67-2.5-9.05-2.28-14,.17-3.78.81-6.8,2.71-10,1.48-2.5,2.94-4.61,5.4-6.3,2.99-2.05,6.09-3.35,9.96-3.66,11.12-.91,22.08,3.43,30.16,11.11,4.02,3.82,6.99,7.81,9.86,12.5,5.39,8.81,10.01,17.69,13.67,27.39.75,2,2.19,3.6,4.44,3.71l9.83.48c7.16.35,22.23-1.11,24.4-9.31,1.15-4.35-.37-8.7-2.48-12.31-7.73.85-8.15.16-14.64-3.51-11.08-6.27-30.77-26.47-38.38-36.74l-10.52-14.2c-2-2.7-2.62-5.5-5.25-5.37-3.05.15-1.83,9.84-5.41,10.03-1.37.07-5.78-4.23-3.36-10.32l2.41-6.05c.46-1.16-.32-3.56-1.13-4.59l-8.16-10.37c-4.03-5.12-8.33-9.61-13.13-14.05-1.3-1.2-.73-3.48-.2-4.93l3.81-10.36c.5-1.36,2.11-2.84,3.21-3.4,1.27-.64,3.88-.5,5.17.46,3.83,2.85,7.24,5.92,10.15,9.64l7.37,9.42c.79,1.01,2.74-1.34,2.87-2.36.26-2.06.74-4.3,1.67-6.03.37-.69,2.56-.8,3.17-.36s1.3,1.46,1.67,2.4c3.35,8.59-5.68,11.73-1.09,18.08l10.81,14.98c6.43,8.9,13.29,17.18,20.6,25.38l8.52,9.54c3.32,3.71,6.97,6.63,11.11,9.36,2.66,1.75,5.67,2.15,7.86-.9,3.49-4.87,1.74-11.26-2.88-14.99-2.11-1.7-3.53-4.95-4.36-7.51l-4.54-14-9.34-31.86-15.69-57.41c-2.02-7.41-3.84-14.29-6.16-21.53-.4-1.24-1.68-3.57-.6-4.75,2.96-3.23,5.73-5.98,8.94-9.03.74-.7,2.95-1.15,4.04-1.04,4,.38,6.94,11.98,7.88,15.28,1.25,4.37,2.82,8.62,3.7,13.07.77,3.88,1.1,7.42,2.62,11.41,2.01-.14,2.57-7.67,3.9-11.33,1.56-4.3,5.26-7.9,9.05-9.99,5.73-3.17,11.95-2.89,16.72,1.68,4.46,4.28,8.09,9.46,10.76,15.23s5.25,11.69,7.32,17.87l10.22,30.56c.98,2.93,2.2,5.46,3.45,8.34.28.65,1.45,1.57,2.11,1.65s2.09-.58,2.47-1.14c6.48-9.68-.94-17.18.24-31.96.7-8.8,2.49-17.05,5.85-25.15s5.61-13.11,10.43-20.11c9.84-14.27,25.41-28.19,42.7-32.26,4.94-1.16,9.31-.72,14.12.42,3.32.79,5.98,1.9,8.54,4.12,2.15,1.87,4.02,3.66,5.21,6.36,1.44,3.26,2.22,6.61,1.74,10.51-1.58,12.99-9.86,24.01-21.67,30.06s-24.08,9.37-36.89,11.96c-2.27.46-3.47,1.82-4.01,4.01-2.21,9.08-4.07,15.19-2.85,24.59.46,3.52,1.98,7.5,5.56,9.08,4.05,1.78,9,1.2,12.89-.63s6.71-4.18,9.69-6.82c3.69-3.26,4.04-5.12,5.88-4.64-1.96,7.68-1.77,2.71-4.88,9.22-.43.91-1.9,1.92-2.77,2.72l-3.79,3.54c-7.36,6.88-15.84,11.3-26.28,8.6-2.3-.6-5.26-1.63-6.94-3.13l-5.43-4.84c-2.89,1.32-.53,4-2.05,11.6-1.22,6.09-4.46,11.62-10.06,14.42-3.02,1.51-6.3,1.01-8.7-1.25-2.84-2.67-5.48-5.61-7.25-9.17-3.06-6.15-5.87-12.1-7.97-18.73l-12.27-38.58-2.9-8.29c-1.48-4.24-3.05-8.48-6.38-11.64-1.1-1.04-3.57-.03-4.42,1.13-2.22,3-3.68,6.45-4.33,10.28-1.83,10.74-1.81,15.49-.42,26.4.32,2.53.98,5.19,1.6,7.64l2.64,10.43c3.8,15.01,9.23,29.3,14.74,43.76,1.89,4.97,4.27,9.43,7.43,13.59,1.17,1.54,2.53,3.17.81,5.12-2.06,2.34-4.57,4.72-7.34,6.45-1.04.64-3.41.94-3.38,2.48.07,4.06,7.58,17.2.4,29.35,6.68,6.01,10.53,12.83,10.18,21.9-.22,5.79-2.3,9.38-5.83,13.83-7.11,8.95-6.45,6.18-16.97,11.21,6.23,4.9,11.55,10.21,13.72,17.74.98,3.39.01,6.97-2.52,9.28-7.06,6.46-5.5,3.59-11.49,6.02-.5.2-1.27.98-1.45,1.43-.22.54.93,1.79,1.52,1.97,10.4,3.15,19.84,7.85,28.21,14.78,7.38,6.11,13.58,15.81,10.69,25.4-.2.67.31,2.01.67,2.31,1.24,1.06,4.07-2.42,9.28-4.77,15.34-6.9,34.37-11.22,51.2-12.07,8.6-.44,16.3,2.61,22.3,8.52,4.85,4.78,3.51,8.63,6.09,8.85.76.06,2.34-1.02,2.45-1.9,1.06-8.32,5.24-15.6,12.44-20.08,2.92-1.82,6.98-2.82,10.26-1.49s5.15,4.37,6.73,7.17c5.89,10.45,7.17,35.41,7.97,47.84l1.34,20.86c.27,4.26.9,8.31,1.48,12.56.43,3.18,1.87,9.4,5.43,9.81,1.28.15,3.04-.68,4.13-1.64,4.78-4.2,7.4-9.85,9.65-15.72,3.59-9.34,4.82-19.37,4.43-29.47-.36-9.4-.22-18.51-1.25-27.8l-2.61-23.61c-.37-3.34-1.17-6.51-1.83-9.79-.62-3.02-1.84-5.65-3.45-8.32-2.35-3.89,3.18-5.7,7.44-7.87,1.86-.95,4.71-2.13,6.79-1.02l6.8,3.61c.41-1.32.33-2.89-.35-4.23-7.32-14.33-12.64-33.35-6.58-48.86,2.56-6.57,7.18-12.23,14.35-13.63,2.02-.39,4.25-.66,4.9-3.17-5.11-6.64-8.39-11.3-12-19.22-1.1-2.41-1.4-5.02-1.84-7.57-.75-4.35-1.01-8.72,1.58-12.67.53-.81,2.27-1.64,3.36-2.2.9-.47,2.36-2.73,1.3-3.33-2.84-1.63-5.61-2.72-8-4.74-2.23-1.89-4.33-3.76-6.28-5.99-5.59-6.4-8.7-14.27-10.88-22.48-3.97-14.9-1.2-31.66,15.36-36.35,5.32-1.51-4.5-5.64-2.58-12.27,1.01-3.5,2.88-7.19,5.08-10.08l12.99-17.09c1.18-1.55,1.32-3.94.58-5.69-.64-1.51-2.75-2.65-4.85-2.98-12.37-1.89-28.75,6.02-37.79,14.12-6.1,5.47-11.69,11.2-17.08,17.35l-2.94,3.36-8.35,9.61c-7.13,8.21-12.08,15.23-18.04,24.22-2,3.01-3.22,6.18-3.94,9.7-.28,1.36-1.62,2.82-3.14,2.31l-3.56-1.2c-3.41-1.15-7.18-1.94-9.77-4.8-2.09-2.31-3.7-5.72-3.77-8.94-.09-4.01,1.24-8.66,3.74-11.72,1.11-1.37,2.29-2.69,3.43-3.96l4.36-4.87,4.07-4.62,3.51-3.89c11.24-12.47,37.91-39.99,45.36-53.45,1.07-1.94,2.75-2.96,5-2.25,3.37,1.05,6.74,1.99,10.19,2.87,2.15.55,3.47,1.72,4.82,3.35,3.79,4.56-.19,6.93.78,9.27,1.12,2.7,9.74-5.97,24.28-3.58,13.31,2.19,22.71,16.32,17.46,26.36-1.21,2.31-2.47,4.95-3.99,7.01l-5.84,7.9c-.53.72-.79,2.59-.49,3.47.27.8,1.43,1.95,2.43,2.27,6.34,2.05,16.43-4.63,21.93-8,.34-.21,1.12-.12,1.44,0s.05,1.4-.27,1.65l-4.93,3.95c-5.33,4.27-10.42,7.67-16.93,9.86-.54.18-1.42,1.18-1.48,1.74-.25,2.56,4.01,1.18,9.41,7.85,3.83,4.73,5.98,10.16,6.46,16.26.1,1.24.66,3.61-.81,3.97-2.32.57-3.64-1.65-5.28-2.72-3.25-2.12-7.15-2.9-10.95-3.69-6.64-1.38-16.32-.58-22.14,3.05-5.04,3.14-7.07,8.61-5.2,14.14,1.06,3.13,2.85,5.93,5.75,7.56,5.32,3,12.25,3.07,18,1.45,13.72-3.88,20.02-14.78,32.28-22.52,16.52-10.42,35.67-7.28,48.03,7.54,7.24,8.67,9.72,14.33,12.73,25,1.03,3.64,1.1,7.77.69,11.51-1.24,11.28-15.94,17.49-23.75,14.42-3.21-1.26-4.81-4.74-6.12-7.67-1.47-3.3-.79-6.77,2.2-8.91,2.51-1.79,5.89-2.79,8.97-1.7,6.9,2.43,6.07,9.09,9.74,8.16.83-.21,1.52-2.28,1.54-3.2.19-11.52-9.1-24.41-19.94-28.03-8.24-2.75-16.67-1.33-22.91,4.67l-10.15,9.75c-4.91,4.72-10.32,8.94-16.57,11.85,0,0-6.69,1.44-6.04,3.47.11.34.83.93,1.2,1.07,7.48,2.93,12.77,5.67,19.47,10.07l6.97,4.58,6.87,4.86,5.56,4.14c1.66,1.24,3.24,2.51,4.81,3.86l4.68,4.04c1.77,1.52,3.45,2.94,5.08,4.65,1.3,1.36,3.05,2.8,4.77,3.33,3.22-3.4.23-5.65,1.58-10.94.18-.71,2.15-.99,2.78-.58ZM278.56,148.19c4.05-1.95,7.9-3.12,11.57-5.21,12.11-6.93,28.95-22.06,33.83-35.09.99-2.63-.09-6.93-3.26-7.13-6.46-.41-12.38,2.35-17.45,6.31-11.36,8.86-19.18,20.94-25.39,33.88l-2.19,4.57c-.29.6.04,2.03.53,2.36.41.28,1.89.53,2.37.3ZM153.31,312.04c1.81-1.87-.67-3.8-1.41-5.1-4.21-7.39-9.54-13.17-15.99-18.6-8.18-6.87-20.94-15.59-31.53-17.49-3.06-.55-7.3,1.46-6.76,4.93,1.02,6.57,4.84,12.04,9.84,16.4,11.32,9.88,25.16,15.89,39.76,19.4,1.86.45,4.58,2.02,6.1.46ZM463.07,422.11c.58.63,1.97,1.22,2.74,1.06.62-.13,1.64-1.14,1.87-1.73,2.03-5.27,1.43-10.25.47-15.53-1.43-7.78-4.03-14.66-7.29-21.85-5.31-11.71-12.2-22.07-20.52-31.87-5.01-5.9-9.83-11.45-15.8-16.37s-17.87-14.36-23.4-4.59c-1.76,3.1-2.93,7.13-2.66,10.88,1.46,19.64,17.11,44.21,29.33,59.26,4.17,5.13,8.42,9.6,13.01,14.28,1.03,1.05,2.68,2.64,4.14,2.04,6.85-2.81,13.42-.72,18.11,4.43ZM205.46,406.41c3.08-2.18,4.62-5.9,3.4-9.13-.79-2.09-2.05-4.45-3.56-6.04-10.11-10.73-36.28-15.18-50.61-16.99l-17.26-2.19c-7.17-.91-14.15-1.35-21.4-1.51-3.61-.08-7.61.59-10.51,2.3-2.49,1.47-3.81,4.4-2.91,6.92,1.45,4.07,3.97,7.61,7.26,10.36,8.51,7.1,18.56,12.32,29.17,15.32l6.5,1.84c12.48,3.52,27.21,4.69,40.15,4.23,6.99-.25,13.99-1.04,19.76-5.11ZM263.62,476.31c6.35-5.76,11.68-12.17,17.3-18.65.34-.39.49-1.55.39-2.02s-1.34-1.21-1.9-1.17c-12.07.91-23.57,4.9-34.2,10.61-6.53,3.5-12.11,7.66-17.77,12.41-3.11,2.61-5.93,5.95-7.12,9.91-.57,1.89,1.66,4.15,3.43,4.67,13.23,3.88,30.43-7.17,39.88-15.75Z"/>
-</svg><a href="../index.html" class="w-inline-block w--current" style="display:block;"></a></div><div class="nav-top_left_3 hide-mobile-landscape"><div id="modeSwitch" class="link is-mono"><div class="link_first"><div class="text-mono difference">Dark mode</div></div><div class="link_second"><div class="text-mono difference">Dark mode</div></div></div></div></div><div class="nav-top_middle has-cart"><div id="menuToggle" class="link is-mono"><div class="link_first"><div class="text-mono difference">Menu</div></div><div class="link_second"><div class="text-mono difference">Open</div></div></div><div id="modeSwitch2" class="show-mobile-landscape"></div></div><div class="nav-top_right hide-mobile-landscape"><div data-w-id="aec3b3b5-7411-c902-5605-0d159459a9a1" class="link is-mono"><div class="link_first"><div class="text-mono difference">Let&#x27;s talk!</div></div><div class="link_second"><div class="text-mono difference">Contact us</div></div></div></div></div></div></div></nav><section class="nav-menu" id="navMenuOverlay"><div class="padding-global"><div class="container-nav"><div class="nav-menu_component"><div class="nav-menu_col"><a href="../index.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/nadhem-portrait1.jpg');"></div><div class="nav-menu_link">Home</div></a><a href="works.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/works/ecurie33.jpg');"></div><div class="nav-menu_link">Projets</div></a><a href="shop.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/moodgie.jpg');"></div><div class="nav-menu_link">Shop</div></a></div><div class="nav-menu_col"><a href="#" class="nav-menu_link_wrapper hidden w-inline-block" tabindex="-1" aria-hidden="true"><div class="nav-menu_link">_</div></a><a href="mailto:atherpluss@gmail.com" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/nadhem-portrait2.jpg');"></div><div class="nav-menu_link">Contact</div></a><a href="approach.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/building-facade.jpg');"></div><div class="nav-menu_link">À propos</div></a></div></div></div></div></section><nav class="nav-bottom"><div class="padding-global is-nav"><div class="container-nav"><div class="nav-bottom_component"><div class="hide-tablet"><div class="text-mono difference">Aetherstone — Nadhem Hsini, independent creative.</div></div><div class="nav-bottom_right"><div class="cities_list"><div class="city_wrapper"><div id="citySwitchSingle" class="text-mono difference">Montreal, Canada</div><div id="timeSwitchSingle" class="text-mono difference">3:49 PM</div></div></div></div></div></div></div></nav>
+</svg></a></div><div class="nav-top_left_3 hide-mobile-landscape"><div id="modeSwitch" class="link is-mono"><div class="link_first"><div class="text-mono difference">Dark mode</div></div><div class="link_second"><div class="text-mono difference">Dark mode</div></div></div></div></div><div class="nav-top_middle has-cart"><div id="menuToggle" class="link is-mono"><div class="link_first"><div class="text-mono difference">Menu</div></div><div class="link_second"><div class="text-mono difference">Open</div></div></div><div id="cartToggle" class="link is-mono shop_cart_toggle"><div class="link_first"><div class="text-mono difference">Cart (<span id="cartCount">0</span>)</div></div><div class="link_second"><div class="text-mono difference">View cart</div></div></div><div id="modeSwitch2" class="show-mobile-landscape"></div></div><div class="nav-top_right hide-mobile-landscape"><div data-w-id="aec3b3b5-7411-c902-5605-0d159459a9a1" class="link is-mono"><div class="link_first"><div class="text-mono difference">Let&#x27;s talk!</div></div><div class="link_second"><div class="text-mono difference">Contact us</div></div></div></div></div></div></div></nav><section class="nav-menu" id="navMenuOverlay"><div class="padding-global"><div class="container-nav"><div class="nav-menu_component"><div class="nav-menu_col"><a href="../index.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/nadhem-portrait1.webp');"></div><div class="nav-menu_link">Home</div></a><a href="works.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/works/ecurie33.webp');"></div><div class="nav-menu_link">Projects</div></a><a href="shop.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/moodgie.webp');"></div><div class="nav-menu_link">Shop</div></a></div><div class="nav-menu_col"><a href="#" class="nav-menu_link_wrapper hidden w-inline-block" tabindex="-1" aria-hidden="true"><div class="nav-menu_link">_</div></a><a href="#" data-email-trigger class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/nadhem-portrait2.webp');"></div><div class="nav-menu_link">Contact</div></a><a href="approach.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/building-facade.webp');"></div><div class="nav-menu_link">About</div></a></div></div></div></div></section><nav class="nav-bottom"><div class="padding-global is-nav"><div class="container-nav"><div class="nav-bottom_component"><div class="hide-tablet"><div class="text-mono difference">Aetherstone, independent creative.</div></div><div class="nav-bottom_right"><div class="cities_list"><div class="city_wrapper"><div id="citySwitchSingle" class="text-mono difference">Montreal, Canada</div><div id="timeSwitchSingle" class="text-mono difference">3:49 PM</div></div></div></div></div></div></div></nav>
 <main class="page-main">
 
-<h1 class="section_hero-project" style="text-align:left; margin-left:5%; margin-right:5%;">Shop</h1>
+<h1 class="section_hero-project heading-appear" style="text-align:left; margin-left:5%; margin-right:5%;">Shop</h1>
 
-<section class="section_tagline"><div class="padding-global"><div class="container-large">
-  <div class="project_tagline shop_soon_tagline">Bientôt disponible — objets et éditions limitées en préparation.</div>
+<section class="section_project shop_hero_marquee"><div class="padding-global"><div class="container-large">
+  <div class="gallery_marquee"><div class="gallery_marquee_inner">
+    <div class="gallery_marquee_track">
+      <div class="gallery_marquee_item"><img src="../wf/shop/aether-market-a.webp" alt="Aether Market" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/aether-market-b.webp" alt="Aether Market" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/high-society-a.webp" alt="High Society" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/high-society-b.webp" alt="High Society" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/digital-cowboy-a.webp" alt="Digital Cowboy" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/digital-cowboy-b.webp" alt="Digital Cowboy" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/the-family-a.webp" alt="Bada Bing" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/the-family-b.webp" alt="Bada Bing" loading="lazy" decoding="async"></div>
+    </div>
+    <div class="gallery_marquee_track" aria-hidden="true">
+      <div class="gallery_marquee_item"><img src="../wf/shop/aether-market-a.webp" alt="Aether Market" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/aether-market-b.webp" alt="Aether Market" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/high-society-a.webp" alt="High Society" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/high-society-b.webp" alt="High Society" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/digital-cowboy-a.webp" alt="Digital Cowboy" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/digital-cowboy-b.webp" alt="Digital Cowboy" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/the-family-a.webp" alt="Bada Bing" loading="lazy" decoding="async"></div>
+      <div class="gallery_marquee_item"><img src="../wf/shop/the-family-b.webp" alt="Bada Bing" loading="lazy" decoding="async"></div>
+    </div>
+  </div></div>
+</div></div></section>
+
+<section class="section_intro"><div class="padding-global"><div class="container-large"><div class="intro_component is-project shop_intro_component">
+  <div class="text-mono_wrapper"><h2 class="text-mono">The Shop</h2></div>
+  <div>
+    <p>Une petite série de t-shirts dessinés comme des affiches, coupe oversize et coton épais. Produits en petites quantités, sans réassort garanti.</p>
+  </div>
+</div></div></div></section>
+
+<section class="shop_products"><div class="padding-global"><div class="container-large">
+  <div class="shop_grid" id="shopGrid">
+    <div class="shop_card" data-product="aether-market">
+      <div class="shop_card_media bg-amber">
+        <span class="shop_card_badge">Série limitée</span>
+        <img class="is-front" src="../wf/shop/aether-market-a.webp" alt="Aether Market" loading="lazy" decoding="async">
+        <img class="is-back" src="../wf/shop/aether-market-b.webp" alt="Aether Market: autre vue" loading="lazy" decoding="async">
+      </div>
+      <div class="shop_card_info">
+        <div class="shop_card_top_row">
+          <h3 class="shop_card_name">Aether Market</h3>
+          <div class="shop_card_price" data-price-cad="55">55 $ CAD</div>
+        </div>
+        <div class="shop_card_tag">Devanture de galerie, dos oversize</div>
+        <div class="shop_card_footer">
+          <button class="shop_add_btn" data-add-to-cart="aether-market">Add to cart</button>
+        </div>
+      </div>
+    </div>
+    <div class="shop_card" data-product="high-society">
+      <div class="shop_card_media bg-forest">
+        <span class="shop_card_badge">Série limitée</span>
+        <img class="is-front" src="../wf/shop/high-society-a.webp" alt="High Society" loading="lazy" decoding="async">
+        <img class="is-back" src="../wf/shop/high-society-b.webp" alt="High Society: autre vue" loading="lazy" decoding="async">
+      </div>
+      <div class="shop_card_info">
+        <div class="shop_card_top_row">
+          <h3 class="shop_card_name">High Society</h3>
+          <div class="shop_card_price" data-price-cad="55">55 $ CAD</div>
+        </div>
+        <div class="shop_card_tag">Pin-up vintage, lettrage fumée</div>
+        <div class="shop_card_footer">
+          <button class="shop_add_btn" data-add-to-cart="high-society">Add to cart</button>
+        </div>
+      </div>
+    </div>
+    <div class="shop_card" data-product="digital-cowboy">
+      <div class="shop_card_media bg-rust">
+        <span class="shop_card_badge">Série limitée</span>
+        <img class="is-front" src="../wf/shop/digital-cowboy-a.webp" alt="Digital Cowboy" loading="lazy" decoding="async">
+        <img class="is-back" src="../wf/shop/digital-cowboy-b.webp" alt="Digital Cowboy: autre vue" loading="lazy" decoding="async">
+      </div>
+      <div class="shop_card_info">
+        <div class="shop_card_top_row">
+          <h3 class="shop_card_name">Digital Cowboy</h3>
+          <div class="shop_card_price" data-price-cad="55">55 $ CAD</div>
+        </div>
+        <div class="shop_card_tag">Lettrage corde, ranch à deadlines</div>
+        <div class="shop_card_footer">
+          <button class="shop_add_btn" data-add-to-cart="digital-cowboy">Add to cart</button>
+        </div>
+      </div>
+    </div>
+    <div class="shop_card" data-product="bada-bing">
+      <div class="shop_card_media bg-azure">
+        <span class="shop_card_badge">Série limitée</span>
+        <img class="is-front" src="../wf/shop/the-family-a.webp" alt="Bada Bing" loading="lazy" decoding="async">
+        <img class="is-back" src="../wf/shop/the-family-b.webp" alt="Bada Bing: autre vue" loading="lazy" decoding="async">
+      </div>
+      <div class="shop_card_info">
+        <div class="shop_card_top_row">
+          <h3 class="shop_card_name">Bada Bing</h3>
+          <div class="shop_card_price" data-price-cad="55">55 $ CAD</div>
+        </div>
+        <div class="shop_card_tag">Portrait mob, oies en formation</div>
+        <div class="shop_card_footer">
+          <button class="shop_add_btn" data-add-to-cart="bada-bing">Add to cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div></div></section>
 
 <section class="section_cta"><div class="padding-global"><div class="container-large"><div class="cta_component">
   <div class="w-embed"><h2>Let's work<br><span class="cta_visual"></span>together</h2></div>
   <div class="cta_content">
     <p>Work with us if average isn't your thing.<br>Drop it, we'll build it!</p>
-    <a href="mailto:atherpluss@gmail.com" class="small-link"><div class="text-mono_wrapper"><div class="text-mono">Say hello</div></div><div class="small-link_arrow">→</div></a>
+    <a href="../index.html#contact" data-cta-contact class="small-link"><div class="text-mono_wrapper"><div class="text-mono">Say hello</div></div><div class="small-link_arrow">→</div></a>
   </div>
 </div></div></div></section>
 
 </main>
-<footer class="footer"><div class="padding-global"><div class="container-large"><div class="footer_component"><div class="footer_top"><div class="grow-appear"><div class="footer_top_video w-embed"><video style="width:100%;height:100%;object-fit: cover;" autoplay="" loop="" style="background-image:url(&quot;../wf/68dfa249c8ad1d2624abf3d5_Footer-Service-designV2-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-	<source src="wf/68dfa249c8ad1d2624abf3d5_Footer-Service-designV2-transcode.mp4" data-wf-ignore="true">
-</video></div></div><div class="grow-appear"><div class="footer_top_video w-embed"><video style="width:100%;height:100%;object-fit: cover;" autoplay="" loop="" style="background-image:url(&quot;../wf/68dfa1926bb2adbd4315d488_Zefir footerV2-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-	<source src="wf/68dfa1926bb2adbd4315d488_Zefir footerV2-transcode.mp4" data-wf-ignore="true">
-</video></div></div><div class="grow-appear"><div class="footer_top_video w-embed"><video style="width:100%;height:100%;object-fit: cover;" autoplay="" loop="" style="background-image:url(&quot;../wf/68dfa2440a49684a10b9e055_FOOTER - BRANDINGV2-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-	<source src="wf/68dfa2440a49684a10b9e055_FOOTER - BRANDINGV2-transcode.mp4" data-wf-ignore="true">
-</video></div></div><div class="grow-appear hide-mobile-landscape"><div class="footer_top_video w-embed"><video style="width:100%;height:100%;object-fit: cover;" autoplay="" loop="" style="background-image:url(&quot;../wf/68dfa20fc54b7796aaa5edf6_SILVR-Video 1 footersV3-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-	<source src="wf/68dfa20fc54b7796aaa5edf6_SILVR-Video 1 footersV3-transcode.mp4" data-wf-ignore="true">
-</video></div></div><div class="grow-appear hide-mobile-landscape"><div class="footer_top_video w-embed"><video style="width:100%;height:100%;object-fit: cover;" autoplay="" loop="" style="background-image:url(&quot;../wf/68dfa0feb2681e0616dc3b3a_Footer-supercomics-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-	<source src="wf/68dfa0feb2681e0616dc3b3a_Footer-supercomics-transcode.mp4" data-wf-ignore="true">
-</video></div></div><div class="grow-appear hide-tablet"><div class="footer_top_video w-embed"><video style="width:100%;height:100%;object-fit: cover;" autoplay="" loop="" style="background-image:url(&quot;../wf/68dfa22f852959114b6c7b56_OSOL-COVER-footer-V2-poster-00001.jpg&quot;)" muted="" playsinline="" data-wf-ignore="true" data-object-fit="cover">
-	<source src="wf/68dfa22f852959114b6c7b56_OSOL-COVER-footer-V2-transcode.mp4" data-wf-ignore="true">
-</video></div></div></div><div class="footer_content"><div class="footer_main"><div class="footer_menu _2col-mobile"><div class="footer_menu_col">
+
+<div class="shop_modal" id="shopModal">
+  <div class="shop_modal_backdrop" data-modal-close></div>
+  <div class="shop_modal_panel">
+    <button class="shop_modal_close" data-modal-close>Close ×</button>
+    <div class="shop_modal_gallery">
+      <div class="shop_modal_stage" id="modalStage">
+        <div class="shop_modal_stage_track" id="modalStageTrack">
+          <div class="shop_modal_stage_slide"><img id="modalStageImgA" src="" alt="" loading="lazy" decoding="async"></div>
+          <div class="shop_modal_stage_slide"><img id="modalStageImgB" src="" alt="" loading="lazy" decoding="async"></div>
+          <div class="shop_modal_stage_slide" aria-hidden="true"><img id="modalStageImgA2" src="" alt="" loading="lazy" decoding="async"></div>
+        </div>
+      </div>
+      <div class="shop_modal_thumbs">
+        <button type="button" class="shop_modal_thumb is-active" id="modalThumbBtnA" data-view="a"><img id="modalThumbA" src="" alt="" loading="lazy" decoding="async"></button>
+        <button type="button" class="shop_modal_thumb" id="modalThumbBtnB" data-view="b"><img id="modalThumbB" src="" alt="" loading="lazy" decoding="async"></button>
+      </div>
+    </div>
+    <div class="shop_modal_info">
+      <div class="shop_modal_badge">Série limitée, imprimée à la commande</div>
+      <h2 class="shop_modal_name" id="modalName"></h2>
+      <div class="shop_modal_price" id="modalPrice"></div>
+      <p class="shop_modal_desc" id="modalDesc"></p>
+      <div class="shop_modal_meta">Coupe oversize, col haut · Coton biologique · Impression DTF recto-verso</div>
+      <div class="shop_size_row">
+        <div class="shop_size_label">Taille</div>
+        <div class="shop_size_options" id="modalSizes">
+          <button type="button" class="shop_size_btn" data-size="S">S</button>
+          <button type="button" class="shop_size_btn" data-size="M">M</button>
+          <button type="button" class="shop_size_btn" data-size="L">L</button>
+          <button type="button" class="shop_size_btn" data-size="XL">XL</button>
+          <button type="button" class="shop_size_btn" data-size="XXL">XXL</button>
+        </div>
+      </div>
+      <div class="shop_qty_row">
+        <div class="shop_qty_wrapper">
+          <button type="button" data-qty-minus aria-label="Moins">−</button>
+          <span id="modalQty">1</span>
+          <button type="button" data-qty-plus aria-label="Plus">+</button>
+        </div>
+      </div>
+      <button class="shop_add_btn shop_modal_add" id="modalAddBtn">Add to cart</button>
+      <div class="shop_trust_row">Imprimé à la commande &middot; Expédié sous 5 à 10 jours ouvrables &middot; Stanley/Stella, coton biologique</div>
+    </div>
+  </div>
+</div>
+
+<div class="cart_drawer" id="cartDrawer">
+  <div class="cart_drawer_backdrop" data-cart-close></div>
+  <div class="cart_drawer_panel">
+    <div class="cart_drawer_header">
+      <h2>Cart</h2>
+      <button class="cart_drawer_close" data-cart-close>Close ×</button>
+    </div>
+    <div class="cart_drawer_items" id="cartItems"></div>
+    <div class="cart_drawer_footer">
+      <div class="cart_subtotal"><span>Subtotal</span><span id="cartSubtotal">0 $ CAD</span></div>
+      <button class="shop_add_btn cart_checkout_btn" id="checkoutBtn">Checkout</button>
+    </div>
+  </div>
+</div>
+
+<div class="checkout_modal" id="checkoutModal">
+  <div class="checkout_modal_backdrop" data-checkout-close></div>
+  <div class="checkout_modal_panel">
+    <button class="checkout_modal_close" data-checkout-close>Close ×</button>
+    <h2>Checkout</h2>
+    <div class="checkout_summary" id="checkoutSummary"></div>
+    <form id="checkoutForm">
+      <input type="hidden" name="_subject" value="Nouvelle commande Aetherstone Shop">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="Commande" id="checkoutOrderField">
+      <div class="checkout_field">
+        <label>Nom complet</label>
+        <input type="text" name="Nom" required>
+      </div>
+      <div class="checkout_row2">
+        <div class="checkout_field">
+          <label>Courriel</label>
+          <input type="email" name="Email" required>
+        </div>
+        <div class="checkout_field">
+          <label>Téléphone</label>
+          <input type="tel" name="Téléphone">
+        </div>
+      </div>
+      <div class="checkout_field">
+        <label>Adresse de livraison</label>
+        <input type="text" name="Adresse" required placeholder="Rue, appartement">
+      </div>
+      <div class="checkout_row2">
+        <div class="checkout_field">
+          <label>Ville</label>
+          <input type="text" name="Ville" required>
+        </div>
+        <div class="checkout_field">
+          <label>Code postal</label>
+          <input type="text" name="Code postal" required>
+        </div>
+      </div>
+      <div class="checkout_row2">
+        <div class="checkout_field">
+          <label>Pays</label>
+          <select name="Pays" id="coPays" required>
+            <option value="CA" selected>Canada</option>
+            <option value="US">&Eacute;tats-Unis</option>
+            <option value="FR">France</option>
+            <option value="BE">Belgique</option>
+            <option value="CH">Suisse</option>
+            <option value="GB">Royaume-Uni</option>
+            <option value="ES">Espagne</option>
+            <option value="DE">Allemagne</option>
+          </select>
+        </div>
+        <div class="checkout_field" id="coProvinceWrap">
+          <label id="coProvinceLabel">Province</label>
+          <select name="Province" id="coProvince"></select>
+        </div>
+      </div>
+      <div class="checkout_field">
+        <label>Note (optionnel)</label>
+        <textarea name="Note" rows="2"></textarea>
+      </div>
+      <button type="submit" class="checkout_submit" id="checkoutSubmitBtn"><span>Confirmer la commande</span></button>
+      <div class="checkout_status" id="checkoutStatus"></div>
+    </form>
+  </div>
+</div>
+
+<div class="email_modal" id="emailModal">
+  <div class="email_modal_panel">
+    <button class="email_modal_close" data-email-close>Close ×</button>
+    <div class="text-mono" style="font-size:.75rem;letter-spacing:.1rem;text-transform:uppercase;opacity:.55;margin-bottom:.75rem;">Send an email</div>
+    <form id="emailModalForm" method="post" action="https://formsubmit.co/ajax/2395635cegep@gmail.com">
+      <input type="hidden" name="_subject" value="Quick message (Aetherstone Shop)">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <label>Your email</label>
+      <input type="email" name="Email" required>
+      <label>Message</label>
+      <textarea name="Message" required rows="3"></textarea>
+      <button type="submit" class="email_modal_send">Send</button>
+      <div id="emailModalStatus" class="text-mono" style="margin-top:.8rem;font-size:.75rem;"></div>
+    </form>
+  </div>
+</div>
+
+
+<footer class="footer"><div class="padding-global"><div class="container-large"><div class="footer_component"><div class="footer_content"><div class="footer_main"><div class="footer_menu _2col-mobile"><div class="footer_menu_col">
 <a href="../index.html" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="text-mono">Home</div></div><div class="link_second"><div class="text-mono">Home</div></div></a>
-<a href="works.html" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="text-mono">Projets</div></div><div class="link_second"><div class="text-mono">Projets</div></div></a>
+<a href="works.html" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="text-mono">Projects</div></div><div class="link_second"><div class="text-mono">Projects</div></div></a>
 <a href="shop.html" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="text-mono">Shop</div></div><div class="link_second"><div class="text-mono">Shop</div></div></a>
-</div><div class="footer_menu_col"><a href="https://www.instagram.com/nadhem_ath/" target="_blank" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">Instagram</div></div></div><div class="link_second"><div class="text-mono">Instagram</div></div></a><a href="https://www.behance.net/athertn" target="_blank" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">Behance</div></div></div><div class="link_second"><div class="text-mono">Behance</div></div></a><a href="legal.html" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">Legal</div></div></div><div class="link_second"><div class="text-mono">Legal</div></div></a></div></div><div class="footer_menu"><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">I am an independent brand designer based between Tunis &amp; Paris.</div></div></div><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Big project? Crazy thought? Or just feel like chatting?</div></div></div><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Let&#x27;s talk!</div></div></div><div class="footer_menu_col"><a data-cursor-hover="Send love" href="mailto:atherpluss@gmail.com" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="text-appear"><div class="text-mono">atherpluss@gmail.com</div></div></div><div class="link_second"><div class="text-mono">atherpluss@gmail.com</div></div></a></div><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Copyright 2026</div></div><div class="text-appear"><div class="text-mono">Aetherstone</div></div></div></div></div></div><div class="footer_logo_wrapper" style="overflow-anchor:none;"><div class="footer_logo_fill w-embed" style="overflow-anchor:none;"><div class="logo-instance"><svg class="footer_logo" width="100%" height="100%" viewBox="0 0 762.07 225.49" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M59.04,4.74h63.23l40.81,215.99h-48.28l-6.54-45.08h-37.38l-6.54,45.08H18.24L59.04,4.74ZM102.34,132.92l-12.46-86.12-12.77,86.12h25.23Z" fill="currentColor"/><path d="M167.9,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M287.04,47.46h-28.35V4.74h103.42v42.73h-28.35v173.26h-46.72V47.46Z" fill="currentColor"/><path d="M447.3,133.25h-31.15v87.47h-46.72V4.74h46.72v85.79h31.15V4.74h46.72v215.99h-46.72v-87.47Z" fill="currentColor"/><path d="M513.18,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M616.12,4.74h57c37.69,0,64.79,29.27,64.79,69.98,0,22.2-8.41,40.71-21.8,52.82l26.48,93.19h-49.22l-19.31-78.72h-11.21v78.72h-46.72V4.74ZM690.88,75.72c0-18.84-8.41-32.3-20.25-32.3h-7.79v63.58h7.16c12.15,0,20.87-13.12,20.87-31.29Z" fill="currentColor"/></svg></div></div><div class="footer_logo_stretch w-embed" style="overflow-anchor:none;"><div class="logo-instance" style="height:0px;overflow:hidden;overflow-anchor:none;transform-origin:top;"><svg width="100%" height="100%" viewBox="0 0 762.07 225.49" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M59.04,4.74h63.23l40.81,215.99h-48.28l-6.54-45.08h-37.38l-6.54,45.08H18.24L59.04,4.74ZM102.34,132.92l-12.46-86.12-12.77,86.12h25.23Z" fill="currentColor"/><path d="M167.9,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M287.04,47.46h-28.35V4.74h103.42v42.73h-28.35v173.26h-46.72V47.46Z" fill="currentColor"/><path d="M447.3,133.25h-31.15v87.47h-46.72V4.74h46.72v85.79h31.15V4.74h46.72v215.99h-46.72v-87.47Z" fill="currentColor"/><path d="M513.18,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M616.12,4.74h57c37.69,0,64.79,29.27,64.79,69.98,0,22.2-8.41,40.71-21.8,52.82l26.48,93.19h-49.22l-19.31-78.72h-11.21v78.72h-46.72V4.74ZM690.88,75.72c0-18.84-8.41-32.3-20.25-32.3h-7.79v63.58h7.16c12.15,0,20.87-13.12,20.87-31.29Z" fill="currentColor"/></svg></div></div></div></div></div></div></footer>
+</div><div class="footer_menu_col"><a href="https://www.instagram.com/nadhem_hsini?igsh=ZTZzbmdhOHdteDJn&amp;utm_source=qr" target="_blank" rel="noopener noreferrer" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">Instagram</div></div></div><div class="link_second"><div class="text-mono">Instagram</div></div></a><a href="https://www.behance.net/athertn" target="_blank" rel="noopener noreferrer" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">Behance</div></div></div><div class="link_second"><div class="text-mono">Behance</div></div></a><a href="https://youtube.com/@atherstone2590?si=jlftRjqkU-Ipe2TB" target="_blank" rel="noopener noreferrer" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">YouTube</div></div></div><div class="link_second"><div class="text-mono">YouTube</div></div></a><a href="legal.html" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">Legal</div></div></div><div class="link_second"><div class="text-mono">Legal</div></div></a></div></div><div class="footer_menu"><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Independent multidisciplinary designer based in Montréal, working with clients worldwide.</div></div></div><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Whether it&#x27;s a new brand, a fresh direction, or simply an idea worth exploring, let&#x27;s talk.</div></div></div><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Let&#x27;s talk!</div></div></div><div class="footer_menu_col"><a data-cursor-hover="Send love" href="#" data-email-trigger class="link is-mono-footer w-inline-block"><div class="link_first"><div class="text-appear"><div class="text-mono">Email</div></div></div><div class="link_second"><div class="text-mono">Email</div></div></a></div><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Copyright 2026</div></div><div class="text-appear"><div class="text-mono">Aetherstone</div></div></div></div></div></div><div class="footer_logo_wrapper" style="overflow-anchor:none;"><div class="footer_logo_fill w-embed" style="overflow-anchor:none;"><div class="logo-instance"><svg class="footer_logo" width="100%" height="100%" viewBox="0 0 762.07 225.49" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M59.04,4.74h63.23l40.81,215.99h-48.28l-6.54-45.08h-37.38l-6.54,45.08H18.24L59.04,4.74ZM102.34,132.92l-12.46-86.12-12.77,86.12h25.23Z" fill="currentColor"/><path d="M167.9,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M287.04,47.46h-28.35V4.74h103.42v42.73h-28.35v173.26h-46.72V47.46Z" fill="currentColor"/><path d="M447.3,133.25h-31.15v87.47h-46.72V4.74h46.72v85.79h31.15V4.74h46.72v215.99h-46.72v-87.47Z" fill="currentColor"/><path d="M513.18,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M616.12,4.74h57c37.69,0,64.79,29.27,64.79,69.98,0,22.2-8.41,40.71-21.8,52.82l26.48,93.19h-49.22l-19.31-78.72h-11.21v78.72h-46.72V4.74ZM690.88,75.72c0-18.84-8.41-32.3-20.25-32.3h-7.79v63.58h7.16c12.15,0,20.87-13.12,20.87-31.29Z" fill="currentColor"/></svg></div></div><div class="footer_logo_stretch w-embed" style="overflow-anchor:none;"><div class="logo-instance" style="height:0px;overflow:hidden;overflow-anchor:none;transform-origin:top;"><svg width="100%" height="100%" viewBox="0 0 762.07 225.49" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M59.04,4.74h63.23l40.81,215.99h-48.28l-6.54-45.08h-37.38l-6.54,45.08H18.24L59.04,4.74ZM102.34,132.92l-12.46-86.12-12.77,86.12h25.23Z" fill="currentColor"/><path d="M167.9,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M287.04,47.46h-28.35V4.74h103.42v42.73h-28.35v173.26h-46.72V47.46Z" fill="currentColor"/><path d="M447.3,133.25h-31.15v87.47h-46.72V4.74h46.72v85.79h31.15V4.74h46.72v215.99h-46.72v-87.47Z" fill="currentColor"/><path d="M513.18,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M616.12,4.74h57c37.69,0,64.79,29.27,64.79,69.98,0,22.2-8.41,40.71-21.8,52.82l26.48,93.19h-49.22l-19.31-78.72h-11.21v78.72h-46.72V4.74ZM690.88,75.72c0-18.84-8.41-32.3-20.25-32.3h-7.79v63.58h7.16c12.15,0,20.87-13.12,20.87-31.29Z" fill="currentColor"/></svg></div></div></div></div></div></div></footer>
 
 <script>
 (function(){
@@ -117,7 +546,7 @@ body { margin:0; }
   // Custom blue circle cursor
   var cursorDot = document.createElement('div');
     cursorDot.id = 'customCursorDot';
-    cursorDot.style.cssText = 'position:fixed; top:0; left:0; width:16px; height:16px; border-radius:50%; background:#0000ff; color:#fff; z-index:13000; pointer-events:none; opacity:0; display:flex; align-items:center; justify-content:center; text-align:center; font-family:"Mixtape Extra Condensed",sans-serif; font-weight:900; text-transform:uppercase; font-size:2rem; letter-spacing:-0.03rem; white-space:nowrap; padding:0; transform:translate(-50%,-50%); transition:width 0.2s ease, height 0.2s ease, border-radius 0.2s ease, padding 0.2s ease, opacity 0.25s ease, background-color 0.2s ease; will-change:transform;';
+    cursorDot.style.cssText = 'position:fixed; top:0; left:0; width:16px; height:16px; border-radius:50%; background:#0000ff; color:#fff; z-index:200001; pointer-events:none; opacity:1; display:flex; align-items:center; justify-content:center; text-align:center; font-family:"Mixtape Extra Condensed",sans-serif; font-weight:900; text-transform:uppercase; font-size:2rem; letter-spacing:-0.03rem; white-space:nowrap; padding:0; transform:translate(-50%,-50%); transition:width 0.2s ease, height 0.2s ease, border-radius 0.2s ease, padding 0.2s ease, opacity 0.25s ease, background-color 0.2s ease; will-change:transform;';
     document.body.appendChild(cursorDot);
     document.addEventListener('mousemove', function(e){
       cursorDot.style.left = e.clientX + 'px';
@@ -138,9 +567,28 @@ body { margin:0; }
         cursorDot.style.height = '16px';
         cursorDot.style.borderRadius = '50%';
         cursorDot.style.padding = '0';
-        cursorDot.style.opacity = '0';
+        cursorDot.style.opacity = '1';
       });
     });
+
+    // Generic lighten-on-hover for clickable elements without a dedicated cursor interaction
+    document.addEventListener('mouseover', function(e){
+      var el = e.target.closest('a, button, [role="button"], .lightbox-trigger, input[type="submit"]');
+      if(!el) return;
+      if(el.hasAttribute('data-cursor-hover')) return;
+      if(el.closest('.pg-hover-wrap')) return;
+      cursorDot.classList.add('is-light');
+    });
+    document.addEventListener('mouseout', function(e){
+      var el = e.target.closest('a, button, [role="button"], .lightbox-trigger, input[type="submit"]');
+      if(!el) return;
+      if(el.hasAttribute('data-cursor-hover')) return;
+      if(el.closest('.pg-hover-wrap')) return;
+      var to = e.relatedTarget;
+      if(to && el.contains(to)) return;
+      cursorDot.classList.remove('is-light');
+    });
+
 
   // Menu toggle: dynamic fullscreen menu (same as home page)
   var toggle = document.getElementById('menuToggle');
@@ -150,7 +598,7 @@ body { margin:0; }
     m.id = 'dynNavMenu';
     m.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgb(228,228,228);z-index:99999;display:flex;align-items:center;';
     m.innerHTML = '<div style="display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1rem;width:100%;height:100%;padding:0 8vw;box-sizing:border-box;">' +
-      '<a href="works.html" style="font-family:\'Mixtape Extra Condensed\',sans-serif;font-weight:800;font-size:9vw;line-height:0.9;text-transform:uppercase;color:#111;text-decoration:none;">Projets</a>' +
+      '<a href="works.html" style="font-family:\'Mixtape Extra Condensed\',sans-serif;font-weight:800;font-size:9vw;line-height:0.9;text-transform:uppercase;color:#111;text-decoration:none;">Projects</a>' +
       '<a href="shop.html" style="font-family:\'Mixtape Extra Condensed\',sans-serif;font-weight:800;font-size:9vw;line-height:0.9;text-transform:uppercase;color:#111;text-decoration:none;">Shop</a>' +
       '<a href="../index.html#contact" style="cursor:pointer;font-family:\'Mixtape Extra Condensed\',sans-serif;font-weight:800;font-size:9vw;line-height:0.9;text-transform:uppercase;color:#111;text-decoration:none;">Contact</a>' +
       '<div id="closeDynMenu" style="position:absolute;top:2rem;right:2rem;font-family:\'Gt Pressura Mono\',monospace;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;font-size:0.9rem;">Close</div>' +
@@ -161,6 +609,15 @@ body { margin:0; }
     return m;
   }
   function openMenu(){ if(!menu){ menu = buildMenu(); } menu.style.display='flex'; document.body.style.overflow='hidden'; }
+    // Le menu etait construit au premier clic : creation du DOM, parsing d'un
+    // gros innerHTML et premiere mise en page d'une typo en 9vw, tout ca
+    // pendant que le doigt attend. On le prepare pendant un temps mort pour
+    // que la premiere ouverture soit immediate.
+    (function preBuildMenu(){
+      var build = function(){ if(!menu){ menu = buildMenu(); menu.style.display = 'none'; } };
+      if ('requestIdleCallback' in window) requestIdleCallback(build, { timeout: 3000 });
+      else setTimeout(build, 1500);
+    })();
   function closeMenu(){ if(menu){ menu.style.display='none'; } document.body.style.overflow=''; }
   if(toggle){
     toggle.addEventListener('click', function(){
@@ -213,6 +670,11 @@ body { margin:0; }
 
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/CustomEase.min.js"></script>
+<script src="../js/favicon.js"></script><script id="aether-i18n-script" src="../js/i18n.js"></script><script src="../js/scroll-animations.js"></script>
+<script src="../js/currency.js"></script>
 
 
 
@@ -254,7 +716,7 @@ body { margin:0; }
   }
 })();
 </script>
-<script id="aether-i18n-script" src="../js/i18n.js"></script>
+
 <script>
 (function(){
   function init(){
@@ -342,5 +804,462 @@ body { margin:0; }
   }
 })();
 </script>
-</body>
+
+<script id="shop-cart-script">
+(function(){
+  var PRODUCTS = [
+    { id:"aether-market", name:"Aether Market", tag:"Devanture de galerie, dos oversize", price:55, cls:"bg-amber",
+      desc:"Le d\u00e9panneur du coin, r\u00e9invent\u00e9 en galerie d'art. S\u00e9rigraphie d\u00e9taill\u00e9e au dos, macaron discret c\u00f4t\u00e9 c\u0153ur.",
+      imgA:"../wf/shop/aether-market-a.webp", imgB:"../wf/shop/aether-market-b.webp" },
+    { id:"high-society", name:"High Society", tag:"Pin-up vintage, lettrage fum\u00e9e", price:55, cls:"bg-forest",
+      desc:"Une pin-up vintage sur un lettrage fum\u00e9e. Second degr\u00e9 assum\u00e9, fit oversize.",
+      imgA:"../wf/shop/high-society-a.webp", imgB:"../wf/shop/high-society-b.webp" },
+    { id:"digital-cowboy", name:"Digital Cowboy", tag:"Lettrage corde, ranch \u00e0 deadlines", price:55, cls:"bg-rust",
+      desc:"L'artiste multidisciplinaire, version cow-boy connect\u00e9. Lettrage corde, grand imprim\u00e9 au dos.",
+      imgA:"../wf/shop/digital-cowboy-a.webp", imgB:"../wf/shop/digital-cowboy-b.webp" },
+    { id:"bada-bing", name:"Bada Bing", tag:"Portrait mob, oies en formation", price:55, cls:"bg-azure",
+      desc:"Un clin d'\u0153il second degr\u00e9 \u00e0 l'ambiance mafieuse en chemise \u00e0 fleurs, collage graphique au dos.",
+      imgA:"../wf/shop/the-family-a.webp", imgB:"../wf/shop/the-family-b.webp" }
+  ];
+  var SIZES = ["S","M","L","XL","XXL"];
+  var DEFAULT_SIZE = "M";
+  var PRODUCTS_BY_ID = {};
+  PRODUCTS.forEach(function(p){ PRODUCTS_BY_ID[p.id] = p; });
+
+  // Prices are stored in CAD (the shop's native currency); fmtPrice renders
+  // them in whatever currency AetherCurrency detected for this visitor.
+  function fmtPrice(cad){
+    return window.AetherCurrency ? window.AetherCurrency.format(cad) : (cad + " $ CAD");
+  }
+  if(window.AetherCurrency){
+    window.AetherCurrency.ready.then(function(){
+      document.querySelectorAll('[data-price-cad]').forEach(function(el){
+        el.textContent = fmtPrice(parseFloat(el.getAttribute('data-price-cad')));
+      });
+      renderCart();
+    });
+  }
+
+  var CART_KEY = "aetherShopCart";
+  function getCart(){
+    try{
+      var raw = localStorage.getItem(CART_KEY);
+      var cart = raw ? JSON.parse(raw) : [];
+      cart.forEach(function(l){ if(!l.size) l.size = DEFAULT_SIZE; });
+      return cart;
+    }catch(e){ return []; }
+  }
+  function saveCart(cart){
+    try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }catch(e){}
+  }
+  function findLine(cart, id, size){
+    for(var i=0;i<cart.length;i++){ if(cart[i].id === id && cart[i].size === size) return cart[i]; }
+    return null;
+  }
+  function addToCart(id, size, qty){
+    var cart = getCart();
+    var line = findLine(cart, id, size);
+    if(line){ line.qty += qty; } else { cart.push({ id:id, size:size, qty:qty }); }
+    saveCart(cart);
+    renderCart();
+  }
+  function setQty(id, size, qty){
+    var cart = getCart();
+    var line = findLine(cart, id, size);
+    if(!line) return;
+    line.qty = qty;
+    if(line.qty <= 0){ cart = cart.filter(function(l){ return l !== line; }); }
+    saveCart(cart);
+    renderCart();
+  }
+  function removeFromCart(id, size){
+    var cart = getCart().filter(function(l){ return !(l.id === id && l.size === size); });
+    saveCart(cart);
+    renderCart();
+  }
+  function cartTotal(cart){
+    var total = 0;
+    cart.forEach(function(l){
+      var p = PRODUCTS_BY_ID[l.id];
+      if(p) total += p.price * l.qty;
+    });
+    return total;
+  }
+  function cartCount(cart){
+    var n = 0;
+    cart.forEach(function(l){ if(PRODUCTS_BY_ID[l.id]) n += l.qty; });
+    return n;
+  }
+
+  var cartCountEl = document.getElementById("cartCount");
+  var cartItemsEl = document.getElementById("cartItems");
+  var cartSubtotalEl = document.getElementById("cartSubtotal");
+
+  var SHOP_DICT = { fr: { "Remove":"Retirer", "Your cart is empty":"Ton panier est vide", "Added":"Ajout\u00e9", "Size":"Taille" } };
+  function t(str){
+    var lang = (window.__aetherI18n && window.__aetherI18n.getLang()) || "en";
+    if(lang === "fr" && SHOP_DICT.fr[str]) return SHOP_DICT.fr[str];
+    return str;
+  }
+
+  function renderCart(){
+    var cart = getCart();
+    var cleaned = cart.filter(function(l){ return !!PRODUCTS_BY_ID[l.id]; });
+    if(cleaned.length !== cart.length){ cart = cleaned; saveCart(cart); }
+    if(cartCountEl) cartCountEl.textContent = cartCount(cart);
+    if(!cartItemsEl) return;
+    if(cart.length === 0){
+      cartItemsEl.innerHTML = '<div class="cart_empty">' + t("Your cart is empty") + '</div>';
+    } else {
+      cartItemsEl.innerHTML = cart.map(function(l){
+        var p = PRODUCTS_BY_ID[l.id];
+        if(!p) return "";
+        return '<div class="cart_item" data-cart-line="' + p.id + '|' + l.size + '">' +
+          '<div class="cart_item_media ' + p.cls + '"><img src="' + p.imgA + '" alt="' + p.name + '" loading="lazy" decoding="async"></div>' +
+          '<div class="cart_item_body">' +
+            '<div class="cart_item_top"><h3 class="cart_item_name">' + p.name + '</h3><div class="cart_item_price">' + fmtPrice(p.price * l.qty) + '</div></div>' +
+            '<div class="cart_item_size">' + t("Size") + ' ' + l.size + '</div>' +
+            '<div class="cart_item_bottom">' +
+              '<div class="shop_qty_wrapper">' +
+                '<button type="button" data-cart-minus="' + p.id + '" data-size="' + l.size + '" aria-label="Minus">\u2212</button>' +
+                '<span>' + l.qty + '</span>' +
+                '<button type="button" data-cart-plus="' + p.id + '" data-size="' + l.size + '" aria-label="Plus">+</button>' +
+              '</div>' +
+              '<button type="button" class="cart_item_remove" data-cart-remove="' + p.id + '" data-size="' + l.size + '">' + t("Remove") + '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join("");
+    }
+    if(cartSubtotalEl) cartSubtotalEl.textContent = fmtPrice(cartTotal(cart));
+  }
+
+  cartItemsEl && cartItemsEl.addEventListener("click", function(e){
+    var minus = e.target.closest("[data-cart-minus]");
+    var plus = e.target.closest("[data-cart-plus]");
+    var remove = e.target.closest("[data-cart-remove]");
+    if(minus){
+      var cart = getCart(); var line = findLine(cart, minus.getAttribute("data-cart-minus"), minus.getAttribute("data-size"));
+      if(line) setQty(line.id, line.size, line.qty - 1);
+    } else if(plus){
+      var cart2 = getCart(); var line2 = findLine(cart2, plus.getAttribute("data-cart-plus"), plus.getAttribute("data-size"));
+      if(line2) setQty(line2.id, line2.size, line2.qty + 1);
+    } else if(remove){
+      removeFromCart(remove.getAttribute("data-cart-remove"), remove.getAttribute("data-size"));
+    }
+  });
+
+  var cartDrawer = document.getElementById("cartDrawer");
+  var cartToggle = document.getElementById("cartToggle");
+  function openCart(){ if(cartDrawer){ cartDrawer.classList.add("is-open"); document.body.style.overflow = "hidden"; } }
+  function closeCart(){ if(cartDrawer){ cartDrawer.classList.remove("is-open"); document.body.style.overflow = ""; } }
+  cartToggle && cartToggle.addEventListener("click", openCart);
+  document.querySelectorAll("[data-cart-close]").forEach(function(el){ el.addEventListener("click", closeCart); });
+
+  var checkoutBtn = document.getElementById("checkoutBtn");
+  var checkoutModal = document.getElementById("checkoutModal");
+  var checkoutSummaryEl = document.getElementById("checkoutSummary");
+  var checkoutOrderField = document.getElementById("checkoutOrderField");
+  var checkoutForm = document.getElementById("checkoutForm");
+  var checkoutStatusEl = document.getElementById("checkoutStatus");
+
+  function openCheckout(){
+    var cart = getCart();
+    if(cart.length === 0) return;
+    var lines = cart.map(function(l){
+      var p = PRODUCTS_BY_ID[l.id];
+      return p ? { name:p.name, size:l.size, qty:l.qty, lineTotal:(p.price * l.qty) } : null;
+    }).filter(Boolean);
+    var total = cartTotal(cart);
+    checkoutSummaryEl.innerHTML = lines.map(function(l){
+      return '<div class="checkout_summary_line"><span>' + l.name + " (" + l.size + ") x" + l.qty + '</span><span>' + fmtPrice(l.lineTotal) + '</span></div>';
+    }).join("") + '<div class="checkout_summary_total"><span>Total</span><span>' + fmtPrice(total) + '</span></div>';
+    // The emailed order record always states the merchant's native currency (CAD),
+    // regardless of what was displayed to the visitor, so fulfillment never has to guess.
+    checkoutOrderField.value = lines.map(function(l){ return l.name + " (" + l.size + ") x" + l.qty + ": " + l.lineTotal + " $ CAD"; }).join(" | ") + " | Total: " + total + " $ CAD" + (AetherCurrency.state.currency !== 'CAD' ? " (shown to customer as " + fmtPrice(total) + ")" : "");
+    checkoutStatusEl.textContent = "";
+    closeCart();
+    checkoutModal.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeCheckout(){
+    checkoutModal.classList.remove("is-open");
+    document.body.style.overflow = "";
+  }
+  checkoutBtn && checkoutBtn.addEventListener("click", openCheckout);
+  document.querySelectorAll("[data-checkout-close]").forEach(function(el){ el.addEventListener("click", closeCheckout); });
+  checkoutModal && checkoutModal.addEventListener("click", function(e){ if(e.target === checkoutModal) closeCheckout(); });
+
+  // Le libell\u00e9 « Province » n'a de sens qu'au Canada et aux \u00c9tats-Unis ;
+  // ailleurs Printful ne l'attend pas et le champ ne ferait qu'embrouiller.
+  var paysEl = document.getElementById("coPays");
+  var provWrap = document.getElementById("coProvinceWrap");
+  var provLabel = document.getElementById("coProvinceLabel");
+  var provInput = document.getElementById("coProvince");
+  // Printful n'accepte QUE le code officiel a deux lettres. Un champ libre
+  // laissait ecrire « montreal » et la commande etait rejetee APRES paiement :
+  // le client avait paye, rien ne partait en production. D'ou une liste fermee.
+  var PROVINCES_CA = [["AB","Alberta"],["BC","Colombie-Britannique"],["MB","Manitoba"],["NB","Nouveau-Brunswick"],["NL","Terre-Neuve-et-Labrador"],["NS","Nouvelle-\u00c9cosse"],["NT","Territoires du Nord-Ouest"],["NU","Nunavut"],["ON","Ontario"],["PE","\u00cele-du-Prince-\u00c9douard"],["QC","Qu\u00e9bec"],["SK","Saskatchewan"],["YT","Yukon"]];
+  var ETATS_US = [["AL","Alabama"],["AK","Alaska"],["AZ","Arizona"],["AR","Arkansas"],["CA","Californie"],["CO","Colorado"],["CT","Connecticut"],["DE","Delaware"],["DC","District de Columbia"],["FL","Floride"],["GA","G\u00e9orgie"],["HI","Hawa\u00ef"],["ID","Idaho"],["IL","Illinois"],["IN","Indiana"],["IA","Iowa"],["KS","Kansas"],["KY","Kentucky"],["LA","Louisiane"],["ME","Maine"],["MD","Maryland"],["MA","Massachusetts"],["MI","Michigan"],["MN","Minnesota"],["MS","Mississippi"],["MO","Missouri"],["MT","Montana"],["NE","Nebraska"],["NV","Nevada"],["NH","New Hampshire"],["NJ","New Jersey"],["NM","Nouveau-Mexique"],["NY","New York"],["NC","Caroline du Nord"],["ND","Dakota du Nord"],["OH","Ohio"],["OK","Oklahoma"],["OR","Oregon"],["PA","Pennsylvanie"],["RI","Rhode Island"],["SC","Caroline du Sud"],["SD","Dakota du Sud"],["TN","Tennessee"],["TX","Texas"],["UT","Utah"],["VT","Vermont"],["VA","Virginie"],["WA","Washington"],["WV","Virginie-Occidentale"],["WI","Wisconsin"],["WY","Wyoming"]];
+  function syncProvince(){
+    if(!paysEl || !provWrap) return;
+    var c = paysEl.value;
+    var need = (c === "CA" || c === "US");
+    provWrap.style.display = need ? "" : "none";
+    if(provLabel) provLabel.textContent = c === "US" ? "\u00c9tat" : "Province";
+    if(!provInput) return;
+    provInput.required = need;
+    if(!need){ provInput.innerHTML = ""; return; }
+    var liste = (c === "US") ? ETATS_US : PROVINCES_CA;
+    var defaut = (c === "US") ? "NY" : "QC";
+    provInput.innerHTML = liste.map(function(x){
+      return '<option value="' + x[0] + '"' + (x[0] === defaut ? " selected" : "") + ">" + x[1] + "</option>";
+    }).join("");
+  }
+  paysEl && paysEl.addEventListener("change", syncProvince);
+  syncProvince();
+
+  checkoutForm && checkoutForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    var submitBtn = document.getElementById("checkoutSubmitBtn");
+    var label = submitBtn.querySelector("span");
+    var labelOrig = label ? label.textContent : "";
+    submitBtn.disabled = true;
+    if(label) label.textContent = "Pr\u00e9paration du paiement\u2026";
+    checkoutStatusEl.textContent = "";
+
+    var f = new FormData(checkoutForm);
+    var cart = getCart().filter(function(l){ return !!PRODUCTS_BY_ID[l.id]; });
+    var payload = {
+      recipient: {
+        name: f.get("Nom") || "",
+        email: f.get("Email") || "",
+        phone: f.get("T\u00e9l\u00e9phone") || "",
+        address1: f.get("Adresse") || "",
+        city: f.get("Ville") || "",
+        zip: f.get("Code postal") || "",
+        country_code: f.get("Pays") || "CA",
+        state_code: f.get("Province") || ""
+      },
+      items: cart.map(function(l){
+        return { id: l.id, size: l.size || DEFAULT_SIZE, qty: l.qty, name: PRODUCTS_BY_ID[l.id].name };
+      })
+    };
+
+    fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function(res){
+      return res.json().then(function(d){ return { ok: res.ok, d: d }; });
+    }).then(function(r){
+      if(!r.ok || !r.d.url) throw new Error(r.d && r.d.error ? r.d.error : "erreur");
+      // Le panier n'est PAS vid\u00e9 ici : si le visiteur abandonne le paiement,
+      // il doit retrouver sa commande en revenant.
+      window.location.href = r.d.url;
+    }).catch(function(err){
+      checkoutStatusEl.textContent = (err && err.message) ? err.message : "Le paiement n'a pas pu \u00eatre ouvert. R\u00e9essayez.";
+      submitBtn.disabled = false;
+      if(label) label.textContent = labelOrig;
+    });
+  });
+
+  // --- Retour depuis Stripe -------------------------------------------------
+  // La commande n'est transmise \u00e0 Printful qu'ici, apr\u00e8s v\u00e9rification du
+  // paiement c\u00f4t\u00e9 serveur. Le param\u00e8tre d'URL ne prouve rien \u00e0 lui seul.
+  (function(){
+    var q = new URLSearchParams(window.location.search);
+    var etat = q.get("commande");
+    if(!etat) return;
+    var sid = q.get("session_id");
+    function bandeau(txt, ok){
+      var d = document.createElement("div");
+      d.setAttribute("role", "status");
+      d.style.cssText = "position:fixed;left:1rem;right:1rem;bottom:1rem;max-width:30rem;margin:0 auto;z-index:100000;padding:.9rem 1.1rem;border-radius:.4rem;font-family:Mixtape,Verdana,sans-serif;font-size:.9rem;line-height:1.35;background:" + (ok ? "#111" : "#7a1f1f") + ";color:#e4e4e4;box-shadow:0 .5rem 2rem rgba(0,0,0,.25);";
+      d.textContent = txt;
+      document.body.appendChild(d);
+      setTimeout(function(){ d.style.transition = "opacity .4s ease"; d.style.opacity = "0"; setTimeout(function(){ d.remove(); }, 400); }, 9000);
+    }
+    history.replaceState(null, "", window.location.pathname);
+    if(etat === "annulee"){ bandeau("Paiement annul\u00e9. Votre panier est intact.", false); return; }
+    if(etat !== "ok" || !sid) return;
+    fetch("/api/order-confirm?session_id=" + encodeURIComponent(sid))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if(d && d.paye){
+          saveCart([]); renderCart();
+          bandeau("Merci ! Paiement re\u00e7u, votre commande est enregistr\u00e9e. Un courriel de confirmation suit.", true);
+        } else {
+          bandeau("Paiement non confirm\u00e9. \u00c9crivez-nous si le montant a \u00e9t\u00e9 pr\u00e9lev\u00e9.", false);
+        }
+      })
+      .catch(function(){
+        bandeau("Paiement re\u00e7u. Un souci technique emp\u00eache la confirmation automatique, nous vous \u00e9crivons.", false);
+      });
+  })();
+
+  // Email popup (footer / nav-menu contact triggers)
+  var emailModal = document.getElementById("emailModal");
+  var emailForm = document.getElementById("emailModalForm");
+  var emailStatusEl = document.getElementById("emailModalStatus");
+  document.querySelectorAll("[data-email-trigger]").forEach(function(t){
+    t.addEventListener("click", function(e){ e.preventDefault(); emailModal.classList.add("is-open"); });
+  });
+  document.querySelectorAll("[data-email-close]").forEach(function(el){ el.addEventListener("click", function(){ emailModal.classList.remove("is-open"); }); });
+  emailModal && emailModal.addEventListener("click", function(e){ if(e.target === emailModal) emailModal.classList.remove("is-open"); });
+  emailForm && emailForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    var btn = emailForm.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    emailStatusEl.textContent = "Sending\u2026";
+    fetch(emailForm.action, { method:"POST", body:new FormData(emailForm), headers:{ "Accept":"application/json" } })
+      .then(function(res){
+        if(!res.ok) throw new Error("failed");
+        emailStatusEl.textContent = "Sent! Thanks, talk soon.";
+        emailForm.reset();
+      })
+      .catch(function(){ emailStatusEl.textContent = "Something went wrong. Try again."; })
+      .finally(function(){ btn.disabled = false; });
+  });
+
+  // Product modal
+  var modal = document.getElementById("shopModal");
+  var stageTrack = document.getElementById("modalStageTrack");
+  var stageA = document.getElementById("modalStageImgA");
+  var stageB = document.getElementById("modalStageImgB");
+  var stageA2 = document.getElementById("modalStageImgA2");
+  var thumbA = document.getElementById("modalThumbA");
+  var thumbB = document.getElementById("modalThumbB");
+  var thumbBtnA = document.getElementById("modalThumbBtnA");
+  var thumbBtnB = document.getElementById("modalThumbBtnB");
+  var modalName = document.getElementById("modalName");
+  var modalPrice = document.getElementById("modalPrice");
+  var modalDesc = document.getElementById("modalDesc");
+  var modalQtyEl = document.getElementById("modalQty");
+  var modalAddBtn = document.getElementById("modalAddBtn");
+  var modalSizesEl = document.getElementById("modalSizes");
+  var modalQty = 1;
+  var modalSize = DEFAULT_SIZE;
+  var modalProductId = null;
+  var modalCycleTimer = null;
+  var modalCycleIndex = 0;
+
+  function setModalThumbActive(idx){
+    thumbBtnA.classList.toggle("is-active", idx === 0);
+    thumbBtnB.classList.toggle("is-active", idx === 1);
+  }
+  function goToModalSlide(idx, animated){
+    modalCycleIndex = idx;
+    stageTrack.style.transition = animated ? "transform 0.7s cubic-bezier(.65,0,.35,1)" : "none";
+    stageTrack.style.transform = "translateY(-" + (idx * 33.3334) + "%)";
+    setModalThumbActive(idx);
+  }
+  function stopModalCycle(){
+    if(modalCycleTimer){ clearInterval(modalCycleTimer); modalCycleTimer = null; }
+  }
+  function startModalCycle(){
+    stopModalCycle();
+    goToModalSlide(0, false);
+    modalCycleTimer = setInterval(function(){
+      modalCycleIndex++;
+      stageTrack.style.transition = "transform 0.7s cubic-bezier(.65,0,.35,1)";
+      stageTrack.style.transform = "translateY(-" + (modalCycleIndex * 33.3334) + "%)";
+      setModalThumbActive(modalCycleIndex % 2);
+      if(modalCycleIndex === 2){
+        setTimeout(function(){
+          stageTrack.style.transition = "none";
+          stageTrack.style.transform = "translateY(0%)";
+          modalCycleIndex = 0;
+        }, 720);
+      }
+    }, 2600);
+  }
+  thumbBtnA.addEventListener("click", function(){ stopModalCycle(); goToModalSlide(0, true); startModalCycle(); });
+  thumbBtnB.addEventListener("click", function(){ stopModalCycle(); goToModalSlide(1, true); startModalCycle(); });
+
+  function setModalSize(size){
+    modalSize = size;
+    modalSizesEl.querySelectorAll(".shop_size_btn").forEach(function(btn){
+      btn.classList.toggle("is-active", btn.getAttribute("data-size") === size);
+    });
+  }
+  modalSizesEl.addEventListener("click", function(e){
+    var btn = e.target.closest("[data-size]");
+    if(btn) setModalSize(btn.getAttribute("data-size"));
+  });
+
+  function openModal(id){
+    var p = PRODUCTS_BY_ID[id];
+    if(!p || !modal) return;
+    modalProductId = id;
+    modalQty = 1;
+    modalQtyEl.textContent = modalQty;
+    setModalSize(DEFAULT_SIZE);
+    var stageEl = document.getElementById("modalStage");
+    if(stageEl){
+      stageEl.classList.remove("bg-amber","bg-forest","bg-rust","bg-azure");
+      stageEl.classList.add(p.cls);
+    }
+    stageA.src = p.imgA; stageA.alt = p.name;
+    stageB.src = p.imgB; stageB.alt = p.name + ": autre vue";
+    stageA2.src = p.imgA; stageA2.alt = "";
+    thumbA.src = p.imgA; thumbA.alt = p.name;
+    thumbB.src = p.imgB; thumbB.alt = p.name + ": autre vue";
+    modalName.textContent = p.name;
+    modalPrice.textContent = fmtPrice(p.price);
+    modalDesc.textContent = p.desc;
+    modal.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    startModalCycle();
+  }
+  function closeModal(){
+    if(!modal) return;
+    modal.classList.remove("is-open");
+    document.body.style.overflow = "";
+    stopModalCycle();
+  }
+  document.querySelectorAll("[data-modal-close]").forEach(function(el){ el.addEventListener("click", closeModal); });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){ closeModal(); closeCart(); }
+  });
+
+  document.querySelectorAll(".shop_card").forEach(function(card){
+    card.addEventListener("click", function(e){
+      if(e.target.closest("[data-add-to-cart]")) return;
+      openModal(card.getAttribute("data-product"));
+    });
+  });
+
+  document.querySelectorAll("[data-add-to-cart]").forEach(function(btn){
+    btn.addEventListener("click", function(e){
+      e.stopPropagation();
+      addToCart(btn.getAttribute("data-add-to-cart"), DEFAULT_SIZE, 1);
+      var original = btn.textContent;
+      btn.textContent = t("Added") + " \u2713";
+      btn.classList.add("is-added");
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove("is-added"); }, 1200);
+    });
+  });
+
+  document.querySelector("[data-qty-minus]") && document.querySelector("[data-qty-minus]").addEventListener("click", function(){
+    modalQty = Math.max(1, modalQty - 1);
+    modalQtyEl.textContent = modalQty;
+  });
+  document.querySelector("[data-qty-plus]") && document.querySelector("[data-qty-plus]").addEventListener("click", function(){
+    modalQty = modalQty + 1;
+    modalQtyEl.textContent = modalQty;
+  });
+  modalAddBtn && modalAddBtn.addEventListener("click", function(){
+    if(!modalProductId) return;
+    addToCart(modalProductId, modalSize, modalQty);
+    var original = modalAddBtn.textContent;
+    modalAddBtn.textContent = t("Added") + " \u2713";
+    modalAddBtn.classList.add("is-added");
+    setTimeout(function(){ modalAddBtn.textContent = original; modalAddBtn.classList.remove("is-added"); }, 1200);
+  });
+
+  renderCart();
+})();
+</script>
+<script src="../js/analytics.js" defer></script></body>
 </html>

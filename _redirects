@@ -1,0 +1,12 @@
+# Cloudflare Pages — redirections.
+# Doc : https://developers.cloudflare.com/pages/configuration/redirects/
+
+# URLs propres : /works plutôt que /pages/works.html
+/works            /pages/works.html            301
+/approach         /pages/approach.html         301
+/shop             /pages/shop.html             301
+/legal            /pages/legal.html            301
+/work/:slug       /pages/work_:slug.html       301
+
+# Ancienne page d'accueil du template cloné.
+/index.raw-namma-source.html   /   301
