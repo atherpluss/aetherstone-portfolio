@@ -239,7 +239,7 @@ ARTICLES = [
     ),
     dict(
         slug="choisir-un-designer-graphique-a-montreal",
-        title="Choisir un designer graphique à Montréal : ce qu'il faut regarder",
+        title="Choisir un designer graphique à Montréal",
         description="Agence, studio ou indépendant : comment lire un portfolio, quelles questions poser avant de signer, et les signaux qui doivent alerter.",
         keywords=["designer graphique Montréal", "graphiste freelance Montréal", "choisir un designer", "agence design Montréal"],
         category="Collaboration",
@@ -765,6 +765,232 @@ ARTICLES = [
 <h2>Le bon moment</h2>
 <p>Vérifier la disponibilité&nbsp;: avant de commander le design. Déposer la marque&nbsp;: idéalement avant le lancement public. Obtenir la cession de droits&nbsp;: à la signature du contrat, pas à la livraison.</p>
 <p><strong>Avertissement</strong>&nbsp;: cet article donne des repères pratiques, pas un avis juridique. Pour un dépôt réel, consultez un agent de marques ou un avocat.</p>
+"""
+    ),
+
+    dict(
+        slug="grille-de-mise-en-page",
+        title="La grille : l'outil qui rend une marque cohérente",
+        description="Pourquoi une grille de mise en page fait plus pour la cohérence d'une identité qu'un guide de cinquante pages, et comment en définir une simple.",
+        keywords=["grille de mise en page", "système de design", "cohérence visuelle marque", "mise en page graphique"],
+        category="Méthode",
+        date="2026-08-07",
+        lede="Deux affiches faites par deux personnes différentes se ressemblent quand elles partagent une grille. Sans elle, même palette et même police ne suffisent pas.",
+        body="""
+<h2>Ce qu'une grille résout</h2>
+<p>Une identité tient rarement en défaut de couleurs ou de police. Elle tient en défaut de <strong>placement</strong>&nbsp;: une marge à 20&nbsp;mm ici, 34&nbsp;mm là, un titre centré sur une pièce et calé à gauche sur la suivante.</p>
+<p>L'œil enregistre ces écarts avant de lire quoi que ce soit. C'est ce qui donne l'impression que des documents «&nbsp;ne vont pas ensemble&nbsp;» sans qu'on sache dire pourquoi.</p>
+
+<h2>Une grille utile est simple</h2>
+<p>On imagine des systèmes complexes. En pratique, trois décisions couvrent l'essentiel&nbsp;:</p>
+<ul>
+  <li><strong>La marge extérieure</strong>&nbsp;: la même proportion sur tous les supports.</li>
+  <li><strong>Le nombre de colonnes</strong>&nbsp;: souvent 4 en petit format, 12 en grand.</li>
+  <li><strong>L'unité verticale</strong>&nbsp;: un pas d'espacement dont tous les écarts sont des multiples.</li>
+</ul>
+<p>Une grille qu'on ne peut pas expliquer en trois phrases ne sera pas appliquée.</p>
+
+<h2>Raisonner en proportions</h2>
+<p>Une marge fixée à 20&nbsp;mm est confortable sur une affiche et énorme sur une carte. Exprimez la marge en pourcentage de la largeur&nbsp;: le système se transpose alors du format carte au format panneau sans réglage.</p>
+
+<h2>L'unité verticale</h2>
+<p>C'est le point le plus négligé et le plus rentable. Choisissez un pas&nbsp;— disons 8&nbsp;points&nbsp;— et faites que tous les espacements soient des multiples de ce pas.</p>
+<p>Résultat&nbsp;: les blocs s'alignent d'eux-mêmes, y compris entre documents faits à des mois d'intervalle. Et personne n'a plus à trancher au jugé entre 13 et 15 points.</p>
+
+<h2>Savoir en sortir</h2>
+<p>Une grille est un cadre, pas une prison. Un élément qui déborde volontairement crée un accent&nbsp;— à condition que tout le reste soit rigoureusement aligné.</p>
+<p>La règle&nbsp;: on ne sort de la grille qu'une fois par pièce, et pour une raison. Trois exceptions, et il n'y a plus de grille.</p>
+
+<h2>Le documenter en une page</h2>
+<p>Dans le guide de marque, une page suffit&nbsp;: un schéma des marges, le nombre de colonnes, l'unité verticale, et deux exemples appliqués. C'est le document que les gens utiliseront réellement.</p>
+"""
+    ),
+    dict(
+        slug="site-vitrine-ou-portfolio-designer",
+        title="Ce qu'un site de designer doit vraiment faire",
+        description="Un portfolio n'est pas une galerie : c'est un outil de qualification. Ce qu'il faut montrer, dans quel ordre, et ce qui fait fuir un client sérieux.",
+        keywords=["site portfolio designer", "portfolio graphiste", "site vitrine créatif", "présenter ses projets design"],
+        category="Stratégie",
+        date="2026-08-07",
+        lede="La plupart des portfolios sont construits pour impressionner d'autres designers. Les clients, eux, cherchent autre chose — et repartent souvent sans l'avoir trouvé.",
+        body="""
+<h2>Deux publics, deux lectures</h2>
+<p>Un pair regarde l'exécution. Un client cherche à savoir si vous pouvez résoudre <em>son</em> problème.</p>
+<p>Un portfolio qui n'affiche que de belles images répond au premier et laisse le second dans le doute. Il verra que c'est joli&nbsp;; il ne saura pas si vous avez déjà traité un cas comme le sien.</p>
+
+<h2>Montrer le problème avant la solution</h2>
+<p>Une étude de cas utile tient en quatre temps&nbsp;: le contexte, la contrainte, la décision, le résultat. Deux phrases suffisent pour chacun.</p>
+<p>«&nbsp;Une gamme de six références qui devait rester lisible en rayon à un mètre&nbsp;» en dit plus long que dix visuels sans légende.</p>
+
+<h2>Nommer le type de client</h2>
+<p>Un visiteur veut se reconnaître. S'il dirige une PME agroalimentaire et que rien n'indique que vous travaillez pour des marques comme la sienne, il partira&nbsp;— même si vos projets le prouvent implicitement.</p>
+<p>Dites-le simplement&nbsp;: quels secteurs, quelles tailles d'organisation, quels types de mandats.</p>
+
+<h2>Rendre le contact évident</h2>
+<p>Une part importante des visiteurs prêts à écrire abandonnent parce qu'ils ne trouvent pas comment. Un lien de contact doit être accessible depuis n'importe quelle page, pas seulement au bas d'un menu.</p>
+<p>Et ce lien doit dire ce qui se passe ensuite. «&nbsp;Écrivez-moi, je réponds sous 48&nbsp;h&nbsp;» rassure davantage qu'un simple formulaire muet.</p>
+
+<h2>Les erreurs qui coûtent des projets</h2>
+<ul>
+  <li><strong>Aucun texte.</strong> Un site sans mots ne se positionne sur rien dans les moteurs de recherche, et ne dit rien à un client pressé.</li>
+  <li><strong>Trop de projets.</strong> Douze projets bien racontés valent mieux que quarante vignettes. On est jugé sur sa pièce la plus faible.</li>
+  <li><strong>Des animations qui retardent la lecture.</strong> L'effet est agréable une fois&nbsp;; il est pénible quand on cherche une information.</li>
+  <li><strong>Aucune indication de tarif.</strong> Sans repère, les demandes hors budget arrivent et font perdre du temps aux deux parties.</li>
+</ul>
+
+<h2>Écrire aide au référencement</h2>
+<p>Un site de designer sans contenu textuel n'a presque rien à indexer. Décrire ses projets, expliquer sa méthode, publier des notes de métier&nbsp;: c'est ce qui rend un portfolio trouvable autrement que par son nom propre.</p>
+<p>C'est aussi ce qui distingue un site consulté après recommandation d'un site qui apporte lui-même des demandes.</p>
+"""
+    ),
+    dict(
+        slug="mockups-et-honnetete-visuelle",
+        title="Mises en situation : présenter sans mentir",
+        description="Les maquettes de présentation vendent une idée, mais elles peuvent aussi masquer ce qui ne fonctionnera pas. Comment les utiliser sans se piéger.",
+        keywords=["mockup design", "présentation projet graphique", "maquette packaging", "présenter une identité"],
+        category="Méthode",
+        date="2026-08-07",
+        lede="Une identité moyenne posée sur une belle photo de studio passe pour excellente. C'est pratique pour faire valider, et c'est exactement le problème.",
+        body="""
+<h2>Ce que la mise en situation apporte</h2>
+<p>Elle rend un projet compréhensible. Un logo sur fond blanc est abstrait&nbsp;; le même logo sur une devanture permet à un client non spécialiste de se projeter et de décider.</p>
+<p>À ce titre, elle est utile et légitime.</p>
+
+<h2>Ce qu'elle masque</h2>
+<p>Les maquettes du commerce sont éclairées parfaitement, cadrées idéalement, dans des matières nobles. Elles gomment justement ce qui pose problème en production&nbsp;: un tirage à deux couleurs, un carton brun, une lumière de supermarché.</p>
+<p>Une identité validée en maquette peut décevoir à la livraison sans que personne ait mal travaillé&nbsp;— simplement parce que la validation portait sur une fiction.</p>
+
+<h2>Le test qui compte</h2>
+<p>Avant de présenter, faites l'inverse&nbsp;: sortez le projet dans ses pires conditions. Imprimé sur une imprimante ordinaire, réduit à un centimètre, en noir et blanc, photographié sous une lumière banale.</p>
+<p>Ce qui survit à cet exercice survivra à la réalité. Ce qui s'écroule doit être repris avant, pas après.</p>
+
+<h2>Présenter les deux</h2>
+<p>La démarche honnête consiste à montrer la mise en situation <em>et</em> la version brute. La première fait comprendre l'intention, la seconde montre ce que le client recevra vraiment.</p>
+<p>C'est aussi une protection&nbsp;: personne ne pourra dire plus tard que le résultat ne ressemble pas à ce qui avait été vendu.</p>
+
+<h2>Le cas du portfolio</h2>
+<p>Un portfolio composé uniquement de maquettes soulève une question légitime&nbsp;: est-ce que quelque chose a été produit&nbsp;? Un projet photographié en vrai, même imparfaitement, a plus de valeur qu'une simulation impeccable.</p>
+<p>Quand un projet n'a pas été produit, mieux vaut le dire. L'honnêteté sur ce point se remarque et rassure.</p>
+
+<h2>Une règle simple</h2>
+<p>La mise en situation doit aider à comprendre, jamais à flatter. Si elle rend le travail meilleur qu'il ne sera, elle prépare une déception dont le designer portera la responsabilité.</p>
+"""
+    ),
+    dict(
+        slug="animation-et-motion-pour-une-marque",
+        title="Le motion design au service d'une marque",
+        description="Ce que le mouvement ajoute à une identité, quand il devient nécessaire, et les règles qui évitent l'animation gratuite.",
+        keywords=["motion design marque", "animation logo", "identité animée", "motion design Montréal"],
+        category="Fondamentaux",
+        date="2026-08-07",
+        lede="Une marque existe aujourd'hui autant en mouvement qu'en fixe. Encore faut-il que le mouvement dise quelque chose — la plupart du temps il ne fait que bouger.",
+        body="""
+<h2>Le mouvement fait partie de l'identité</h2>
+<p>La façon dont un logo apparaît, dont une transition s'enchaîne, dont un texte entre à l'écran&nbsp;: ce sont des traits de caractère au même titre qu'une couleur.</p>
+<p>Un mouvement sec et rapide ne raconte pas la même marque qu'un fondu lent. À graphisme identique, l'impression change complètement.</p>
+
+<h2>Trois paramètres à figer</h2>
+<ul>
+  <li><strong>La durée</strong>&nbsp;: une plage courte et constante, plutôt qu'une valeur différente à chaque pièce.</li>
+  <li><strong>La courbe d'accélération</strong>&nbsp;: c'est elle qui donne le caractère. Un démarrage franc et une fin amortie se lisent comme de l'assurance&nbsp;; un mouvement linéaire paraît mécanique.</li>
+  <li><strong>La direction</strong>&nbsp;: décider une fois si les éléments entrent par le bas, par la gauche, ou en échelle.</li>
+</ul>
+<p>Trois décisions, et toutes les animations d'une marque appartiennent à la même famille.</p>
+
+<h2>Le mouvement doit servir la lecture</h2>
+<p>Une animation utile guide l'œil vers ce qu'il faut lire en premier. Une animation gratuite disperse l'attention et retarde la compréhension.</p>
+<p>Le test&nbsp;: retirez l'animation. Si la pièce fonctionne toujours, l'animation était un accent&nbsp;— c'est bien. Si la pièce devient incompréhensible, l'animation compensait un problème de hiérarchie.</p>
+
+<h2>Penser au son, ou à son absence</h2>
+<p>Une grande partie des vidéos sont vues sans le son. Une animation dont le message dépend d'une voix ou d'une musique perd la majorité de son audience.</p>
+<p>Concevez d'abord muet, avec du texte lisible. Le son devient alors un bonus, pas une condition.</p>
+
+<h2>La contrainte du premier instant</h2>
+<p>Sur les plateformes sociales, la décision de continuer ou de passer se prend en une seconde. Une animation qui commence par un logo pendant deux secondes perd son public avant d'avoir parlé.</p>
+<p>Mettez l'information la plus forte au début, la signature à la fin.</p>
+
+<h2>Quand ça devient nécessaire</h2>
+<p>Dès qu'une marque publie régulièrement en vidéo, ou dès que son site comporte des transitions. À ce moment, mieux vaut décider ces règles que les laisser s'inventer à chaque pièce.</p>
+"""
+    ),
+    dict(
+        slug="travailler-avec-un-imprimeur",
+        title="Travailler avec un imprimeur : ce qu'il faut demander",
+        description="Le dialogue avec l'imprimeur détermine la qualité finale plus que la maquette. Les questions à poser, et à quel moment.",
+        keywords=["travailler avec imprimeur", "épreuve impression", "choisir un imprimeur", "production print"],
+        category="Production",
+        date="2026-08-07",
+        lede="Un imprimeur consulté au début fait gagner de l'argent. Consulté à la fin, il ne peut plus que constater les dégâts.",
+        body="""
+<h2>Le consulter avant de dessiner</h2>
+<p>Le procédé, le support et le nombre de couleurs déterminent ce qui est possible. Un dégradé subtil, un trait fin, une couleur fluorescente&nbsp;: chacun dépend de contraintes que seul l'imprimeur connaît pour son parc de machines.</p>
+<p>Un appel de quinze minutes avant la première maquette évite de dessiner quelque chose d'irréalisable.</p>
+
+<h2>Les questions utiles</h2>
+<ul>
+  <li><strong>Quel procédé</strong> pour ce tirage, et quelles limites&nbsp;?</li>
+  <li><strong>Combien de couleurs</strong> sont disponibles, et à quel coût la couleur supplémentaire&nbsp;?</li>
+  <li><strong>Quel profil colorimétrique</strong> dois-je utiliser&nbsp;?</li>
+  <li><strong>Quel fond perdu</strong>, quelles marges techniques&nbsp;?</li>
+  <li><strong>Pouvez-vous fournir le dieline</strong> du format&nbsp;?</li>
+  <li><strong>Quel délai</strong>, et quelle date limite pour les fichiers&nbsp;?</li>
+</ul>
+
+<h2>Demander le support réel</h2>
+<p>Une couleur ne se comporte pas de la même façon sur un couché brillant, un offset non couché ou un carton recyclé. Demandez des échantillons vierges du support retenu, et regardez-les à la lumière du jour.</p>
+<p>C'est particulièrement décisif sur les supports bruns ou recyclés&nbsp;: ils absorbent l'encre et assourdissent toutes les teintes.</p>
+
+<h2>L'épreuve contractuelle</h2>
+<p>C'est la seule référence commune entre vous et l'imprimeur. Elle sert à valider, mais surtout à trancher en cas de désaccord après tirage.</p>
+<p>Sur un tirage important, refuser l'épreuve pour économiser est un mauvais calcul&nbsp;: le coût d'une réimpression est sans commune mesure.</p>
+
+<h2>Ce que l'imprimeur ne fera pas</h2>
+<p>Il n'est pas relecteur. Une faute d'orthographe dans un fichier validé sera imprimée en milliers d'exemplaires sans que personne la signale.</p>
+<p>La relecture finale vous appartient. Faites-la relire par quelqu'un qui n'a pas travaillé sur le projet&nbsp;: après trois semaines dessus, on ne voit plus les erreurs.</p>
+
+<h2>Construire une relation, pas une transaction</h2>
+<p>Un imprimeur qui connaît vos exigences vous préviendra d'un problème avant de lancer. Un imprimeur choisi à chaque fois au moins-disant imprimera exactement ce qu'il a reçu, défauts compris.</p>
+<p>Sur la durée, la deuxième approche coûte plus cher.</p>
+"""
+    ),
+    dict(
+        slug="nommer-une-marque",
+        title="Nommer une marque : méthode et pièges",
+        description="Ce qui fait un bon nom, les catégories de noms possibles, et les vérifications à faire avant de s'y attacher.",
+        keywords=["trouver un nom de marque", "naming", "choisir nom entreprise", "nom de marque disponible"],
+        category="Stratégie",
+        date="2026-08-07",
+        lede="Le nom est la seule décision de marque qu'on ne peut presque jamais corriger. Il mérite plus de temps que le logo, et en reçoit presque toujours moins.",
+        body="""
+<h2>Un bon nom se prononce et s'épelle</h2>
+<p>Avant toute considération de sens&nbsp;: est-ce qu'on peut le dire au téléphone sans l'épeler&nbsp;? Est-ce qu'on l'écrit correctement après l'avoir entendu une fois&nbsp;?</p>
+<p>Un nom qui échoue à ces deux tests coûtera du trafic tous les jours&nbsp;— des gens qui vous cherchent et ne vous trouvent pas.</p>
+<p>En contexte bilingue, testez la prononciation en français <em>et</em> en anglais. Un nom qui devient ridicule ou imprononçable dans l'autre langue posera problème à Montréal.</p>
+
+<h2>Les grandes familles</h2>
+<ul>
+  <li><strong>Descriptif</strong> (ce que l'entreprise fait)&nbsp;: clair immédiatement, mais banal et très difficile à protéger juridiquement.</li>
+  <li><strong>Évocateur</strong> (une image, une association)&nbsp;: bon compromis entre sens et distinction.</li>
+  <li><strong>Inventé</strong>&nbsp;: parfaitement protégeable, mais il faut investir pour lui donner un sens.</li>
+  <li><strong>Patronymique</strong>&nbsp;: personnel et crédible pour un indépendant&nbsp;; contraignant en cas de revente.</li>
+</ul>
+<p>Aucune famille n'est supérieure. Le choix dépend du budget de notoriété disponible&nbsp;: moins on peut communiquer, plus il faut que le nom travaille seul.</p>
+
+<h2>Le piège du descriptif</h2>
+<p>Un nom qui décrit littéralement l'activité rassure au départ et enferme ensuite. Il empêche de se diversifier, et il ressemble à celui de tous les concurrents.</p>
+<p>Surtout, il se défend mal&nbsp;: on ne peut pas interdire à d'autres d'employer des termes usuels de leur métier.</p>
+
+<h2>Vérifier avant de s'attacher</h2>
+<p>L'erreur classique consiste à tomber amoureux d'un nom, puis à découvrir qu'il est pris. Vérifiez tôt&nbsp;: registre des marques, registre des entreprises, nom de domaine, réseaux sociaux, et une recherche simple dans votre secteur.</p>
+<p>Faites cette vérification sur une liste de plusieurs candidats, avant de choisir&nbsp;— pas sur le seul nom auquel vous tenez déjà.</p>
+
+<h2>Le tester à voix haute</h2>
+<p>Dites-le dans une phrase réelle&nbsp;: «&nbsp;Bonjour, ici [nom]&nbsp;». Écrivez-le en majuscules, en minuscules, dans une adresse courriel. Certains noms parfaits sur le papier deviennent pénibles à l'usage.</p>
+<p>Vérifiez aussi ce que donnent les initiales, et ce que produit le nom collé sans espace dans un domaine&nbsp;: des surprises désagréables s'y cachent.</p>
+
+<h2>Accepter que rien ne soit parfait</h2>
+<p>Tous les grands noms paraissaient étranges avant de devenir familiers. Un nom correct, disponible et prononçable, porté par un travail sérieux, vaut mieux qu'une recherche interminable du nom idéal.</p>
+<p>Passé un certain point, ce n'est plus le nom qui bloque le projet&nbsp;: c'est la recherche du nom.</p>
 """
     ),
 ]

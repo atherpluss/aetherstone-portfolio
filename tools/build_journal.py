@@ -209,7 +209,7 @@ def render_index(articles, chrome):
 <meta content="width=device-width, initial-scale=1" name="viewport"/>\
 <link rel="preload" href="../wf/68396a14a9b4604f87fdbba4_MixtapeExtraCondensed-ExtraBold.woff2" as="font" type="font/woff2" crossorigin/>\
 <link rel="preload" href="../wf/GTPressuraMonoLight-exact.woff2" as="font" type="font/woff2" crossorigin/>\
-<link href="../css/main.css" rel="stylesheet" type="text/css"/>\
+<link href="/css/main.css" rel="stylesheet" type="text/css"/>\
 <meta name="description" content="{desc}"/>\
 <meta name="author" content="Nadhem Hsini"/>\
 <link rel="canonical" href="{url}"/>\
