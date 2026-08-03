@@ -1,0 +1,16 @@
+{
+  "name": "Aetherstone — Nadhem Hsini",
+  "short_name": "Aetherstone",
+  "description": "Nadhem Hsini, designer graphique multidisciplinaire independant base a Montreal : identite de marque, packaging, direction artistique.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#e4e4e4",
+  "theme_color": "#111111",
+  "lang": "fr-CA",
+  "icons": [
+    { "src": "/wf/favicon-light-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/wf/favicon-light-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/wf/favicon-light-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
