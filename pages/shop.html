@@ -1293,7 +1293,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
   document.querySelectorAll("[data-modal-close]").forEach(function(el){ el.addEventListener("click", closeModal); });
 
   // Zoom sur la photo produit : meme lightbox que les pages projet.
-  // Les triggers sont sur des <img loading="lazy" decoding="async"> dont le src change a chaque produit ;
+  // Les triggers sont sur des <img> dont le src change a chaque produit ;
   // l'ecouteur, pose une seule fois au chargement, clone le noeud tel
   // qu'il est au moment du clic, donc il suit toujours la bonne photo.
   function closeLightbox(){
