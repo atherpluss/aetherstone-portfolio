@@ -211,8 +211,23 @@ html.is-dark .shop_modal_zoom_btn:hover{ background:#1c1c1c; }
 .checkout_modal{ display:none; position:fixed; inset:0; z-index:199500; align-items:center; justify-content:center; padding:2rem 1.2rem; }
 .checkout_modal.is-open{ display:flex; }
 .checkout_modal_backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.88); }
-.checkout_modal_panel{ position:relative; background:var(--background); color:var(--text); max-width:30rem; width:100%; max-height:92vh; overflow-y:auto; padding:3rem 2.4rem 2.4rem; border-radius:0.4rem; }
-.checkout_modal_close{ position:absolute; top:1.4rem; right:1.4rem; background:none; border:none; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; font-size:.72rem; cursor:pointer; color:inherit; opacity:.6; }
+/* Le panneau de commande est decoupe comme un ticket : une rangee de dents
+   rectangulaires en haut et en bas. Trois couches de masque — le corps, puis
+   les dents du haut et du bas — reunies par le compositing par defaut.
+   Le padding vertical laisse la place aux dents pour ne rien manger du texte. */
+.checkout_modal_panel{ position:relative; background:var(--background); color:var(--text); max-width:30rem; width:100%; max-height:92vh; overflow-y:auto; padding:3.4rem 2.4rem 2.8rem; border-radius:0;
+  --ticket-tooth-w:14px; --ticket-tooth-h:9px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) 0 var(--ticket-tooth-h) / 100% calc(100% - var(--ticket-tooth-h) * 2) no-repeat,
+    repeating-linear-gradient(90deg, #000 0 var(--ticket-tooth-w), #0000 var(--ticket-tooth-w) calc(var(--ticket-tooth-w) * 2)) 0 0 / 100% var(--ticket-tooth-h) no-repeat,
+    repeating-linear-gradient(90deg, #000 0 var(--ticket-tooth-w), #0000 var(--ticket-tooth-w) calc(var(--ticket-tooth-w) * 2)) 0 100% / 100% var(--ticket-tooth-h) no-repeat;
+  mask:
+    linear-gradient(#000 0 0) 0 var(--ticket-tooth-h) / 100% calc(100% - var(--ticket-tooth-h) * 2) no-repeat,
+    repeating-linear-gradient(90deg, #000 0 var(--ticket-tooth-w), #0000 var(--ticket-tooth-w) calc(var(--ticket-tooth-w) * 2)) 0 0 / 100% var(--ticket-tooth-h) no-repeat,
+    repeating-linear-gradient(90deg, #000 0 var(--ticket-tooth-w), #0000 var(--ticket-tooth-w) calc(var(--ticket-tooth-w) * 2)) 0 100% / 100% var(--ticket-tooth-h) no-repeat;
+}
+@media (max-width:479px){ .checkout_modal_panel{ --ticket-tooth-w:10px; --ticket-tooth-h:7px; } }
+.checkout_modal_close{ position:absolute; top:1.8rem; right:1.4rem; background:none; border:none; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; font-size:.72rem; cursor:pointer; color:inherit; opacity:.6; }
 .checkout_modal_panel h2{ font-family:"Mixtape Extra Condensed",sans-serif; font-weight:800; text-transform:uppercase; font-size:3rem; line-height:.9; margin:0 0 1.6rem; letter-spacing:-0.065em; }
 .checkout_summary{ border-top:1px solid rgba(128,128,128,.3); border-bottom:1px solid rgba(128,128,128,.3); padding:1rem 0; margin-bottom:1.8rem; font-family:"Gt Pressura Mono",monospace; font-size:.75rem; }
 .checkout_summary_line{ display:flex; justify-content:space-between; gap:1rem; padding:0.35rem 0; text-transform:uppercase; letter-spacing:.03rem; }

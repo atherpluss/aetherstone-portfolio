@@ -389,7 +389,9 @@ html.is-dark #chatPanel_header{ border-bottom-color:rgba(228,228,228,0.15); }
    site (bouton d'ouverture, curseur, boutons d'envoi) pour le visiteur ;
    surface neutre pour l'assistant. Coin resserre du cote de l'emetteur,
    convention standard de bulle de discussion. */
-.cp-msg{ font-size:0.9rem; line-height:1.42; white-space:pre-wrap; max-width:84%; padding:.55rem .8rem; border-radius:1.1rem; }
+.cp-msg{ font-size:0.9rem; line-height:1.42; white-space:pre-wrap; max-width:84%; padding:.55rem .8rem; border-radius:1.1rem; overflow-wrap:anywhere; word-break:break-word; }
+.cp-msg a{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
+.cp-msg.user a{ color:#fff; }
 .cp-msg.bot{ align-self:flex-start; color:inherit; background:rgba(17,17,17,0.06); border-bottom-left-radius:.3rem; }
 .cp-msg.user{ align-self:flex-end; color:#fff; background:#0000ff; border-bottom-right-radius:.3rem; }
 html.is-dark .cp-msg.bot{ background:rgba(228,228,228,0.09); }
@@ -1967,7 +1969,20 @@ if (introTextElement) {
       function addMsg(text, who){
         var div = document.createElement('div');
         div.className = 'cp-msg ' + who;
-        div.textContent = text;
+        var re = /https?:\/\/[^\s<>"']+/g;
+        var last = 0, m;
+        while ((m = re.exec(text)) !== null) {
+          if (m.index > last) div.appendChild(document.createTextNode(text.slice(last, m.index)));
+          var href = m[0].replace(/[.,;:!?)]+$/, '');
+          var a = document.createElement('a');
+          a.href = href;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.textContent = href;
+          div.appendChild(a);
+          last = m.index + href.length;
+        }
+        if (last < text.length) div.appendChild(document.createTextNode(text.slice(last)));
         messagesEl.appendChild(div);
         messagesEl.scrollTop = messagesEl.scrollHeight;
         return div;
@@ -2483,6 +2498,47 @@ if (introTextElement) {
     });
   }
   if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+<script>
+/* Parallaxe de la section « Design with purpose ».
+   Les deux blocs de texte defilent a des vitesses legerement differentes du
+   reste de la page, ce qui donne de la profondeur sans toucher a l'animation
+   caractere par caractere deja en place (elle vit sur .home_intro_content,
+   on deplace donc son PARENT pour ne pas entrer en conflit).
+   Desactive si GSAP manque, sur mobile, et si l'utilisateur a demande moins
+   d'animations. */
+(function(){
+  function init(){
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(max-width: 767px)').matches) return;
+
+    var section = document.querySelector('.section_home-intro');
+    if (!section || section.dataset.parallaxInit === '1') return;
+    section.dataset.parallaxInit = '1';
+
+    var mono = section.querySelector('.home_intro_mono_wrapper');
+    var textBlocks = section.querySelectorAll('.simple-appear, .text-appear');
+    var visuals = section.querySelector('.home_intro_visuals');
+
+    function drift(el, distance){
+      if (!el) return;
+      gsap.fromTo(el,
+        { yPercent: 0 },
+        { yPercent: distance, ease: 'none', force3D: true,
+          scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+    }
+
+    drift(mono, -18);
+    textBlocks.forEach(function(b){ drift(b, -7); });
+    drift(visuals, 12);
+  }
+  if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
