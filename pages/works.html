@@ -8,7 +8,29 @@
 <link rel="preload" href="../wf/68396a14a9b4604f87fdbba4_MixtapeExtraCondensed-ExtraBold.woff2" as="font" type="font/woff2" crossorigin/><link rel="preload" href="../wf/GTPressuraMonoLight-exact.woff2" as="font" type="font/woff2" crossorigin/><link href="../css/main.css" rel="stylesheet" type="text/css">
 <style>
 body { margin:0; }
-.filters { display:flex; gap:1.5rem; margin: 2rem 5% 3rem; flex-wrap:wrap; }
+.filters { display:flex; gap:1.5rem; margin: 2rem 5% 3rem; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+.filters-cats { display:flex; gap:1.5rem; flex-wrap:wrap; }
+/* Recherche : rectangle arrondi, meme langage que les selecteurs de taille
+   de la boutique (.shop_size_btn) plutot qu'un style invente pour l'occasion.
+   Desktop uniquement, sur demande explicite : masquee sous 768px. */
+.works-search{ display:none; }
+@media (min-width:768px){
+  .works-search{
+    display:flex; align-items:center; gap:.5rem;
+    border:1px solid rgba(128,128,128,.35); border-radius:.5rem;
+    padding:.5rem .9rem; flex-shrink:0; min-width:15rem;
+    transition:border-color .2s ease;
+  }
+  .works-search:focus-within{ border-color:#111; }
+  html.is-dark .works-search:focus-within{ border-color:#e4e4e4; }
+  .works-search svg{ flex-shrink:0; opacity:.5; }
+  .works-search input{
+    border:none; background:none; outline:none; width:100%; color:inherit;
+    font-family:"Gt Pressura Mono",monospace; font-size:.85rem; letter-spacing:.04rem;
+    font-weight:300;
+  }
+  .works-search input::placeholder{ color:inherit; opacity:.5; }
+}
 .filter-btn { background:none; border:none; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; font-size:0.9rem; letter-spacing:.121875rem; cursor:pointer; padding:0.4rem 0; border-bottom:2px solid transparent; color:#666; font-weight:300; }
 .filter-btn.is-active { color:#111; border-bottom-color:#111; }
 .works-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.9rem; padding: 0 5% 6rem; margin:0 auto; }
@@ -52,7 +74,13 @@ body { margin:0; }
 </svg></a></div><div class="nav-top_left_3 hide-mobile-landscape"><div id="modeSwitch" class="link is-mono"><div class="link_first"><div class="text-mono difference">Dark mode</div></div><div class="link_second"><div class="text-mono difference">Dark mode</div></div></div></div></div><div class="nav-top_middle has-cart"><div id="menuToggle" class="link is-mono"><div class="link_first"><div class="text-mono difference">Menu</div></div><div class="link_second"><div class="text-mono difference">Open</div></div></div><div id="modeSwitch2" class="show-mobile-landscape"></div></div><div class="nav-top_right hide-mobile-landscape"><div data-w-id="aec3b3b5-7411-c902-5605-0d159459a9a1" class="link is-mono"><div class="link_first"><div class="text-mono difference">Let&#x27;s talk!</div></div><div class="link_second"><div class="text-mono difference">Contact us</div></div></div></div></div></div></div></nav><section class="nav-menu" id="navMenuOverlay"><div class="padding-global"><div class="container-nav"><div class="nav-menu_component"><div class="nav-menu_col"><a href="../index.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/nadhem-portrait1.webp');"></div><div class="nav-menu_link">Home</div></a><a href="works.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/works/ecurie33.webp');"></div><div class="nav-menu_link">Projects</div></a><a href="shop.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/moodgie.webp');"></div><div class="nav-menu_link">Shop</div></a></div><div class="nav-menu_col"><a href="#" class="nav-menu_link_wrapper hidden w-inline-block" tabindex="-1" aria-hidden="true"><div class="nav-menu_link">_</div></a><a href="mailto:atherpluss@gmail.com" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/nadhem-portrait2.webp');"></div><div class="nav-menu_link">Contact</div></a><a href="approach.html" class="nav-menu_link_wrapper w-inline-block"><div class="nav-menu_visual" style="background-image:url('../wf/jorge/building-facade.webp');"></div><div class="nav-menu_link">About</div></a></div></div></div></div></section><nav class="nav-bottom"><div class="padding-global is-nav"><div class="container-nav"><div class="nav-bottom_component"><div class="hide-tablet"><div class="text-mono difference">Aetherstone, independent creative.</div></div><div class="nav-bottom_right"><div class="cities_list"><div class="city_wrapper"><div id="citySwitchSingle" class="text-mono difference">Montreal, Canada</div><div id="timeSwitchSingle" class="text-mono difference">3:49 PM</div></div></div></div></div></div></div></nav>
 <main class="page-main">
 <h1 class="heading-appear" style="margin: 12rem 5% 2rem;">Projects</h1>
-<div class="filters"><button class="filter-btn is-active" data-filter="Tous">Tous</button><button class="filter-btn" data-filter="Packaging">Packaging</button><button class="filter-btn" data-filter="Direction artistique">Direction artistique</button><button class="filter-btn" data-filter="Vidéoclip">Vidéoclip</button><button class="filter-btn" data-filter="Illustration">Illustration</button></div>
+<div class="filters">
+  <div class="filters-cats"><button class="filter-btn is-active" data-filter="Tous">Tous</button><button class="filter-btn" data-filter="Packaging">Packaging</button><button class="filter-btn" data-filter="Direction artistique">Direction artistique</button><button class="filter-btn" data-filter="Vidéoclip">Vidéoclip</button><button class="filter-btn" data-filter="Illustration">Illustration</button></div>
+  <label class="works-search">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input type="search" id="worksSearch" placeholder="Rechercher un projet" autocomplete="off">
+  </label>
+</div>
 <div class="works-grid">
     <a href="work_moodgie.html" class="work-card" data-cat="Packaging">
       <img src="../wf/works/moodgie.webp" alt="Moodgie" loading="lazy" class="work-card-img" decoding="async">
@@ -167,16 +195,36 @@ body { margin:0; }
 <a href="shop.html" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="text-mono">Shop</div></div><div class="link_second"><div class="text-mono">Shop</div></div></a>
 </div><div class="footer_menu_col"><a data-wf-native-id-path="6d571964-3b11-2cdc-6fc1-916aa4b92846:0822c830-c044-c5e7-b1fd-f5f60b9a7098" data-wf-ao-click-engagement-tracking="true" data-wf-element-id="0822c830-c044-c5e7-b1fd-f5f60b9a7098" data-wf-component-context="%5B%7B%22componentId%22%3A%223ca8485b-0fb1-1025-7b1f-29e7668f5e81%22%2C%22instanceId%22%3A%226d571964-3b11-2cdc-6fc1-916aa4b92846%22%7D%5D" href="https://www.instagram.com/nadhem_hsini?igsh=ZTZzbmdhOHdteDJn&amp;utm_source=qr" target="_blank" rel="noopener noreferrer" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">Instagram</div></div></div><div class="link_second"><div class="text-mono">Instagram</div></div></a><a data-wf-native-id-path="6d571964-3b11-2cdc-6fc1-916aa4b92846:c574e2cd-c233-6d91-3f3e-18e16e4ba173" data-wf-ao-click-engagement-tracking="true" data-wf-element-id="c574e2cd-c233-6d91-3f3e-18e16e4ba173" data-wf-component-context="%5B%7B%22componentId%22%3A%223ca8485b-0fb1-1025-7b1f-29e7668f5e81%22%2C%22instanceId%22%3A%226d571964-3b11-2cdc-6fc1-916aa4b92846%22%7D%5D" href="https://www.behance.net/athertn" target="_blank" rel="noopener noreferrer" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">Behance</div></div></div><div class="link_second"><div class="text-mono">Behance</div></div></a><a data-wf-native-id-path="6d571964-3b11-2cdc-6fc1-916aa4b92846:b2499be0-a553-f4e7-a9df-a26b39211da3" data-wf-ao-click-engagement-tracking="true" data-wf-element-id="b2499be0-a553-f4e7-a9df-a26b39211da3" data-wf-component-context="%5B%7B%22componentId%22%3A%223ca8485b-0fb1-1025-7b1f-29e7668f5e81%22%2C%22instanceId%22%3A%226d571964-3b11-2cdc-6fc1-916aa4b92846%22%7D%5D" href="https://youtube.com/@atherstone2590?si=jlftRjqkU-Ipe2TB" target="_blank" rel="noopener noreferrer" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">YouTube</div></div></div><div class="link_second"><div class="text-mono">YouTube</div></div></a><a data-wf-native-id-path="6d571964-3b11-2cdc-6fc1-916aa4b92846:e883adca-7272-53a6-827b-f8a934aacee8" data-wf-ao-click-engagement-tracking="true" data-wf-element-id="e883adca-7272-53a6-827b-f8a934aacee8" data-wf-component-context="%5B%7B%22componentId%22%3A%223ca8485b-0fb1-1025-7b1f-29e7668f5e81%22%2C%22instanceId%22%3A%226d571964-3b11-2cdc-6fc1-916aa4b92846%22%7D%5D" href="legal.html" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="mono-appear"><div class="text-mono">Legal</div></div></div><div class="link_second"><div class="text-mono">Legal</div></div></a><div class="w-locales-list"><div role="list" class="locales-list w-locales-items"><div role="listitem" class="locale w-locales-item"><div class="link is-mono-footer no-padding-right"><div class="link_first"><div class="mono-appear is-locales"><a hreflang="en-US" data-wf-native-id-path="6d571964-3b11-2cdc-6fc1-916aa4b92846:bf41ff11-ea0a-e3aa-1643-0cfbf2cc081f_instance-0" data-wf-ao-click-engagement-tracking="true" data-wf-element-id="bf41ff11-ea0a-e3aa-1643-0cfbf2cc081f" data-wf-component-context="%5B%7B%22componentId%22%3A%223ca8485b-0fb1-1025-7b1f-29e7668f5e81%22%2C%22instanceId%22%3A%226d571964-3b11-2cdc-6fc1-916aa4b92846%22%7D%5D" href="#" aria-current="page" class="text-mono w--current">Switch to english</a></div></div><div class="link_second is-locales"><a hreflang="en-US" data-wf-native-id-path="6d571964-3b11-2cdc-6fc1-916aa4b92846:141d8a92-3429-cd48-e2cb-06c6e0244fd7_instance-0" data-wf-ao-click-engagement-tracking="true" data-wf-element-id="141d8a92-3429-cd48-e2cb-06c6e0244fd7" data-wf-component-context="%5B%7B%22componentId%22%3A%223ca8485b-0fb1-1025-7b1f-29e7668f5e81%22%2C%22instanceId%22%3A%226d571964-3b11-2cdc-6fc1-916aa4b92846%22%7D%5D" href="#" aria-current="page" class="text-mono w--current">Switch to english</a></div></div></div><div role="listitem" class="locale w-locales-item"><div class="link is-mono-footer no-padding-right"><div class="link_first"><div class="mono-appear is-locales"><a hreflang="fr-FR" data-wf-native-id-path="6d571964-3b11-2cdc-6fc1-916aa4b92846:bf41ff11-ea0a-e3aa-1643-0cfbf2cc081f_instance-1" data-wf-ao-click-engagement-tracking="true" data-wf-element-id="bf41ff11-ea0a-e3aa-1643-0cfbf2cc081f" data-wf-component-context="%5B%7B%22componentId%22%3A%223ca8485b-0fb1-1025-7b1f-29e7668f5e81%22%2C%22instanceId%22%3A%226d571964-3b11-2cdc-6fc1-916aa4b92846%22%7D%5D" href="#" class="text-mono">Site en français</a></div></div><div class="link_second is-locales"><a hreflang="fr-FR" data-wf-native-id-path="6d571964-3b11-2cdc-6fc1-916aa4b92846:141d8a92-3429-cd48-e2cb-06c6e0244fd7_instance-1" data-wf-ao-click-engagement-tracking="true" data-wf-element-id="141d8a92-3429-cd48-e2cb-06c6e0244fd7" data-wf-component-context="%5B%7B%22componentId%22%3A%223ca8485b-0fb1-1025-7b1f-29e7668f5e81%22%2C%22instanceId%22%3A%226d571964-3b11-2cdc-6fc1-916aa4b92846%22%7D%5D" href="#" class="text-mono">Site en français</a></div></div></div></div></div></div><div id="webflowTrigger" class="hide"></div></div><div class="footer_menu"><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Independent multidisciplinary designer based in Montréal, working with clients worldwide.</div></div></div><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Whether it&#x27;s a new brand, a fresh direction, or simply an idea worth exploring, let&#x27;s talk.</div></div></div><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Let&#x27;s talk!</div></div></div><div class="footer_menu_col"><a data-cursor-hover="Send love" data-wf-native-id-path="6d571964-3b11-2cdc-6fc1-916aa4b92846:3e21199b-1b2d-ee60-c307-d8b2546c778a" data-wf-ao-click-engagement-tracking="true" data-wf-element-id="3e21199b-1b2d-ee60-c307-d8b2546c778a" data-wf-component-context="%5B%7B%22componentId%22%3A%223ca8485b-0fb1-1025-7b1f-29e7668f5e81%22%2C%22instanceId%22%3A%226d571964-3b11-2cdc-6fc1-916aa4b92846%22%7D%5D" href="mailto:atherpluss@gmail.com" class="link is-mono-footer w-inline-block"><div class="link_first"><div class="text-appear"><div class="text-mono">atherpluss@gmail.com</div></div></div><div class="link_second"><div class="text-mono">atherpluss@gmail.com</div></div></a></div><div class="footer_menu_col"><div class="text-appear"><div class="text-mono">Copyright 2026</div></div><div class="text-appear"><div class="text-mono">Aetherstone</div></div></div></div></div></div><div class="footer_logo_wrapper" style="overflow-anchor:none;"><div class="footer_logo_fill w-embed" style="overflow-anchor:none;"><div class="logo-instance"><svg class="footer_logo" width="100%" height="100%" viewBox="0 0 762.07 225.49" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M59.04,4.74h63.23l40.81,215.99h-48.28l-6.54-45.08h-37.38l-6.54,45.08H18.24L59.04,4.74ZM102.34,132.92l-12.46-86.12-12.77,86.12h25.23Z" fill="currentColor"/><path d="M167.9,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M287.04,47.46h-28.35V4.74h103.42v42.73h-28.35v173.26h-46.72V47.46Z" fill="currentColor"/><path d="M447.3,133.25h-31.15v87.47h-46.72V4.74h46.72v85.79h31.15V4.74h46.72v215.99h-46.72v-87.47Z" fill="currentColor"/><path d="M513.18,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M616.12,4.74h57c37.69,0,64.79,29.27,64.79,69.98,0,22.2-8.41,40.71-21.8,52.82l26.48,93.19h-49.22l-19.31-78.72h-11.21v78.72h-46.72V4.74ZM690.88,75.72c0-18.84-8.41-32.3-20.25-32.3h-7.79v63.58h7.16c12.15,0,20.87-13.12,20.87-31.29Z" fill="currentColor"/></svg></div></div><div class="footer_logo_stretch w-embed" style="overflow-anchor:none;"><div class="logo-instance" style="height:0px;overflow:hidden;overflow-anchor:none;transform-origin:top;"><svg width="100%" height="100%" viewBox="0 0 762.07 225.49" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M59.04,4.74h63.23l40.81,215.99h-48.28l-6.54-45.08h-37.38l-6.54,45.08H18.24L59.04,4.74ZM102.34,132.92l-12.46-86.12-12.77,86.12h25.23Z" fill="currentColor"/><path d="M167.9,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M287.04,47.46h-28.35V4.74h103.42v42.73h-28.35v173.26h-46.72V47.46Z" fill="currentColor"/><path d="M447.3,133.25h-31.15v87.47h-46.72V4.74h46.72v85.79h31.15V4.74h46.72v215.99h-46.72v-87.47Z" fill="currentColor"/><path d="M513.18,4.74h88.78v42.73h-42.05v43.4h42.05v42.73h-42.05v44.41h42.05v42.73h-88.78V4.74Z" fill="currentColor"/><path d="M616.12,4.74h57c37.69,0,64.79,29.27,64.79,69.98,0,22.2-8.41,40.71-21.8,52.82l26.48,93.19h-49.22l-19.31-78.72h-11.21v78.72h-46.72V4.74ZM690.88,75.72c0-18.84-8.41-32.3-20.25-32.3h-7.79v63.58h7.16c12.15,0,20.87-13.12,20.87-31.29Z" fill="currentColor"/></svg></div></div></div></div></div></div></footer>
 <script>
+var activeFilter = 'Tous';
+var searchQuery = '';
+function applyWorksFilters(){
+  document.querySelectorAll('.work-card').forEach(function(card){
+    var matchesCat = activeFilter === 'Tous' || card.dataset.cat === activeFilter;
+    var matchesSearch = true;
+    if(searchQuery){
+      var title = (card.querySelector('.work-card-title') || {}).textContent || '';
+      var tag = (card.querySelector('.work-card-tag') || {}).textContent || '';
+      var haystack = (title + ' ' + tag + ' ' + (card.dataset.cat || '')).toLowerCase();
+      matchesSearch = haystack.indexOf(searchQuery) !== -1;
+    }
+    card.classList.toggle('is-hidden', !(matchesCat && matchesSearch));
+  });
+}
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('is-active'));
     btn.classList.add('is-active');
-    const f = btn.dataset.filter;
-    document.querySelectorAll('.work-card').forEach(card => {
-      card.classList.toggle('is-hidden', f !== 'Tous' && card.dataset.cat !== f);
-    });
+    activeFilter = btn.dataset.filter;
+    applyWorksFilters();
   });
 });
+var worksSearchInput = document.getElementById('worksSearch');
+if(worksSearchInput){
+  worksSearchInput.addEventListener('input', function(){
+    searchQuery = worksSearchInput.value.trim().toLowerCase();
+    applyWorksFilters();
+  });
+}
 </script>
 
 <script>

@@ -131,7 +131,7 @@ body { margin:0; }
 .shop_modal{ display:none; position:fixed; inset:0; z-index:199000; align-items:center; justify-content:center; padding:2.5rem 1.2rem; }
 .shop_modal.is-open{ display:flex; }
 .shop_modal_backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.88); }
-.shop_modal_panel{ position:relative; background:var(--background); color:var(--text); max-width:64rem; width:100%; max-height:92vh; overflow-y:auto; border-radius:0.5rem; display:grid; grid-template-columns:1.1fr 1fr; }
+.shop_modal_panel{ position:relative; background:var(--background); color:var(--text); max-width:64rem; width:100%; max-height:92vh; overflow-y:auto; border-radius:0.4rem; display:grid; grid-template-columns:1.1fr 1fr; }
 @media (max-width:767px){ .shop_modal_panel{ grid-template-columns:1fr; max-height:94vh; } }
 
 .shop_modal_gallery{ padding:1.5rem; display:flex; flex-direction:column; gap:0.7rem; }
@@ -139,6 +139,14 @@ body { margin:0; }
 .shop_modal_stage_track{ display:flex; flex-direction:column; height:300%; transition:transform 0.85s cubic-bezier(.65,0,.35,1); }
 .shop_modal_stage_slide{ height:33.3334%; width:100%; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
 .shop_modal_stage_slide img{ width:100%; height:100%; object-fit:contain; padding:0; box-sizing:border-box; transform:scale(1.45); cursor:zoom-in; }
+/* Le curseur zoom-in n'existe pas au toucher : sans repere visuel, rien
+   n'indique sur mobile que la photo s'agrandit au tap. Bouton visible en
+   permanence, coherent avec les autres controles (meme arrondi, memes
+   proportions que les vignettes). */
+.shop_modal_zoom_btn{ position:absolute; right:0.8rem; bottom:0.8rem; width:2.4rem; height:2.4rem; border-radius:50%; border:none; background:rgba(228,228,228,0.92); color:#111; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,0.18); z-index:2; }
+.shop_modal_zoom_btn:hover{ background:#fff; }
+html.is-dark .shop_modal_zoom_btn{ background:rgba(28,28,28,0.92); color:#e4e4e4; }
+html.is-dark .shop_modal_zoom_btn:hover{ background:#1c1c1c; }
 /* Agrandissement au clic sur la photo produit : meme mecanisme que les
    pages projet (.lightbox-trigger), pour rester coherent visuellement
    avec le reste du site plutot que d'inventer un second systeme de zoom. */
@@ -203,14 +211,14 @@ body { margin:0; }
 .checkout_modal{ display:none; position:fixed; inset:0; z-index:199500; align-items:center; justify-content:center; padding:2rem 1.2rem; }
 .checkout_modal.is-open{ display:flex; }
 .checkout_modal_backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.88); }
-.checkout_modal_panel{ position:relative; background:var(--background); color:var(--text); max-width:30rem; width:100%; max-height:92vh; overflow-y:auto; padding:3rem 2.4rem 2.4rem; }
+.checkout_modal_panel{ position:relative; background:var(--background); color:var(--text); max-width:30rem; width:100%; max-height:92vh; overflow-y:auto; padding:3rem 2.4rem 2.4rem; border-radius:0.4rem; }
 .checkout_modal_close{ position:absolute; top:1.4rem; right:1.4rem; background:none; border:none; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; font-size:.72rem; cursor:pointer; color:inherit; opacity:.6; }
 .checkout_modal_panel h2{ font-family:"Mixtape Extra Condensed",sans-serif; font-weight:800; text-transform:uppercase; font-size:3rem; line-height:.9; margin:0 0 1.6rem; letter-spacing:-0.065em; }
 .checkout_summary{ border-top:1px solid rgba(128,128,128,.3); border-bottom:1px solid rgba(128,128,128,.3); padding:1rem 0; margin-bottom:1.8rem; font-family:"Gt Pressura Mono",monospace; font-size:.75rem; }
 .checkout_summary_line{ display:flex; justify-content:space-between; gap:1rem; padding:0.35rem 0; text-transform:uppercase; letter-spacing:.03rem; }
 .checkout_summary_total{ display:flex; justify-content:space-between; padding-top:0.7rem; margin-top:0.5rem; border-top:1px solid rgba(128,128,128,.3); font-weight:700; }
 .checkout_field{ margin-bottom:1.3rem; }
-.checkout_field label{ display:block; font-family:"Gt Pressura Mono",monospace; font-size:.65rem; letter-spacing:.1rem; text-transform:uppercase; opacity:.5; margin-bottom:.4rem; }
+.checkout_field label{ display:block; font-family:"Mixtape",Verdana,sans-serif; font-weight:400; font-size:.85rem; letter-spacing:.02rem; text-transform:uppercase; opacity:.5; margin-bottom:.4rem; }
 .checkout_field input, .checkout_field textarea{ width:100%; box-sizing:border-box; background:none; border:none; border-bottom:1px solid rgba(128,128,128,.35); padding:.4rem 0; font-family:"Mixtape",Verdana,sans-serif; font-size:1.05rem; color:inherit; cursor:none; transition:border-color .2s ease; }
 .checkout_field input:focus, .checkout_field textarea:focus{ outline:none; border-bottom-color:var(--text); }
 .checkout_field select{ width:100%; box-sizing:border-box; background:none; border:none; border-bottom:1px solid rgba(128,128,128,.35); border-radius:0; padding:.4rem 0; font-family:"Mixtape",Verdana,sans-serif; font-size:1.05rem; color:inherit; cursor:pointer; transition:border-color .2s ease; -webkit-appearance:none; appearance:none; background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%); background-position:calc(100% - 9px) calc(50% + 1px),calc(100% - 4px) calc(50% + 1px); background-size:5px 5px,5px 5px; background-repeat:no-repeat; }
@@ -225,9 +233,9 @@ body { margin:0; }
 
 .email_modal{ display:none; position:fixed; inset:0; z-index:199500; background:rgba(0,0,0,.88); align-items:center; justify-content:center; padding:2rem; }
 .email_modal.is-open{ display:flex; }
-.email_modal_panel{ background:var(--background); color:var(--text); max-width:24rem; width:100%; padding:3rem 2.2rem 2.2rem; position:relative; }
+.email_modal_panel{ background:var(--background); color:var(--text); max-width:24rem; width:100%; padding:3rem 2.2rem 2.2rem; position:relative; border-radius:0.4rem; }
 .email_modal_close{ position:absolute; top:1.4rem; right:1.4rem; background:none; border:none; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; font-size:.72rem; cursor:pointer; color:inherit; opacity:.6; }
-.email_modal_panel label{ display:block; font-family:"Gt Pressura Mono",monospace; font-size:.65rem; letter-spacing:.1rem; text-transform:uppercase; opacity:.5; margin-bottom:.4rem; }
+.email_modal_panel label{ display:block; font-family:"Mixtape",Verdana,sans-serif; font-weight:400; font-size:.85rem; letter-spacing:.02rem; text-transform:uppercase; opacity:.5; margin-bottom:.4rem; }
 .email_modal_panel input, .email_modal_panel textarea{ width:100%; box-sizing:border-box; background:none; border:none; border-bottom:1px solid rgba(128,128,128,.35); padding:.4rem 0; font-family:"Mixtape",Verdana,sans-serif; font-size:1.05rem; color:inherit; cursor:none; margin-bottom:1.3rem; }
 .email_modal_send{ display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none; border-top:1px solid rgba(128,128,128,.3); padding:1.1rem 0 0; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.08rem; font-size:.85rem; color:inherit; cursor:pointer; text-align:left; }
 .email_modal_send::after{ content:"\2192"; font-size:1.1rem; transition:transform .2s ease; }
@@ -367,6 +375,9 @@ body { margin:0; }
           <div class="shop_modal_stage_slide"><img id="modalStageImgB" class="lightbox-trigger" src="" alt="" loading="lazy" decoding="async"></div>
           <div class="shop_modal_stage_slide" aria-hidden="true"><img id="modalStageImgA2" src="" alt="" loading="lazy" decoding="async"></div>
         </div>
+        <button type="button" class="shop_modal_zoom_btn" id="modalZoomBtn" aria-label="Agrandir la photo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+        </button>
       </div>
       <div class="shop_modal_thumbs">
         <button type="button" class="shop_modal_thumb is-active" id="modalThumbBtnA" data-view="a"><img id="modalThumbA" src="" alt="" loading="lazy" decoding="async"></button>
@@ -1195,6 +1206,32 @@ body { margin:0; }
   thumbBtnA.addEventListener("click", function(){ stopModalCycle(); goToModalSlide(0, true); });
   thumbBtnB.addEventListener("click", function(){ stopModalCycle(); goToModalSlide(1, true); });
 
+  // Balayage tactile entre les deux vues (avant / arriere). Le glissement
+  // vertical suit le sens du train de vignettes (translateY) ; un mouvement
+  // trop court (tap normal) ne declenche rien pour ne pas gener le zoom.
+  var modalStageEl = document.getElementById("modalStage");
+  var swipeStartY = null, swipeStartX = null;
+  if(modalStageEl){
+    modalStageEl.addEventListener("touchstart", function(e){
+      if(e.touches.length !== 1) return;
+      swipeStartY = e.touches[0].clientY;
+      swipeStartX = e.touches[0].clientX;
+    }, { passive: true });
+    modalStageEl.addEventListener("touchend", function(e){
+      if(swipeStartY === null) return;
+      var endY = e.changedTouches[0].clientY;
+      var endX = e.changedTouches[0].clientX;
+      var dy = endY - swipeStartY, dx = endX - swipeStartX;
+      swipeStartY = null;
+      // Un vrai balayage vertical : plus haut que large, et au-dela d'un
+      // seuil pour ne pas confondre avec un tap (qui ouvre le zoom).
+      if(Math.abs(dy) < 32 || Math.abs(dy) < Math.abs(dx)) return;
+      var showingA = modalCycleIndex % 2 === 0;
+      stopModalCycle();
+      goToModalSlide(showingA ? 1 : 0, true);
+    }, { passive: true });
+  }
+
   function setModalSize(size){
     modalSize = size;
     modalSizesEl.querySelectorAll(".shop_size_btn").forEach(function(btn){
@@ -1248,15 +1285,24 @@ body { margin:0; }
     lb.classList.remove("is-open");
     document.getElementById("lightbox-content").innerHTML = "";
   }
+  function openLightboxFrom(el){
+    var clone = el.cloneNode(true);
+    clone.classList.remove("lightbox-trigger");
+    var box = document.getElementById("lightbox-content");
+    box.innerHTML = "";
+    box.appendChild(clone);
+    document.getElementById("lightbox").classList.add("is-open");
+  }
   document.querySelectorAll(".lightbox-trigger").forEach(function(el){
-    el.addEventListener("click", function(){
-      var clone = el.cloneNode(true);
-      clone.classList.remove("lightbox-trigger");
-      var box = document.getElementById("lightbox-content");
-      box.innerHTML = "";
-      box.appendChild(clone);
-      document.getElementById("lightbox").classList.add("is-open");
-    });
+    el.addEventListener("click", function(){ openLightboxFrom(el); });
+  });
+  // Bouton loupe : indispensable au toucher, ou le curseur zoom-in (cursor:
+  // zoom-in) ne veut rien dire — rien d'autre ne signale que la photo
+  // s'agrandit. Ouvre la vue actuellement affichee (A ou B), pas toujours A.
+  var modalZoomBtn = document.getElementById("modalZoomBtn");
+  if(modalZoomBtn) modalZoomBtn.addEventListener("click", function(){
+    var current = modalCycleIndex % 2 === 1 ? stageB : stageA;
+    openLightboxFrom(current);
   });
   var lightboxCloseBtn = document.querySelector("[data-lightbox-close]");
   if(lightboxCloseBtn) lightboxCloseBtn.addEventListener("click", closeLightbox);

@@ -290,3 +290,18 @@ h1, h2, h3,
 @media screen and (max-width: 767px){
   .playground-heading{ padding-right: .25rem; }
 }
+
+/* ============================================================
+   11. SELECTEUR DE LANGUE (footer) — collision transitoire.
+
+   Les deux liens ("Switch to english" / "Site en français") sont
+   TOUJOURS presents dans le DOM au meme endroit ; js/i18n.js bascule
+   seulement une classe w--current pour indiquer lequel masquer, sans
+   filet CSS. Le plus souvent ca se resout proprement, mais observe une
+   fois un etat transitoire ou les deux occupent l'espace en meme temps
+   (l'un a largeur pleine, l'autre pas encore reduit a 0) — lu comme un
+   enorme espace vide entre "Mentions légales" et le lien de langue.
+   Garantie CSS pure, independante du timing JS : le lien marque comme
+   la langue courante ne prend jamais de place.
+   ============================================================ */
+.locale.w-locales-item:has(a.w--current) { display: none; }
