@@ -138,7 +138,15 @@ body { margin:0; }
 .shop_modal_stage{ position:relative; width:100%; aspect-ratio:1/1.05; border-radius:0.4rem; overflow:hidden; }
 .shop_modal_stage_track{ display:flex; flex-direction:column; height:300%; transition:transform 0.85s cubic-bezier(.65,0,.35,1); }
 .shop_modal_stage_slide{ height:33.3334%; width:100%; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-.shop_modal_stage_slide img{ width:100%; height:100%; object-fit:contain; padding:0; box-sizing:border-box; transform:scale(1.45); }
+.shop_modal_stage_slide img{ width:100%; height:100%; object-fit:contain; padding:0; box-sizing:border-box; transform:scale(1.45); cursor:zoom-in; }
+/* Agrandissement au clic sur la photo produit : meme mecanisme que les
+   pages projet (.lightbox-trigger), pour rester coherent visuellement
+   avec le reste du site plutot que d'inventer un second systeme de zoom. */
+.lightbox{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.94); z-index:200000; align-items:center; justify-content:center; padding:4rem 3rem; }
+.lightbox.is-open{ display:flex; }
+.lightbox img{ max-width:100%; max-height:100%; border-radius:0.2rem; cursor:zoom-out; }
+.lightbox-close{ position:fixed; top:1.5rem; right:1.5rem; display:flex; align-items:center; gap:0.4rem; height:2.6rem; padding:0 1.1rem; background:rgb(228,228,228); border:1px solid rgba(17,17,17,0.25); border-radius:999px; font-family:"Gt Pressura Mono",monospace; text-transform:uppercase; letter-spacing:.121875rem; cursor:pointer; font-size:0.8rem; z-index:210001; font-weight:300; }
+@media (max-width:479px){ .lightbox{ padding:1.5rem; } }
 .shop_modal_thumbs{ display:flex; gap:0.6rem; }
 .shop_modal_thumb{ flex:1; aspect-ratio:1/1; border-radius:0.3rem; border:2px solid transparent; padding:2%; box-sizing:border-box; cursor:pointer; opacity:.55; transition:opacity .2s ease, border-color .2s ease; }
 .shop_modal_thumb.is-active{ opacity:1; border-color:var(--text); }
@@ -355,8 +363,8 @@ body { margin:0; }
     <div class="shop_modal_gallery">
       <div class="shop_modal_stage" id="modalStage">
         <div class="shop_modal_stage_track" id="modalStageTrack">
-          <div class="shop_modal_stage_slide"><img id="modalStageImgA" src="" alt="" loading="lazy" decoding="async"></div>
-          <div class="shop_modal_stage_slide"><img id="modalStageImgB" src="" alt="" loading="lazy" decoding="async"></div>
+          <div class="shop_modal_stage_slide"><img id="modalStageImgA" class="lightbox-trigger" src="" alt="" loading="lazy" decoding="async"></div>
+          <div class="shop_modal_stage_slide"><img id="modalStageImgB" class="lightbox-trigger" src="" alt="" loading="lazy" decoding="async"></div>
           <div class="shop_modal_stage_slide" aria-hidden="true"><img id="modalStageImgA2" src="" alt="" loading="lazy" decoding="async"></div>
         </div>
       </div>
@@ -475,6 +483,11 @@ body { margin:0; }
       <div class="checkout_status" id="checkoutStatus"></div>
     </form>
   </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" data-lightbox-close aria-label="Fermer">Fermer <span>&times;</span></button>
+  <div id="lightbox-content"></div>
 </div>
 
 <div class="email_modal" id="emailModal">
@@ -1174,8 +1187,13 @@ body { margin:0; }
       }
     }, 2600);
   }
-  thumbBtnA.addEventListener("click", function(){ stopModalCycle(); goToModalSlide(0, true); startModalCycle(); });
-  thumbBtnB.addEventListener("click", function(){ stopModalCycle(); goToModalSlide(1, true); startModalCycle(); });
+  // Choisir une vignette arretait bien le defilement automatique, mais le
+  // relancait dans la meme foulee : startModalCycle() commence toujours par
+  // sauter a la vue A sans transition, ce qui annulait le clic sur la vue B
+  // dans le meme tick avant que le visiteur ait pu la voir. Un choix manuel
+  // doit rester en place, pas etre repris par l'automatique.
+  thumbBtnA.addEventListener("click", function(){ stopModalCycle(); goToModalSlide(0, true); });
+  thumbBtnB.addEventListener("click", function(){ stopModalCycle(); goToModalSlide(1, true); });
 
   function setModalSize(size){
     modalSize = size;
@@ -1219,8 +1237,34 @@ body { margin:0; }
     stopModalCycle();
   }
   document.querySelectorAll("[data-modal-close]").forEach(function(el){ el.addEventListener("click", closeModal); });
+
+  // Zoom sur la photo produit : meme lightbox que les pages projet.
+  // Les triggers sont sur des <img> dont le src change a chaque produit ;
+  // l'ecouteur, pose une seule fois au chargement, clone le noeud tel
+  // qu'il est au moment du clic, donc il suit toujours la bonne photo.
+  function closeLightbox(){
+    var lb = document.getElementById("lightbox");
+    if(!lb) return;
+    lb.classList.remove("is-open");
+    document.getElementById("lightbox-content").innerHTML = "";
+  }
+  document.querySelectorAll(".lightbox-trigger").forEach(function(el){
+    el.addEventListener("click", function(){
+      var clone = el.cloneNode(true);
+      clone.classList.remove("lightbox-trigger");
+      var box = document.getElementById("lightbox-content");
+      box.innerHTML = "";
+      box.appendChild(clone);
+      document.getElementById("lightbox").classList.add("is-open");
+    });
+  });
+  var lightboxCloseBtn = document.querySelector("[data-lightbox-close]");
+  if(lightboxCloseBtn) lightboxCloseBtn.addEventListener("click", closeLightbox);
+  var lightboxEl = document.getElementById("lightbox");
+  if(lightboxEl) lightboxEl.addEventListener("click", function(e){ if(e.target.id === "lightbox") closeLightbox(); });
+
   document.addEventListener("keydown", function(e){
-    if(e.key === "Escape"){ closeModal(); closeCart(); }
+    if(e.key === "Escape"){ closeLightbox(); closeModal(); closeCart(); }
   });
 
   document.querySelectorAll(".shop_card").forEach(function(card){
