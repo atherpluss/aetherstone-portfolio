@@ -1,40 +1,21 @@
-// Envoi de la commande à Printful — Pages Function, sur /api/order-confirm.
+// Confirmation de commande — Pages Function, sur /api/order-confirm.
 //
 // Appelée avec l'identifiant de session Stripe au retour du paiement. Elle
-// vérifie AUPRÈS DE STRIPE que la session est réellement payée avant de créer
-// quoi que ce soit : le paramètre vient du navigateur, il ne prouve rien par
-// lui-même.
+// vérifie AUPRÈS DE STRIPE que la session est réellement payée avant de faire
+// quoi que ce soit : le paramètre d'URL vient du navigateur, il ne prouve rien.
 //
-// Idempotence : la commande Printful porte `external_id` = identifiant de
-// session Stripe. Si la page est rechargée ou l'appel rejoué, Printful refuse
-// le doublon au lieu d'imprimer deux fois.
+// Fournisseur d'impression : Tapstitch, saisie manuelle des commandes.
+// Tapstitch n'a pas d'API pour un site sur mesure (voir functions/api/
+// checkout.js pour le détail) — il ne reste donc plus de commande à créer
+// automatiquement. Cette fonction envoie à la place un courriel récapitulatif
+// à Nadhem, à ressaisir dans Tapstitch.
 //
-// PRINTFUL_AUTO_CONFIRM : tant que cette variable ne vaut pas "1", la commande
-// arrive chez Printful en BROUILLON, à confirmer à la main. C'est le réglage
-// prudent pour les premières ventes — rien ne part en production par accident.
+// Anti-doublon : Printful refusait auparavant une commande déjà enregistrée
+// (external_id). Sans lui, un simple rechargement de la page de confirmation
+// renverrait le même courriel. Le Cache API de Cloudflare sert de mémoire
+// courte (24 h) pour ne notifier chaque commande qu'une fois — aucune
+// infrastructure supplémentaire à provisionner pour ça.
 
-const STORE_ID = '15273464';
-
-// Même normalisation qu'au paiement : une session déjà encaissée peut contenir
-// un code de province saisi en toutes lettres (avant la mise en place de la
-// liste fermée). Sans ce rattrapage, la commande resterait bloquée alors que
-// le client a payé.
-const ETATS = {
-  CA: ['AB','BC','MB','NB','NL','NS','NT','NU','ON','PE','QC','SK','YT'],
-  US: ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
-};
-const ETAT_ALIAS = {
-  'QUEBEC': 'QC', 'QUÉBEC': 'QC', 'MONTREAL': 'QC', 'MONTRÉAL': 'QC',
-  'ONTARIO': 'ON', 'TORONTO': 'ON', 'BRITISH COLUMBIA': 'BC', 'COLOMBIE-BRITANNIQUE': 'BC',
-  'ALBERTA': 'AB', 'MANITOBA': 'MB', 'NOVA SCOTIA': 'NS', 'NEW BRUNSWICK': 'NB',
-  'SASKATCHEWAN': 'SK', 'NEW YORK': 'NY', 'CALIFORNIA': 'CA', 'TEXAS': 'TX', 'FLORIDA': 'FL'
-};
-function normaliserEtat(pays, code) {
-  if (!ETATS[pays]) return code || undefined;
-  let c = String(code || '').trim().toUpperCase();
-  if (ETAT_ALIAS[c]) c = ETAT_ALIAS[c];
-  return ETATS[pays].indexOf(c) !== -1 ? c : undefined;
-}
 const json = (p, s = 200) => new Response(JSON.stringify(p), { status: s, headers: { 'Content-Type': 'application/json' } });
 
 export async function onRequestGet({ request, env }) {
@@ -43,7 +24,6 @@ export async function onRequestGet({ request, env }) {
   if (!sessionId.startsWith('cs_')) return json({ error: 'Session invalide' }, 400);
   if (!env.STRIPE_SECRET_KEY) return json({ error: 'Configuration Stripe manquante' }, 500);
 
-  // 1. La session est-elle vraiment payée ?
   const sRes = await fetch('https://api.stripe.com/v1/checkout/sessions/' + encodeURIComponent(sessionId), {
     headers: { Authorization: 'Bearer ' + env.STRIPE_SECRET_KEY }
   });
@@ -51,9 +31,15 @@ export async function onRequestGet({ request, env }) {
   if (!sRes.ok || !session) return json({ error: 'Session introuvable' }, 502);
   if (session.payment_status !== 'paid') return json({ paye: false, statut: session.payment_status }, 200);
 
-  const key = env.PRINTFUL_API_KEY || env.PRINTFUL_TOKEN;
-  if (!key) return json({ error: 'Configuration Printful manquante' }, 500);
-  const H = { Authorization: 'Bearer ' + key, 'X-PF-Store-Id': STORE_ID, 'Content-Type': 'application/json' };
+  // Marqueur de doublon : une clé de cache dédiée, propre à cette session.
+  const cache = caches.default;
+  const markerUrl = new URL(request.url);
+  markerUrl.search = '';
+  markerUrl.pathname = '/__order-notified/' + sessionId;
+  const marker = new Request(markerUrl.toString());
+  if (await cache.match(marker)) {
+    return json({ paye: true, deja_enregistree: true });
+  }
 
   let dest, items;
   try {
@@ -64,63 +50,71 @@ export async function onRequestGet({ request, env }) {
     return json({ error: 'Commande illisible' }, 500);
   }
 
-  // Printful limite la longueur de `external_id` ; un identifiant de session
-  // Stripe complet (≈ 66 caractères) est refusé. On retire le préfixe et on
-  // garde 32 caractères : déterministe, donc l'anti-doublon reste valable.
-  const externalId = sessionId.replace(/^cs_(test|live)_/, '').slice(0, 32);
+  const shippingCad = session.total_details && typeof session.total_details.amount_shipping === 'number'
+    ? (session.total_details.amount_shipping / 100).toFixed(2)
+    : '?';
+  const totalCad = typeof session.amount_total === 'number' ? (session.amount_total / 100).toFixed(2) : '?';
 
-  const order = {
-    external_id: externalId,
-    recipient: {
-      name: dest.name || (session.customer_details && session.customer_details.name) || 'Client',
-      email: dest.email,
-      phone: dest.phone || undefined,
-      address1: dest.address1,
-      city: dest.city,
-      state_code: normaliserEtat(dest.country_code, dest.state_code),
-      country_code: dest.country_code,
-      zip: dest.zip
-    },
-    items: items.map(function (a) {
-      return { variant_id: a[0], product_template_id: a[1], quantity: a[2], name: a[3] };
-    })
+  const lignes = items.map(function (a) {
+    return '- ' + a[0] + ' — taille ' + a[1] + ' — quantité ' + a[2];
+  }).join('\n');
+
+  const adresse = [dest.address1, dest.city, dest.state_code, dest.zip, dest.country_code].filter(Boolean).join(', ');
+
+  const payload = {
+    _subject: 'Nouvelle commande payée — à saisir dans Tapstitch',
+    _replyto: dest.email,
+    _template: 'table',
+    Client: dest.name || (session.customer_details && session.customer_details.name) || 'Non précisé',
+    Email: dest.email,
+    Telephone: dest.phone || 'Non précisé',
+    Adresse_de_livraison: adresse,
+    Articles: lignes,
+    Livraison_facturee_CAD: shippingCad,
+    Total_paye_CAD: totalCad,
+    Reference_Stripe: sessionId,
+    A_faire: 'Créer cette commande dans Tapstitch avec ces articles et cette adresse.'
   };
 
-  // GARDE-FOU FINANCIER : un paiement en mode test n'apporte aucun argent, mais
-  // une commande confirmée chez Printful est imprimée et facturée pour de vrai.
-  // La confirmation automatique est donc ignorée tant que le paiement n'est pas
-  // un paiement réel — quel que soit le réglage de PRINTFUL_AUTO_CONFIRM.
-  const paiementReel = session.livemode === true;
-  const confirm = paiementReel && env.PRINTFUL_AUTO_CONFIRM === '1';
-  const res = await fetch('https://api.printful.com/orders?confirm=' + (confirm ? '1' : '0'), {
-    method: 'POST', headers: H, body: JSON.stringify(order)
-  });
-  const pj = await res.json().catch(() => null);
+  const origin = new URL(request.url).origin;
+  let envoye = false;
+  try {
+    const mailRes = await fetch('https://formsubmit.co/ajax/' + (env.LEAD_EMAIL || '2395635cegep@gmail.com'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        // formsubmit rejette tout appel sans origine ("open this page
+        // through a web server") — un appel serveur doit la fournir.
+        Origin: origin,
+        Referer: origin + '/'
+      },
+      body: JSON.stringify(payload)
+    });
+    const mailText = await mailRes.text();
+    let mailData; try { mailData = JSON.parse(mailText); } catch (e) { mailData = null; }
+    envoye = mailRes.ok && mailData && String(mailData.success) === 'true';
+    if (!envoye) console.error('formsubmit refus (commande)', mailRes.status, mailText.slice(0, 300));
+  } catch (e) {
+    console.error('erreur envoi courriel commande', String(e).slice(0, 200));
+  }
 
-  if (!res.ok) {
-    // Doublon = la commande existe déjà : ce n'est pas une erreur pour le client.
-    const msg = (pj && pj.result) ? String(pj.result) : '';
-    // Printful écrit « External ID » avec un espace : le motif doit couvrir
-    // les deux graphies, sinon un simple rechargement de page affichait une
-    // erreur rouge alors que la commande était bien enregistrée.
-    if (res.status === 409 || /external[ _]?id/i.test(msg)) {
-      return json({ paye: true, deja_enregistree: true });
-    }
-    console.error('Printful order error', res.status, JSON.stringify(pj).slice(0, 500));
+  if (!envoye) {
+    // Le paiement est acquis quoi qu'il arrive ; seul l'envoi du récapitulatif
+    // a échoué. On ne pose pas le marqueur de doublon, pour qu'un nouvel
+    // essai (rechargement de la page) puisse retenter l'envoi.
     return json({
       paye: true, transmise: false,
-      detail: 'La commande est payée mais n’a pas pu être transmise.',
-      motif: msg.slice(0, 160)
+      detail: 'Paiement confirmé, mais le courriel de commande n’a pas pu être envoyé. Vérifier manuellement avec la référence Stripe.',
+      reference: sessionId
     }, 502);
   }
 
-  return json({
-    paye: true,
-    transmise: true,
-    brouillon: !confirm,
-    mode: paiementReel ? 'production' : 'test',
-    commande: pj && pj.result ? pj.result.id : null
-  });
+  // Marqueur posé pour 24 h : au-delà, un identifiant de session Stripe très
+  // ancien n'a de toute façon plus de raison de revenir sur cette page.
+  await cache.put(marker, new Response('1', { headers: { 'Cache-Control': 'max-age=86400' } }));
+
+  return json({ paye: true, transmise: true, reference: sessionId });
 }
 
 export async function onRequest({ request }) {

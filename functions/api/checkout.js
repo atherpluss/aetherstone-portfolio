@@ -1,39 +1,42 @@
 // Paiement d'une commande boutique — Pages Function, sur /api/checkout.
 //
-// Enchaînement :
-//   1. le visiteur remplit le formulaire de commande existant (adresse, etc.) ;
-//   2. cette fonction demande à Printful le VRAI tarif de livraison pour cette
-//      adresse — pas un forfait inventé ;
-//   3. elle crée une session de paiement Stripe (chandails + livraison) ;
-//   4. le navigateur est redirigé vers la page de paiement sécurisée de Stripe.
+// Fournisseur d'impression : Tapstitch. Contrairement à Printful, Tapstitch
+// n'expose pas d'API générale pour un site sur mesure — il s'intègre
+// uniquement à des plateformes nommées (Shopify, WooCommerce, Etsy…) dont il
+// appelle lui-même l'API. Impossible d'interroger un catalogue de variantes
+// ou un tarif de livraison en direct depuis ce site.
 //
-// La commande n'est PAS envoyée à Printful ici : elle part seulement une fois
-// le paiement confirmé, dans /api/order-confirm. Sinon un panier abandonné
-// déclencherait une impression payante.
+// D'où l'architecture : ce point d'entrée encaisse via Stripe (produit +
+// forfait de livraison FIXE, faute de tarif réel disponible). Une fois le
+// paiement confirmé, /api/order-confirm envoie un courriel récapitulatif —
+// la commande est ensuite saisie manuellement dans Tapstitch, comme convenu.
 //
 // Les prix sont redéfinis ici, côté serveur. Ne jamais faire confiance au prix
 // envoyé par le navigateur : n'importe qui peut le modifier avant l'envoi.
 
 const PRICE_CAD = 55;
 
-// Correspondance site → modèle Printful (Design Maker).
-// Les variantes ne sont pas codées en dur : elles sont lues chez Printful au
-// moment de la commande, ce qui évite toute dérive si un modèle est modifié.
-const TEMPLATES = {
-  'aether-market': 105728177,
-  'digital-cowboy': 105728160,
-  'high-society': 105728147,
-  'bada-bing': 105728053
+// Forfait de livraison FIXE — il n'existe aucune API Tapstitch à interroger
+// pour un tarif réel. Valeur de départ approximative ; à ajuster ici si les
+// frais réels observés dans Tapstitch s'écartent trop de ce montant.
+// Un seul palier "international" au-delà du Canada/É.-U., par simplicité —
+// affiner par pays si le volume de commandes hors Amérique du Nord le justifie.
+const SHIPPING_CAD = {
+  CA: 1200, // 12,00 $ CAD
+  US: 1500, // 15,00 $ CAD
+  INTL: 2500 // 25,00 $ CAD
 };
 
-const STORE_ID = '15273464';
-const CATALOG_PRODUCT = 823; // Stanley/Stella Blaster 2.0
-// Le site écrit « XXL », Printful écrit « 2XL ».
-const SIZE_ALIAS = { XXL: '2XL' };
+// Correspondance site → nom du modèle dans Tapstitch, pour que le courriel de
+// commande soit sans ambiguïté au moment de la ressaisie manuelle. Les noms
+// doivent matcher exactement ce qui apparaît dans le tableau de bord Tapstitch.
+const PRODUCT_NAMES = {
+  'aether-market': 'Aether Market',
+  'digital-cowboy': 'Digital Cowboy',
+  'high-society': 'High Society',
+  'bada-bing': 'Bada Bing'
+};
 
-// Printful n'accepte que le code officiel à deux lettres. On valide AVANT
-// d'encaisser : un client qui paie pour une adresse inexpédiable, c'est un
-// remboursement et une commande perdue.
 const ETATS = {
   CA: ['AB','BC','MB','NB','NL','NS','NT','NU','ON','PE','QC','SK','YT'],
   US: ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
@@ -48,36 +51,10 @@ const ETAT_ALIAS = {
 
 const json = (p, s = 200) => new Response(JSON.stringify(p), { status: s, headers: { 'Content-Type': 'application/json' } });
 
-function pfHeaders(env) {
-  const key = env.PRINTFUL_API_KEY || env.PRINTFUL_TOKEN;
-  if (!key) return null;
-  return { Authorization: 'Bearer ' + key, 'X-PF-Store-Id': STORE_ID, 'Content-Type': 'application/json' };
-}
-
-// Taille demandée → identifiant de variante Printful, en croisant les variantes
-// autorisées par le modèle (elles portent la couleur) avec le catalogue (qui
-// porte les tailles).
-async function resolveVariant(H, templateId, size) {
-  const [tplRes, catRes] = await Promise.all([
-    fetch('https://api.printful.com/product-templates/' + templateId, { headers: H }),
-    fetch('https://api.printful.com/products/' + CATALOG_PRODUCT, { headers: H })
-  ]);
-  const tpl = await tplRes.json().catch(() => null);
-  const cat = await catRes.json().catch(() => null);
-  const allowed = tpl && tpl.result && tpl.result.available_variant_ids;
-  const variants = cat && cat.result && cat.result.variants;
-  if (!allowed || !variants) return null;
-  const wanted = (SIZE_ALIAS[size] || size).toUpperCase();
-  const match = variants.find((v) => allowed.indexOf(v.id) !== -1 && String(v.size).toUpperCase() === wanted);
-  return match ? match.id : null;
-}
-
 export async function onRequestPost({ request, env }) {
   let body;
   try { body = await request.json(); } catch (e) { return json({ error: 'Requête invalide' }, 400); }
 
-  const H = pfHeaders(env);
-  if (!H) return json({ error: 'Configuration Printful manquante' }, 500);
   if (!env.STRIPE_SECRET_KEY) return json({ error: 'Configuration Stripe manquante' }, 500);
 
   const clean = (v, n = 120) => (typeof v === 'string' ? v.trim().slice(0, n) : '');
@@ -107,54 +84,15 @@ export async function onRequestPost({ request, env }) {
   const rawItems = Array.isArray(body.items) ? body.items.slice(0, 10) : [];
   const items = [];
   for (const it of rawItems) {
-    const tpl = TEMPLATES[it && it.id];
-    if (!tpl) continue;
+    const name = PRODUCT_NAMES[it && it.id];
+    if (!name) continue;
     const qty = Math.min(Math.max(parseInt(it.qty, 10) || 1, 1), 10);
     const size = clean(it.size, 5) || 'M';
-    const variantId = await resolveVariant(H, tpl, size);
-    if (!variantId) return json({ error: 'Taille indisponible pour ' + it.id + ' (' + size + ')' }, 400);
-    items.push({ id: it.id, name: clean(it.name, 60) || it.id, size, qty, template: tpl, variant: variantId });
+    items.push({ id: it.id, name, size, qty });
   }
   if (!items.length) return json({ error: 'Panier vide' }, 400);
 
-  // --- Livraison : tarif réel demandé à Printful pour cette adresse ---
-  let shippingCad = null;
-  let motifLivraison = null;
-  try {
-    const rateRes = await fetch('https://api.printful.com/shipping/rates', {
-      method: 'POST',
-      headers: H,
-      body: JSON.stringify({
-        recipient: {
-          address1: recipient.address1, city: recipient.city, country_code: recipient.country_code,
-          state_code: recipient.state_code || undefined, zip: recipient.zip
-        },
-        items: items.map((i) => ({ variant_id: i.variant, quantity: i.qty })),
-        currency: 'CAD',
-        locale: 'fr_FR'
-      })
-    });
-    const rj = await rateRes.json().catch(() => null);
-    const first = rj && rj.result && rj.result[0];
-    if (first && first.rate) shippingCad = Math.round(parseFloat(first.rate) * 100);
-    else {
-      // Le message de Printful est explicite (« Invalid state code », « Invalid
-      // zip »…) : on le remonte au client, c'est lui qui peut corriger.
-      const brut = rj && rj.result ? String(rj.result) : '';
-      if (/state/i.test(brut)) motifLivraison = 'Province ou État invalide pour ce pays.';
-      else if (/zip|postal/i.test(brut)) motifLivraison = 'Code postal invalide pour cette adresse.';
-      else if (brut) motifLivraison = 'Livraison impossible : ' + brut.slice(0, 120);
-      console.error('tarif livraison indisponible', rateRes.status, JSON.stringify(rj).slice(0, 300));
-    }
-  } catch (e) {
-    console.error('erreur tarif livraison', String(e).slice(0, 200));
-  }
-  // Un tarif indisponible signifie presque toujours une adresse que Printful
-  // ne sait pas livrer. Mieux vaut refuser ici que d'encaisser un paiement
-  // pour une commande qui sera rejetée ensuite.
-  if (shippingCad === null) {
-    return json({ error: motifLivraison || 'Livraison impossible vers cette adresse. Vérifiez le code postal, la ville et la province.' }, 400);
-  }
+  const shippingCad = SHIPPING_CAD[recipient.country_code] || SHIPPING_CAD.INTL;
 
   // --- Session de paiement Stripe ---
   const origin = new URL(request.url).origin;
@@ -176,10 +114,10 @@ export async function onRequestPost({ request, env }) {
   form.set('shipping_options[0][shipping_rate_data][fixed_amount][currency]', 'cad');
   form.set('shipping_options[0][shipping_rate_data][display_name]', 'Livraison');
 
-  // Tout ce qu'il faut pour fabriquer la commande Printful après paiement.
+  // Tout ce qu'il faut pour rédiger le courriel de commande après paiement.
   // Stripe limite chaque valeur à 500 caractères : on reste compact.
   form.set('metadata[dest]', JSON.stringify(recipient).slice(0, 480));
-  form.set('metadata[items]', JSON.stringify(items.map((i) => [i.variant, i.template, i.qty, i.name])).slice(0, 480));
+  form.set('metadata[items]', JSON.stringify(items.map((i) => [i.name, i.size, i.qty])).slice(0, 480));
 
   const res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
     method: 'POST',

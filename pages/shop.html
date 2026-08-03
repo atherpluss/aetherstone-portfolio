@@ -389,7 +389,7 @@ html.is-dark .shop_modal_zoom_btn:hover{ background:#1c1c1c; }
       <h2 class="shop_modal_name" id="modalName"></h2>
       <div class="shop_modal_price" id="modalPrice"></div>
       <p class="shop_modal_desc" id="modalDesc"></p>
-      <div class="shop_modal_meta">Coupe oversize, col haut · Coton biologique · Impression DTF recto-verso</div>
+      <div class="shop_modal_meta">Coupe oversize · Impression à la commande</div>
       <div class="shop_size_row">
         <div class="shop_size_label">Taille</div>
         <div class="shop_size_options" id="modalSizes">
@@ -408,7 +408,7 @@ html.is-dark .shop_modal_zoom_btn:hover{ background:#1c1c1c; }
         </div>
       </div>
       <button class="shop_add_btn shop_modal_add" id="modalAddBtn">Add to cart</button>
-      <div class="shop_trust_row">Imprimé à la commande &middot; Expédié sous 5 à 10 jours ouvrables &middot; Stanley/Stella, coton biologique</div>
+      <div class="shop_trust_row">Imprimé à la commande &middot; Série limitée, sans réassort</div>
     </div>
   </div>
 </div>
@@ -833,7 +833,7 @@ html.is-dark .shop_modal_zoom_btn:hover{ background:#1c1c1c; }
 (function(){
   var PRODUCTS = [
     { id:"aether-market", name:"Aether Market", tag:"Devanture de galerie, dos oversize", price:55, cls:"bg-amber",
-      desc:"Le d\u00e9panneur du coin, r\u00e9invent\u00e9 en galerie d'art. S\u00e9rigraphie d\u00e9taill\u00e9e au dos, macaron discret c\u00f4t\u00e9 c\u0153ur.",
+      desc:"Le d\u00e9panneur du coin, r\u00e9invent\u00e9 en galerie d'art. Visuel d\u00e9taill\u00e9 au dos, macaron discret c\u00f4t\u00e9 c\u0153ur.",
       imgA:"../wf/shop/aether-market-a.webp", imgB:"../wf/shop/aether-market-b.webp" },
     { id:"high-society", name:"High Society", tag:"Pin-up vintage, lettrage fum\u00e9e", price:55, cls:"bg-forest",
       desc:"Une pin-up vintage sur un lettrage fum\u00e9e. Second degr\u00e9 assum\u00e9, fit oversize.",
@@ -1015,12 +1015,13 @@ html.is-dark .shop_modal_zoom_btn:hover{ background:#1c1c1c; }
   checkoutModal && checkoutModal.addEventListener("click", function(e){ if(e.target === checkoutModal) closeCheckout(); });
 
   // Le libell\u00e9 « Province » n'a de sens qu'au Canada et aux \u00c9tats-Unis ;
-  // ailleurs Printful ne l'attend pas et le champ ne ferait qu'embrouiller.
+  // ailleurs ce champ n'a pas de sens et ne ferait qu'embrouiller.
   var paysEl = document.getElementById("coPays");
   var provWrap = document.getElementById("coProvinceWrap");
   var provLabel = document.getElementById("coProvinceLabel");
   var provInput = document.getElementById("coProvince");
-  // Printful n'accepte QUE le code officiel a deux lettres. Un champ libre
+  // Le code officiel a deux lettres est plus fiable pour la saisie manuelle
+         dans Tapstitch qu'un champ libre
   // laissait ecrire « montreal » et la commande etait rejetee APRES paiement :
   // le client avait paye, rien ne partait en production. D'ou une liste fermee.
   var PROVINCES_CA = [["AB","Alberta"],["BC","Colombie-Britannique"],["MB","Manitoba"],["NB","Nouveau-Brunswick"],["NL","Terre-Neuve-et-Labrador"],["NS","Nouvelle-\u00c9cosse"],["NT","Territoires du Nord-Ouest"],["NU","Nunavut"],["ON","Ontario"],["PE","\u00cele-du-Prince-\u00c9douard"],["QC","Qu\u00e9bec"],["SK","Saskatchewan"],["YT","Yukon"]];
@@ -1089,7 +1090,7 @@ html.is-dark .shop_modal_zoom_btn:hover{ background:#1c1c1c; }
   });
 
   // --- Retour depuis Stripe -------------------------------------------------
-  // La commande n'est transmise \u00e0 Printful qu'ici, apr\u00e8s v\u00e9rification du
+  // Le r\u00e9capitulatif de commande n'est envoy\u00e9 qu'ici, apr\u00e8s v\u00e9rification du
   // paiement c\u00f4t\u00e9 serveur. Le param\u00e8tre d'URL ne prouve rien \u00e0 lui seul.
   (function(){
     var q = new URLSearchParams(window.location.search);
