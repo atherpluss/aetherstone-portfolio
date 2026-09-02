@@ -1,0 +1,10 @@
+# Politique de divulgation — Aetherstone (nadhemhsini.online)
+# https://www.rfc-editor.org/rfc/rfc9116
+
+Contact: mailto:atherpluss@gmail.com
+Expires: 2027-08-04T00:00:00.000Z
+Preferred-Languages: fr, en
+Canonical: https://nadhemhsini.online/.well-known/security.txt
+
+# Signalez toute vulnérabilité par courriel. Merci de laisser un délai
+# raisonnable avant publication. Aucun programme de récompense n'est offert.

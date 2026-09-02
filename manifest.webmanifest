@@ -5,12 +5,37 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#e4e4e4",
   "theme_color": "#111111",
   "lang": "fr-CA",
+  "categories": ["design", "portfolio", "business"],
   "icons": [
     { "src": "/wf/favicon-light-180.png", "sizes": "180x180", "type": "image/png" },
     { "src": "/wf/favicon-light-512.png", "sizes": "512x512", "type": "image/png" },
     { "src": "/wf/favicon-light-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Projets",
+      "short_name": "Projets",
+      "description": "Voir les projets de design",
+      "url": "/pages/works.html",
+      "icons": [{ "src": "/wf/favicon-light-180.png", "sizes": "180x180" }]
+    },
+    {
+      "name": "Shop",
+      "short_name": "Shop",
+      "description": "T-shirts graphiques edition limitee",
+      "url": "/pages/shop.html",
+      "icons": [{ "src": "/wf/favicon-light-180.png", "sizes": "180x180" }]
+    },
+    {
+      "name": "Contact",
+      "short_name": "Contact",
+      "description": "Contacter Nadhem Hsini",
+      "url": "/pages/contact.html",
+      "icons": [{ "src": "/wf/favicon-light-180.png", "sizes": "180x180" }]
+    }
   ]
 }

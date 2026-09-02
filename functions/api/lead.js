@@ -72,51 +72,52 @@ export async function onRequestPost({ request, env }) {
   const recap = await summarize(env, transcript);
   const name = [firstName, lastName].filter(Boolean).join(' ') || 'Non précisé';
 
-  const payload = {
-    _subject: `Nouveau prospect via le chatbot — ${name}`,
-    // formsubmit renvoie l'accusé à cette adresse : répondre au visiteur
-    // devient un simple « Répondre » depuis la boîte mail.
-    _replyto: email,
-    _template: 'table',
-    Nom: name,
-    Email: email,
-    Telephone: phone || 'Non précisé',
-    Recapitulatif: recap || 'Résumé indisponible — voir la conversation ci-dessous.',
-    Conversation: transcript || 'Aucune conversation enregistrée.',
-    Recu_le: new Date().toISOString()
-  };
+  const corps = [
+    'NOUVEAU PROSPECT — via le chatbot du site',
+    '',
+    'Nom       : ' + name,
+    'Courriel  : ' + email,
+    'Telephone : ' + (phone || 'Non précisé'),
+    'Recu le   : ' + new Date().toISOString(),
+    '',
+    'RECAPITULATIF :',
+    recap || 'Résumé indisponible — voir la conversation ci-dessous.',
+    '',
+    'CONVERSATION :',
+    transcript || 'Aucune conversation enregistrée.'
+  ].join('\n');
 
-  const origin = new URL(request.url).origin;
+  const boite = env.LEAD_EMAIL || DEST;
+
+  if (!env.CF_ACCOUNT_ID || !env.CF_EMAIL_TOKEN) {
+    console.error('lead : configuration Cloudflare Email absente');
+    return json({ error: "L'envoi a échoué" }, 502);
+  }
 
   try {
-    const res = await fetch(`https://formsubmit.co/ajax/${env.LEAD_EMAIL || DEST}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        // formsubmit rejette tout appel sans origine ("open this page through
-        // a web server") — un appel serveur n'en a pas, il faut la fournir.
-        Origin: origin,
-        Referer: origin + '/'
-      },
-      body: JSON.stringify(payload)
-    });
+    const res = await fetch(
+      'https://api.cloudflare.com/client/v4/accounts/' + env.CF_ACCOUNT_ID + '/email/sending/send',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + env.CF_EMAIL_TOKEN,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'contact@nadhemhsini.online',
+          // Répondre au message renvoie directement au visiteur.
+          reply_to: email,
+          to: boite,
+          subject: `Nouveau prospect via le chatbot — ${name}`,
+          text: corps
+        })
+      }
+    );
 
-    // Piège : formsubmit répond 200 même en cas d'échec, le verdict est dans
-    // le corps. Se fier au seul code HTTP ferait passer un envoi raté pour
-    // un succès — exactement ce que ce point d'entrée doit éviter.
-    const text = await res.text();
-    let ok = res.ok;
-    try {
-      const data = JSON.parse(text);
-      ok = ok && String(data.success) === 'true';
-      if (!ok) console.error('formsubmit refus', res.status, String(data.message).slice(0, 300));
-    } catch (e) {
-      ok = false;
-      console.error('formsubmit réponse illisible', res.status, text.slice(0, 300));
+    if (!res.ok) {
+      console.error('lead : Cloudflare Email refus', res.status, (await res.text()).slice(0, 300));
+      return json({ error: "L'envoi a échoué" }, 502);
     }
-
-    if (!ok) return json({ error: "L'envoi a échoué" }, 502);
     return json({ ok: true });
   } catch (err) {
     console.error('lead send exception', String(err).slice(0, 200));

@@ -1,127 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://nadhemhsini.online/</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://nadhemhsini.online/wf/og-aetherstone.jpg</image:loc>
+      <image:title>Aetherstone — Nadhem Hsini, designer graphique Montréal</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/approach.html</loc>
+    <loc>https://nadhemhsini.online/pages/approach</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/legal.html</loc>
+    <loc>https://nadhemhsini.online/pages/legal</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/shop.html</loc>
+    <loc>https://nadhemhsini.online/pages/shop</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_azzedine-alaia.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_azzedine-alaia</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_beyond-silence.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_beyond-silence</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_casaboom-sousse.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_casaboom-sousse</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_casaboom.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_casaboom</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_chez-stony.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_chez-stony</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_ecurie33.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_ecurie33</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_hess.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_hess</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_lets-not-pretend.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_lets-not-pretend</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_margiela.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_margiela</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_moodgie.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_moodgie</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_party-life.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_party-life</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_simo.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_simo</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_tempo-dolce.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_tempo-dolce</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_thebus.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_thebus</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/work_virgilabloh.html</loc>
+    <loc>https://nadhemhsini.online/pages/work_virgilabloh</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/works.html</loc>
+    <loc>https://nadhemhsini.online/pages/works</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nadhemhsini.online/pages/journal.html</loc>
+    <loc>https://nadhemhsini.online/journal</loc>
     <lastmod>2026-08-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

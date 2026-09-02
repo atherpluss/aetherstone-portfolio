@@ -12,23 +12,43 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
   # Force le HTTPS pendant 2 ans, sous-domaines compris.
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  # Isole le contexte de navigation entre onglets (protection Spectre/XS-Leaks).
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  # Signale au navigateur que toutes les ressources sont explicitement approuvées.
+  Cross-Origin-Resource-Policy: same-site
   # CSP : 'unsafe-inline' reste nécessaire tant que les scripts et styles sont
   # embarqués dans les pages. Le durcir suppose de les externaliser d'abord.
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://player.vimeo.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; font-src 'self'; connect-src 'self' https://formsubmit.co https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com; frame-src https://player.vimeo.com https://splendid-kitsune-85e291.netlify.app; base-uri 'self'; form-action 'self' https://formsubmit.co https://checkout.stripe.com; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://player.vimeo.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; media-src 'self' blob:; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com; frame-src https://player.vimeo.com https://splendid-kitsune-85e291.netlify.app; base-uri 'self'; form-action 'self' https://checkout.stripe.com; object-src 'none'; upgrade-insecure-requests
 
-# Assets versionnés/immuables : cache long.
+# Assets versionnés/immuables : cache 1 an + stale-while-revalidate.
 /wf/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=31536000, stale-while-revalidate=86400, immutable
 /assets/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=31536000, stale-while-revalidate=86400, immutable
 
-# Code : pas d'empreinte dans les noms de fichiers, donc revalidation a chaque
-# visite (304 si inchange). Evite qu'une mise en ligne reste invisible.
+# Code : stale-while-revalidate 60 s — sert l'ancienne version en attendant la
+# revalidation en arrière-plan pour ne pas bloquer la navigation.
 /css/*
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: public, max-age=0, stale-while-revalidate=60, must-revalidate
 /js/*
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: public, max-age=0, stale-while-revalidate=60, must-revalidate
 
 # HTML : jamais servi périmé.
 /*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Service Worker : toujours revalidé (évite un SW périmé coincé sur les clients).
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# llms.txt : revalidé quotidiennement (mis à jour manuellement).
+/llms.txt
+  Cache-Control: public, max-age=86400, must-revalidate
+
+# robots.txt : revalidé toutes les heures.
+/robots.txt
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# manifest.webmanifest : revalidé à chaque visite.
+/manifest.webmanifest
   Cache-Control: public, max-age=0, must-revalidate

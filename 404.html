@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><link rel="icon" href="/favicon.ico" sizes="any"/>
+<head>
+<link rel="preconnect" href="https://www.googletagmanager.com"/>
+<link rel="dns-prefetch" href="https://www.google-analytics.com"/><link rel="icon" href="/favicon.ico" sizes="any"/>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Page not found — Aetherstone</title>
 <meta name="robots" content="noindex, follow"/>
 <meta name="description" content="This page does not exist. Head back to the Aetherstone homepage or browse the projects."/>
+<link rel="canonical" href="https://nadhemhsini.online/404"/>
+<meta property="og:title" content="Page not found — Aetherstone"/>
+<meta property="og:description" content="This page does not exist. Head back to the Aetherstone homepage or browse the projects."/>
+<meta property="og:url" content="https://nadhemhsini.online/404"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Aetherstone — Nadhem Hsini"/>
 <link rel="shortcut icon" href="/wf/favicon-light-32.png" type="image/x-icon"/>
 <link rel="apple-touch-icon" href="/wf/webclip-180.png"/>
 <link href="/css/main.css" rel="stylesheet" type="text/css"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Page not found — Aetherstone","url":"https://nadhemhsini.online/404.html","description":"This page does not exist.","isPartOf":{"@type":"WebSite","name":"Aetherstone","url":"https://nadhemhsini.online"}}</script>
 <script>
   // Respecte le theme choisi par le visiteur, comme le reste du site.
-  try { if (localStorage.getItem('darkMode') === 'enabled') document.documentElement.classList.add('is-dark'); } catch (e) {}
+  try{var s=localStorage.getItem('darkMode'),d=(s==='enabled');document.documentElement.classList.toggle('is-dark',d);document.documentElement.setAttribute('data-theme',d?'dark':'light');}catch(e){}
 </script>
 <style>
   html, body { margin:0; height:100%; background:var(--light,#e4e4e4); color:var(--dark,#111); }
@@ -42,5 +51,25 @@
       <a class="nf_link" href="/pages/shop.html"><span>Shop</span></a>
     </nav>
   </main>
+<script>
+/* Service Worker retire : il cassait la lecture de la video d'intro (requetes
+   Range mises en cache). Ce script desinstalle tout SW encore present et vide
+   ses caches, automatiquement, sans action du visiteur. */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function (regs) {
+    regs.forEach(function (r) { r.unregister(); });
+  }).catch(function () {});
+  if (window.caches && caches.keys) {
+    caches.keys().then(function (keys) {
+      keys.forEach(function (k) {
+        if (k.indexOf('aetherstone') === 0) caches.delete(k);
+      });
+    }).catch(function () {});
+  }
+}
+</script>
+<script type="speculationrules">
+{"prefetch":[{"source":"list","urls":["/pages/works","/pages/shop","/pages/approach","/pages/journal"]}]}
+</script>
 </body>
 </html>

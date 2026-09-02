@@ -61,7 +61,8 @@ html.is-dark #consentBar{background:var(--dark,#111);color:var(--light,#e4e4e4);
     transition-duration: .2s, .2s;
     contain: layout paint;
   }
-  .nav-menu_visual { will-change: auto; }
+  .nav-menu_visual { will-change: auto; display: none; }
+  .nav-menu_link_wrapper { margin-left: 0; }
 
   /* 6. Bandeau de consentement : moins large et moins haut, pour ne
      plus occuper le tiers de l'écran. */
@@ -305,3 +306,236 @@ h1, h2, h3,
    la langue courante ne prend jamais de place.
    ============================================================ */
 .locale.w-locales-item:has(a.w--current) { display: none; }
+
+@media (max-width:767px){._2-col{grid-column-gap:0.6rem;grid-row-gap:0.6rem}}
+
+/* ============================================================
+   MODE SOMBRE — champs du formulaire de contact.
+
+   .contact_field et .contact_area fixent color:var(--dark) en dur, ce qui
+   ecrase le color:var(--light) herite de .contact_component en mode sombre.
+   Resultat : le texte saisi s'affichait presque noir sur fond noir, donc
+   illisible. On retablit la couleur claire, comme pour le reste du bloc.
+   ============================================================ */
+html.is-dark .contact_field,
+html.is-dark .contact_area { color: var(--light); }
+
+/* ============================================================
+   MODE SOMBRE — elements dont la couleur etait codee en dur.
+
+   Trois cas trouves par audit de contraste WCAG (ratio < 3:1) :
+   - .link-underline ("notre politique") : #111 sur fond noir, invisible.
+   - .w-form-done / .w-form-fail : messages Webflow au fond vert/rouge
+     clair, sur lesquels le texte clair herite du mode sombre disparaissait.
+   ============================================================ */
+html.is-dark .link-underline { color: var(--light); }
+html.is-dark .w-form-done,
+html.is-dark .w-form-fail,
+html.is-dark .w-form-done *,
+html.is-dark .w-form-fail * { color: var(--dark); }
+
+/* ============================================================
+   BANNIERE COOKIES — coherence typographique.
+
+   Le paragraphe etait le seul element de la banniere en Mixtape (police
+   d'affichage) : sur du texte legal en petit corps, le rendu jurait avec
+   le reste. Ses propres boutons, la nav, les filtres et le champ de
+   recherche sont tous en Gt Pressura Mono. On aligne le paragraphe
+   dessus, sans les capitales ni l'interlettrage large de .text-mono qui
+   nuiraient a la lecture d'une phrase complete.
+   ============================================================ */
+#consentBar {
+  font-family: "Gt Pressura Mono", Georgia, monospace;
+  font-weight: 300;
+  letter-spacing: .02em;
+  /* Taille fixee en px : le rem suit une echelle responsive qui faisait
+     monter ce texte a 20px, disproportionne pour un bandeau de consentement. */
+  font-size: 13px;
+}
+/* La regle globale `p{font-family:Mixtape}` l'emporte sur l'heritage :
+   il faut donc redeclarer la police sur le paragraphe lui-meme. */
+#consentBar p {
+  font-family: "Gt Pressura Mono", Georgia, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+}
+#consentBar button { font-size: 10.5px; }
+@media (max-width: 767px) {
+  #consentBar,
+  #consentBar p { font-size: 12px; }
+  #consentBar button { font-size: 10px; }
+}
+
+/* ============================================================
+   MOTS ORPHELINS — grands textes d'affichage.
+
+   Sur petit ecran, ces blocs se replient et laissent regulierement un
+   mot seul en fin de ligne, ce qui casse la lecture d'un texte compose
+   en tres gros corps. `text-wrap: pretty` demande au navigateur d'eviter
+   ces orphelins en repartissant autrement la coupure.
+
+   Choix volontaire de `pretty` plutot que `balance` : il ne corrige que
+   l'orpheline et laisse le reste des coupures inchange, donc aucun
+   deplacement visible la ou la mise en page etait deja bonne. Les
+   navigateurs qui ne le connaissent pas l'ignorent simplement.
+   ============================================================ */
+.home_intro_content,
+.heading-style-h1,
+.heading-style-h2,
+h1, h2 {
+  text-wrap: pretty;
+}
+
+/* ============================================================
+   PAGES PROJET — interlignes et espacement des images.
+
+   1) INTERLIGNE DU TAGLINE
+   `.project_tagline:lang(fr-fr){line-height:8.5rem}` etait declaree hors
+   media query. Avec sa pseudo-classe :lang() elle est PLUS SPECIFIQUE que
+   `.project_tagline` des media queries : en francais, le mobile heritait
+   donc d'un line-height de 8.5rem pour un texte de 2.6rem, d'ou l'enorme
+   trou entre les lignes. On redeclare la version francaise a chaque
+   palier, alignee sur la valeur non-francaise.
+
+   2) ESPACEMENT ENTRE BLOCS D'IMAGES
+   Chaque bloc de galerie est une <section> avec sa marge basse (4rem en
+   mobile), alors que deux images DANS une meme grille n'ont que 0.6rem
+   d'ecart. D'ou l'incoherence visible. On aligne la marge entre blocs
+   d'images sur l'ecart des grilles, a chaque palier.
+   ============================================================ */
+
+/* Deux selecteurs sont necessaires :
+   - `.section_project` seul vise le bloc d'ouverture (hero), qui n'a pas la
+     classe `gallery-block`.
+   - `.section_project.gallery-block` (deux classes) est indispensable pour
+     battre le `<style>` local de chaque page projet, qui declare
+     `.gallery-block{margin-bottom:1rem}` APRES la feuille principale. */
+@media screen and (max-width: 991px) {
+  .project_tagline:lang(fr-fr) { line-height: 4.3rem; }
+  .section_project,
+  .section_project.gallery-block { margin-bottom: 2rem; }
+}
+
+@media screen and (max-width: 767px) {
+  .project_tagline:lang(fr-fr) { line-height: 2.4rem; }
+  .section_project,
+  .section_project.gallery-block { margin-bottom: 0.6rem; }
+}
+
+/* Le gap des paires d'images est declare sur `.visual_wrapper-big._2-col`
+   (deux classes) : une regle sur `._2-col` seul ne peut pas l'emporter.
+   On redeclare a la meme specificite pour que l'ecart DANS une paire soit
+   identique a l'ecart ENTRE les blocs, a chaque palier. */
+@media screen and (max-width: 991px) {
+  .visual_wrapper-big._2-col { grid-column-gap: 2rem; grid-row-gap: 2rem; }
+}
+@media screen and (max-width: 767px) {
+  .visual_wrapper-big._2-col { grid-column-gap: 0.6rem; grid-row-gap: 0.6rem; }
+}
+
+/* ============================================================
+   TITRE DE PROJET — espace sous le titre en petit ecran.
+
+   Le <style> local de chaque page projet declare
+   `.section_hero-project{margin-bottom:14rem}` SANS media query : sur
+   mobile cela laissait 224px de vide entre le titre et la premiere image,
+   sans rapport avec les 10px qui separent les images entre elles.
+
+   On cible `h1.section_hero-project` (element + classe) pour passer devant
+   la declaration locale, qui arrive apres la feuille principale.
+   ============================================================ */
+/* Le titre doit etre CENTRE dans le vide qui le separe du haut de page et
+   de la premiere image. Le style local donne 12rem au-dessus et 14rem en
+   dessous : desequilibre. On repartit la meme hauteur totale a parts egales,
+   pour ne pas modifier le rythme general de la page.
+     mobile   : 12 + 4  = 16rem  -> 8rem de chaque cote
+     tablette : 12 + 6  = 18rem  -> 9rem de chaque cote */
+/* Des marges egales ne suffisent pas : la barre de navigation est en
+   position fixe et recouvre le haut, donc la bande vide reellement visible
+   commence SOUS elle. On decale la marge haute de la hauteur de la nav pour
+   que le titre tombe au milieu de ce que l'oeil percoit, en gardant la meme
+   somme totale afin que la premiere image ne bouge pas.
+     mobile   : 11 + 5 = 16rem (inchange)  -> nav ~92px + 82px de part et d'autre
+     tablette : 12 + 6 = 18rem (inchange) */
+@media screen and (max-width: 991px) {
+  h1.section_hero-project { margin-top: 12rem; margin-bottom: 6rem; }
+}
+@media screen and (max-width: 767px) {
+  h1.section_hero-project { margin-top: 11rem; margin-bottom: 5rem; }
+}
+
+/* ============================================================
+   MODE SOMBRE — variable de couleur d'encre.
+
+   `:root` definit `--_theme---text: var(--dark)` et `html.is-dark`
+   redefinissait `--text` et `--background` mais JAMAIS `--_theme---text`.
+   Resultat : tout ce qui s'appuie dessus restait noir sur fond noir, donc
+   invisible — les liens du pied de page (Accueil, Projets, Boutique,
+   Instagram, Behance, Journal, Mentions legales...) et le bloc
+   « projet suivant ». Le bug existait avant, mais il ne se voyait pas tant
+   que le site s'ouvrait toujours en mode clair.
+
+   Les 9 usages de cette variable sont tous semantiquement « l'encre »
+   (couleur de texte, barres du loader, bordure) : la faire basculer est
+   correct pour chacun d'eux.
+   ============================================================ */
+html.is-dark {
+  --_theme---text: var(--light);
+}
+
+/* Le bloc CREDITS / PERIMETRE est un bloc de TEXTE, pas une image : la marge
+   resserree appliquee aux sections projet en petit ecran le collait au visuel
+   precedent. On lui rend une respiration, sans revenir aux 4rem d'origine qui
+   creaient un vide entre les images elles-memes. */
+@media screen and (max-width: 991px) {
+  .section_projects-infos { margin-top: 4rem; }
+}
+@media screen and (max-width: 767px) {
+  .section_projects-infos { margin-top: 3rem; }
+}
+
+/* Bouton « Fermer » de la fiche produit : il pose
+   `background: var(--_theme---background)` (qui reste clair) et
+   `color: var(--_theme---text)`. Depuis que cette derniere bascule en mode
+   sombre, on obtenait du clair sur clair. Le bouton se pose sur le visuel du
+   produit, qui est clair : on garde donc le fond clair et on force l'encre
+   sombre, exactement comme en mode clair. */
+html.is-dark .shop_modal_close { color: var(--dark); }
+
+/* Liens bleus dans le texte courant : `var(--blue)` = #0000ff est un bleu
+   tres sombre. Sur fond clair il passe (ratio ~8), sur fond noir il tombe a
+   2,2 — sous le seuil de lisibilite. On reprend en mode sombre le bleu clair
+   #8080ff deja utilise ailleurs sur le site (curseur, etats de focus), qui
+   remonte le contraste au-dessus de 6 sans changer l'identite. */
+html.is-dark .blue-link { color: #8080ff; }
+
+/* ============================================================
+   12. LOGO "AETHER" DU PIED DE PAGE — trop petit sur mobile.
+
+   .footer_logo_wrapper est un enfant ordinaire de .container-large /
+   .padding-global : il herite donc du padding horizontal standard du
+   site (.75rem a 479px). Correct pour du texte courant, mais ce
+   wordmark geant perd une part significative de sa largeur pour rien —
+   c'est une piece graphique, pas du contenu a aligner sur la grille.
+   Le sortir jusqu'aux bords de l'ecran sur mobile uniquement (le
+   desktop n'est pas touche) lui redonne sa taille voulue.
+
+   Meme a 100vw, le rapport largeur/hauteur du SVG (~3.4:1) ne donne
+   qu'environ 110px de haut sur un ecran de 375px de large — beaucoup
+   trop court pour l'effet "etirement" recherche. Le calque visible
+   (.footer_logo_stretch, en position absolute, inset 0%, SVG en
+   preserveAspectRatio="none") est concu pour justement pouvoir etre
+   deforme/etire au-dela du ratio naturel sans jamais paraitre casse ;
+   on lui donne donc explicitement plus de hauteur sur mobile pour que
+   le mot-symbole se deploie beaucoup plus bas, jusque pres du bord
+   inferieur de l'ecran une fois la page defilee a fond.
+   ============================================================ */
+@media screen and (max-width: 767px) {
+  .footer_logo_wrapper {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    height: 34vh;
+  }
+}

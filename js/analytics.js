@@ -111,3 +111,47 @@
     banner();
   }
 })();
+
+/* ---- Événements automatiques GA4 -----------------------------------------
+   Scroll depth (25/50/75/100%), clics CTA, soumission formulaire.
+   Les events ne partent que si GA4 est chargé (Consent Mode v2 oblige). */
+(function () {
+  var marks = [25, 50, 75, 100];
+  var fired = {};
+  function pct() {
+    var el = document.documentElement;
+    var scrolled = el.scrollTop || document.body.scrollTop;
+    var total = el.scrollHeight - el.clientHeight;
+    return total > 0 ? Math.round(scrolled / total * 100) : 100;
+  }
+  window.addEventListener('scroll', function () {
+    var p = pct();
+    marks.forEach(function (m) {
+      if (!fired[m] && p >= m) {
+        fired[m] = true;
+        if (window.gtag) window.gtag('event', 'scroll', { percent_scrolled: m });
+      }
+    });
+  }, { passive: true });
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('a[href], button');
+    if (!el || !window.gtag) return;
+    var txt = (el.innerText || '').trim().slice(0, 60);
+    var href = el.getAttribute('href') || '';
+    if (/mailto:|#|data-email/i.test(href) || el.dataset.emailTrigger !== undefined) {
+      window.gtag('event', 'cta_click', { cta_text: 'Email', cta_type: 'email' });
+    } else if (/shop|checkout|stripe/i.test(href)) {
+      window.gtag('event', 'cta_click', { cta_text: txt, cta_type: 'shop' });
+    } else if (txt) {
+      window.gtag('event', 'cta_click', { cta_text: txt, cta_type: 'nav' });
+    }
+  });
+
+  var forms = document.querySelectorAll('form');
+  forms.forEach(function (form) {
+    form.addEventListener('submit', function () {
+      if (window.gtag) window.gtag('event', 'form_submit', { form_id: form.id || 'contact' });
+    });
+  });
+})();
