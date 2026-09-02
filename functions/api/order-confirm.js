@@ -61,42 +61,54 @@ export async function onRequestGet({ request, env }) {
 
   const adresse = [dest.address1, dest.city, dest.state_code, dest.zip, dest.country_code].filter(Boolean).join(', ');
 
-  const payload = {
-    _subject: 'Nouvelle commande payée — à saisir dans Tapstitch',
-    _replyto: dest.email,
-    _template: 'table',
-    Client: dest.name || (session.customer_details && session.customer_details.name) || 'Non précisé',
-    Email: dest.email,
-    Telephone: dest.phone || 'Non précisé',
-    Adresse_de_livraison: adresse,
-    Articles: lignes,
-    Livraison_facturee_CAD: shippingCad,
-    Total_paye_CAD: totalCad,
-    Reference_Stripe: sessionId,
-    A_faire: 'Créer cette commande dans Tapstitch avec ces articles et cette adresse.'
-  };
+  const corps = [
+    'NOUVELLE COMMANDE PAYÉE — à saisir dans Tapstitch',
+    '',
+    'Client    : ' + (dest.name || (session.customer_details && session.customer_details.name) || 'Non précisé'),
+    'Email     : ' + dest.email,
+    'Téléphone : ' + (dest.phone || 'Non précisé'),
+    'Adresse   : ' + adresse,
+    '',
+    'Articles :',
+    lignes,
+    '',
+    'Livraison facturée : ' + shippingCad + ' CAD',
+    'Total payé         : ' + totalCad + ' CAD',
+    'Référence Stripe   : ' + sessionId,
+    '',
+    'À faire : créer cette commande dans Tapstitch avec ces articles et cette adresse.'
+  ].join('\n');
 
-  const origin = new URL(request.url).origin;
+  // --- Envoi du récapitulatif -----------------------------------------------
+  // Canal unique : API Cloudflare Email Sending. L'adresse d'arrivée est
+  // vérifiée sur le compte, donc l'envoi est gratuit et hors quota. Il remplace
+  // formsubmit.co, dont la limite de débit (429) laissait passer des commandes
+  // payées sans que personne ne soit prévenu.
   let envoye = false;
-  try {
-    const mailRes = await fetch('https://formsubmit.co/ajax/' + (env.LEAD_EMAIL || '2395635cegep@gmail.com'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        // formsubmit rejette tout appel sans origine ("open this page
-        // through a web server") — un appel serveur doit la fournir.
-        Origin: origin,
-        Referer: origin + '/'
-      },
-      body: JSON.stringify(payload)
-    });
-    const mailText = await mailRes.text();
-    let mailData; try { mailData = JSON.parse(mailText); } catch (e) { mailData = null; }
-    envoye = mailRes.ok && mailData && String(mailData.success) === 'true';
-    if (!envoye) console.error('formsubmit refus (commande)', mailRes.status, mailText.slice(0, 300));
-  } catch (e) {
-    console.error('erreur envoi courriel commande', String(e).slice(0, 200));
+  if (!env.CF_ACCOUNT_ID || !env.CF_EMAIL_TOKEN) {
+    console.error('commande : configuration Cloudflare Email absente');
+  } else {
+    try {
+      const mailRes = await fetch(
+        'https://api.cloudflare.com/client/v4/accounts/' + env.CF_ACCOUNT_ID + '/email/sending/send',
+        {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + env.CF_EMAIL_TOKEN, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            from: 'contact@nadhemhsini.online',
+            // Répondre au récapitulatif écrit directement au client.
+            reply_to: dest.email,
+            to: env.LEAD_EMAIL || '2395635cegep@gmail.com',
+            subject: 'Nouvelle commande payée — à saisir dans Tapstitch',
+            text: corps
+          })
+        }
+      );
+      envoye = mailRes.ok;
+      if (!envoye) console.error('Cloudflare Email refus (commande)', mailRes.status, (await mailRes.text()).slice(0, 300));
+    } catch (e) {
+      console.error('erreur envoi courriel commande', String(e).slice(0, 200));
+    }
   }
 
   if (!envoye) {
